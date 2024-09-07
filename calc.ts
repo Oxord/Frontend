@@ -1,6 +1,6 @@
 const space = " ";
 const operations: string[] = ['+', '-', '*', '/'];
-const nums: string[] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const nums: string[] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
 const openedBracket = "(";
 const closedBracket = ")"; 
 
@@ -10,8 +10,8 @@ type linkOnExpressionType = {
 
 const calc = (expression: string): number => {
     const calcExpressionResult = (num1: string, num2: string, action: string): number => {
-        const operand1 = parseInt(num1);
-        const operand2 = parseInt(num2);
+        const operand1 = Number(num1);
+        const operand2 = Number(num2);
         switch (action) {
             case "+": return operand1 + operand2;
             case "-": return operand1 - operand2;

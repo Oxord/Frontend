@@ -1,12 +1,12 @@
 var space = " ";
 var operations = ['+', '-', '*', '/'];
-var nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+var nums = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
 var openedBracket = "(";
 var closedBracket = ")";
 var calc = function (expression) {
     var calcExpressionResult = function (num1, num2, action) {
-        var operand1 = parseInt(num1);
-        var operand2 = parseInt(num2);
+        var operand1 = Number(num1);
+        var operand2 = Number(num2);
         switch (action) {
             case "+": return operand1 + operand2;
             case "-": return operand1 - operand2;
