@@ -1,6 +1,8 @@
 const space = " ";
 const operations: string[] = ['+', '-', '*', '/'];
 const nums: string[] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const openedBracket = "(";
+const closedBracket = ")"; 
 
 type linkOnExpressionType = {
     expression: string;
@@ -28,20 +30,18 @@ const calc = (expression: string): number => {
     for (const i = 0; linkOnExpression.expression.length > 0 && !isError; ){
         
         if (linkOnExpression.expression[i] !== space){
+            if (linkOnExpression.expression[i] == openedBracket || (operations.includes(linkOnExpression.expression[i]) && whatWeRead === "operand1")) {
+                if (linkOnExpression.expression[i] == openedBracket){
+                    linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
+                }
+                secondOperand = calc(linkOnExpression.expression).toString();
+                whatWeRead = "operand1";
+            }
             if (whatWeRead === "action"){
                 if (operations.includes(linkOnExpression.expression[i])){
                     operation = linkOnExpression.expression[i];   
                     whatWeRead = "operand1";
-                }
-                else{
-                    isError = true;
-                    console.log("Incorrect input! Expected operation. But we got: ", linkOnExpression.expression[i]);
-                }
-            }
-            if (linkOnExpression.expression[i] == "(") {
-                linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-                secondOperand = calc(linkOnExpression.expression).toString();
-                whatWeRead = "operand1";
+                }   
             }
             if (whatWeRead === "operand1" || whatWeRead === "operand2"){
                 if (nums.includes(linkOnExpression.expression[i])){
@@ -69,13 +69,13 @@ const calc = (expression: string): number => {
                 }
                 else if(!operations.includes(linkOnExpression.expression[i])){
                     isError = true;
-                    console.log("Incorrect input! Expected number. But we got: ", linkOnExpression.expression[i]);
+                    console.log("Incorrect input! Expected number.");
                 }
             }
         }
 
         linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-        if (linkOnExpression.expression[i] === ")" ){
+        if (linkOnExpression.expression[i] === closedBracket ){
             linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
         }
     }
