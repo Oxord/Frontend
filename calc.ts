@@ -1,89 +1,107 @@
-const space = " ";
-const operations: string[] = ['+', '-', '*', '/'];
-const nums: string[] = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
-const openedBracket = "(";
-const closedBracket = ")"; 
+const space = ' ';
+const operations: string[] = ['+', '-', '*', '/'];//одинарные кавычки
+const openedBracket = '(';
+const closedBracket = ')'; 
 
 type linkOnExpressionType = {
     expression: string;
 }
 
 const calc = (expression: string): number => {
-    const calcExpressionResult = (num1: string, num2: string, action: string): number => {
-        const operand1 = Number(num1);
-        const operand2 = Number(num2);
+    const calcExpressionResult = (num1: string | number, num2: string, action: string): number => {
+        const operand1 = Number(num1)
+        const operand2 = Number(num2)
         switch (action) {
-            case "+": return operand1 + operand2;
-            case "-": return operand1 - operand2;
-            case "*": return operand1 * operand2;
-            case "/": return operand1 / operand2;
-            default: return NaN;   
+            case '+': return operand1 + operand2
+            case '-': return operand1 - operand2
+            case '*': return operand1 * operand2
+            case '/': return operand1 / operand2
+            default: return NaN
         } 
     }
-    let operationResult: number = 0;
-    let operation: string = "";
-    let firstOperand: string = "";
-    let secondOperand: string = "";
-    let whatWeRead: string = "action";
-    let isError: boolean = false;
-
-    for (const i = 0; linkOnExpression.expression.length > 0 && !isError; ){
-        
-        if (linkOnExpression.expression[i] !== space){
-            if (linkOnExpression.expression[i] == openedBracket || (operations.includes(linkOnExpression.expression[i]) && whatWeRead === "operand1")) {
-                if (linkOnExpression.expression[i] == openedBracket){
-                    linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-                }
-                secondOperand = calc(linkOnExpression.expression).toString();
-                whatWeRead = "operand1";
-            }
-            if (whatWeRead === "action"){
-                if (operations.includes(linkOnExpression.expression[i])){
-                    operation = linkOnExpression.expression[i];   
-                    whatWeRead = "operand1";
-                }   
-            }
-            if (whatWeRead === "operand1" || whatWeRead === "operand2"){
-                if (nums.includes(linkOnExpression.expression[i])){
-                    if(whatWeRead === "operand2"){
-                        for ( i; linkOnExpression.expression[i] !== space && linkOnExpression.expression.length > 0; ){
-                            secondOperand = secondOperand + linkOnExpression.expression[i];
-                            linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-                        }
-                        linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-                        break;
-                    }
-                    if(whatWeRead === "operand1"){
-                        for ( i; linkOnExpression.expression[i] !== space && linkOnExpression.expression.length > 0; ){
-                            firstOperand = firstOperand + linkOnExpression.expression[i];
-                            linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-                        }
-                        if (secondOperand === ""){
-                            whatWeRead = "operand2";
-                        }
-                        else{
-                            linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-                            break;
-                        }
-                    }
-                }
-                else if(!operations.includes(linkOnExpression.expression[i])){
-                    isError = true;
-                    console.log("Incorrect input! Expected number.");
-                }
-            }
-        }
-
-        linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-        if (linkOnExpression.expression[i] === closedBracket ){
-            linkOnExpression.expression = linkOnExpression.expression.slice(1, linkOnExpression.expression.length);
-        }
+    const deleteAllBrackets = (line: string): string => {
+        line = line.replaceAll(openedBracket, "");
+        line = line.replaceAll(closedBracket, "");
+        return line
     }
-    
-    operationResult = calcExpressionResult(firstOperand, secondOperand, operation);
-    return operationResult;
+    const isExpressionValid = (expression: string): boolean => {
+        let bracketsAmount = 0;
+        for(let i = 0; i < expression.length; i++){
+            switch (expression[i]){
+                case '(': bracketsAmount++; break
+                case ')': bracketsAmount--; break
+            }
+        }
+        if (bracketsAmount === 0){
+            return true
+        }
+        else{
+            return false
+        }
+    } 
+    let operationResult = 0
+    let operation = ''
+    let firstOperand = ''
+    let secondOperand = ''
+    let whatWeRead = 'action'
+    let isError = false
+    if (isExpressionValid(expression)){
+        expression = deleteAllBrackets(expression)
+        let operationSteck: string[] = []
+        let operandQueue: string[] = []
+        const expressionChars: string[] = expression.split(' ')
+        for ( let i = 0; i < expressionChars.length; i++ ){
+            let el = expressionChars[i]
+            if (operations.includes(el)){
+                operationSteck = [...operationSteck, el]
+            }
+            else if(!isNaN(Number(el)) && el !== '') {
+                operandQueue.unshift(el)
+            }
+            else if(el !== ''){
+                console.log(`'${el}' does not not recognized as an operation or operand`)
+                return NaN
+            }
+        }
+        let result: number = 0
+        for (let i = operationSteck.length - 1, j = operandQueue.length - 1; i >= 0 && j >= 0; i--, j-- ){
+            if (i === operationSteck.length - 1){
+                if (operationSteck[i]){
+                    const operation: string = operationSteck[i] 
+                    if (operandQueue[j] && operandQueue[j-1]){
+                        const firstOperand: string = operandQueue[j]
+                        j--
+                        const secondOperand: string = operandQueue[j]
+                        result = calcExpressionResult(firstOperand, secondOperand, operation)
+                    }
+                }
+            }
+            else{
+                if(operationSteck[i]){
+                    const operation = operationSteck[i]
+                    if(operandQueue[j]){
+                        const operandTwo = operandQueue[j]
+                        result = calcExpressionResult(result, operandTwo, operation)
+                    }
+                }
+            }
+            if (i === 0 && j >= 1 || i >= 1 && j === 0){
+                console.log('Incorrect input! Check amount of parameters')
+                return NaN
+            }
+        }
+        return result;
+    }
+    else{
+        console.log('You have a error');
+        return NaN
+    } 
 }
+        
+        
 
 const inputExpression: string = process.argv[2];
-const linkOnExpression: linkOnExpressionType = {expression: inputExpression}
-console.log(calc(linkOnExpression.expression));
+const result: number = calc(inputExpression)
+if (!isNaN(result)) {
+    console.log(result)
+}
