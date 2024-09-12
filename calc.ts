@@ -1,5 +1,5 @@
 const space = ' ';
-const operations: string[] = ['+', '-', '*', '/'];//одинарные кавычки
+const operations: string[] = ['+', '-', '*', '/'];
 const openedBracket = '(';
 const closedBracket = ')'; 
 
@@ -15,7 +15,14 @@ const calc = (expression: string): number => {
             case '+': return operand1 + operand2
             case '-': return operand1 - operand2
             case '*': return operand1 * operand2
-            case '/': return operand1 / operand2
+            case '/': {
+                if (operand2 === 0){
+                    return NaN
+                }
+                else{
+                    return operand1 / operand2
+                }
+            }
             default: return NaN
         } 
     }
@@ -39,12 +46,6 @@ const calc = (expression: string): number => {
             return false
         }
     } 
-    let operationResult = 0
-    let operation = ''
-    let firstOperand = ''
-    let secondOperand = ''
-    let whatWeRead = 'action'
-    let isError = false
     if (isExpressionValid(expression)){
         expression = deleteAllBrackets(expression)
         let operationSteck: string[] = []
@@ -89,6 +90,10 @@ const calc = (expression: string): number => {
                 console.log('Incorrect input! Check amount of parameters')
                 return NaN
             }
+            if (isNaN(result)){
+                console.log('Error! It cannot be divided by 0!')
+                return NaN
+            } 
         }
         return result;
     }

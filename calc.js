@@ -8,7 +8,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 var space = ' ';
-var operations = ['+', '-', '*', '/']; //одинарные кавычки
+var operations = ['+', '-', '*', '/'];
 var openedBracket = '(';
 var closedBracket = ')';
 var calc = function (expression) {
@@ -19,7 +19,14 @@ var calc = function (expression) {
             case '+': return operand1 + operand2;
             case '-': return operand1 - operand2;
             case '*': return operand1 * operand2;
-            case '/': return operand1 / operand2;
+            case '/': {
+                if (operand2 === 0) {
+                    return NaN;
+                }
+                else {
+                    return operand1 / operand2;
+                }
+            }
             default: return NaN;
         }
     };
@@ -40,19 +47,13 @@ var calc = function (expression) {
                     break;
             }
         }
-        if (bracketsAmount === 0) {
+        if (bracketsAmount === 0 && expression != '') {
             return true;
         }
         else {
             return false;
         }
     };
-    var operationResult = 0;
-    var operation = '';
-    var firstOperand = '';
-    var secondOperand = '';
-    var whatWeRead = 'action';
-    var isError = false;
     if (isExpressionValid(expression)) {
         expression = deleteAllBrackets(expression);
         var operationSteck = [];
@@ -75,26 +76,30 @@ var calc = function (expression) {
         for (var i = operationSteck.length - 1, j = operandQueue.length - 1; i >= 0 && j >= 0; i--, j--) {
             if (i === operationSteck.length - 1) {
                 if (operationSteck[i]) {
-                    var operation_1 = operationSteck[i];
+                    var operation = operationSteck[i];
                     if (operandQueue[j] && operandQueue[j - 1]) {
-                        var firstOperand_1 = operandQueue[j];
+                        var firstOperand = operandQueue[j];
                         j--;
-                        var secondOperand_1 = operandQueue[j];
-                        result_1 = calcExpressionResult(firstOperand_1, secondOperand_1, operation_1);
+                        var secondOperand = operandQueue[j];
+                        result_1 = calcExpressionResult(firstOperand, secondOperand, operation);
                     }
                 }
             }
             else {
                 if (operationSteck[i]) {
-                    var operation_2 = operationSteck[i];
+                    var operation = operationSteck[i];
                     if (operandQueue[j]) {
                         var operandTwo = operandQueue[j];
-                        result_1 = calcExpressionResult(result_1, operandTwo, operation_2);
+                        result_1 = calcExpressionResult(result_1, operandTwo, operation);
                     }
                 }
             }
             if (i === 0 && j >= 1 || i >= 1 && j === 0) {
                 console.log('Incorrect input! Check amount of parameters');
+                return NaN;
+            }
+            if (isNaN(result_1)) {
+                console.log('Error! It cannot be divided by 0!');
                 return NaN;
             }
         }
