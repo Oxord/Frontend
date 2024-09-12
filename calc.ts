@@ -32,7 +32,7 @@ const calc = (expression: string): number => {
                 case ')': bracketsAmount--; break
             }
         }
-        if (bracketsAmount === 0){
+        if (bracketsAmount === 0 && expression != ''){
             return true
         }
         else{
