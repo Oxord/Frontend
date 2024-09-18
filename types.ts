@@ -1,38 +1,18 @@
 type Presentation = {
     name: string
     slides: Slide[]
+    selectedSlideId: string
 }
 
 type Slide = {
     id: string
-    slidesObjects: SlideObject[]
     background: Background
-    backgroundType: 'solid' | 'image'
+    objects: SlideObject[]
+    selectedObjectIds: string[]
 }
 
-type SlideObject = {
-    obj: TextObject | ImageObject
-    type: 'text' | 'image'
-}
 
-type Background = {
-    type: 'solid' | 'image'
-    value: SolidBackground | ImageBackground
-}
-
-type ImageObject = {
-    src: string
-    position: Position
-    type: 'image'
-}
-
-type TextObject = {
-    value: string
-    font: string
-    fontsize: number
-    position: Position
-    type: 'image'
-}
+type Background = SolidBackground | ImageBackground
 
 type SolidBackground = {
     color: string
@@ -44,40 +24,55 @@ type ImageBackground = {
     type: 'image'
 }
 
+type SlideObject = TextObject | ImageObject | FigureObject
+
+type ObjectBase = {
+    id: string
+    position: Position
+}
 
 type Position = {
     X: number
     Y: number
 }
 
-type Figure = {
-    color: string
-    position: Position
-    value: Circle | Reactangle 
-    type: 'circle' | 'rectangle'
+type TextObject = ObjectBase & {
+    text: string
+    fontsize: number
+    font: string    
+    type: 'text'
 }
 
-type Circle = Figure & {
+type ImageObject = ObjectBase & {
+    src: string
+    type: 'image'
+}
+
+type FigureBase = ObjectBase & {
+    color: string
+}
+
+type FigureObject = Circle | Reactangle | Triangle
+
+type Circle = FigureBase & {
     radius: number
     type: 'circle'
 }
 
-type Reactangle = Figure & {
+type Reactangle = FigureBase & {
     length: number
     width: number
     type: 'rectangle'
 }
 
-type Triangle = Figure & {
+type Triangle = FigureBase & {
     pointOne: Position
     pointTwo: Position
     positionThree: Position
     type: 'triangle'
 }
 
-type selection = {
-    selectedSlideId: string 
-}
+//функции 
 
 const rename = (presentation: Presentation, newName: string): Presentation => {
     return { ...presentation, name: newName}
@@ -85,15 +80,24 @@ const rename = (presentation: Presentation, newName: string): Presentation => {
 
 
 const addSlide = (presentation: Presentation): Presentation => {
+    const background: SolidBackground = {
+        color: 'red',
+        type: 'solid'
+    }
     const newSlide: Slide = {
         id: 'newID',
-        labels: [],
-        backgroundType: 'solid',
-        // background:
+        background: background,
+        objects: [],
+        selectedObjectIds: []
     }
-    slidesCollection = { ...slidesCollection, slides: [ ...slidesCollection.slides, newSlide ] };
+
+    return {...presentation, slides: [...presentation.slides, newSlide]} 
 }
 
-const deleteSlide = (slidesCollection: slidesCollection, slide: Slide): void => {
-    slidesCollection = { ...slidesCollection, slides: slidesCollection.slides.slice(slidesCollection.slides.indexOf(slide), 1) };
+const deleteSlide = (presentation: Presentation, slideId: string): Presentation => {
+    return {...presentation, slides: presentation.slides.filter((slide) => slide.id !== slideId)}
+}
+
+const changeSlidePosition = (presentation: Presentation): Presentation => {
+    
 }
