@@ -1,4 +1,4 @@
-import { addImageToSlide, addSlide, addTextToSlide, changeSlideObjectPosition, changeSlidePosition, deleteObjectFromSlide, deleteSlide, generateGuid, rename } from "./actions"
+import { addImageToSlide, addSlide, addTextToSlide, changeFont, changeImageSize, changeSlideBackground, changeSlideObjectPosition, changeSlidePosition, changeText, changeTextSize, deleteObjectFromSlide, deleteSlide, generateGuid, rename } from "./actions"
 import { ImageObject, Position, Presentation, Slide, SolidBackground, TextObject } from "./types"
 
 describe('Tests', () => {
@@ -93,9 +93,62 @@ describe('Tests', () => {
             const newPos: Position = {X: 150, Y: 150}
             const textObj: TextObject = { id: textObjId, position: newPos, text: 'ABC', fontsize: 16, font: 'arial', type: 'text'}
             const editedSlide = {...oneSlide, objects: [...oneSlide.objects, textObj]}
-            const presentationWithElem = addTextToSlide(presentation, oneSlideId, 'ABC', textObjId)
+            const presentationWithElem = addTextToSlide(presentation, oneSlideId, textObj.text, textObjId)
             it('change object position on slide', () => {
                 expect(changeSlideObjectPosition(presentationWithElem, oneSlideId, textObjId, newPos).slides).toEqual([editedSlide])
+            })
+        })
+        describe('test changeTextSize function', () => {
+            const textObjId = generateGuid()
+            const pos = { X: 0, Y: 0 }
+            const newTextSize = 25
+            const textObj: TextObject = { id: textObjId, position: pos, text: 'newText', fontsize: newTextSize, font: 'arial', type: 'text'}
+            const editedSlide = {...oneSlide, objects: [...oneSlide.objects, textObj]}
+            const presentationWithElem = addTextToSlide(presentation, oneSlideId, textObj.text, textObjId)
+            it('change fontsize on slide', () => {
+                expect(changeTextSize(presentationWithElem, oneSlideId, textObjId, newTextSize).slides).toEqual([editedSlide])
+            })
+        })
+        describe('test changeImageSize function', () => {
+            const imgObjId = generateGuid()
+            const pos = { X: 0, Y: 0 }
+            const imgObj: ImageObject = { id: imgObjId, position: pos, src: 'src', width: 150, height: 150, type: 'image'}
+            const editedSlide = {...oneSlide, objects: [...oneSlide.objects, imgObj]}
+            const presentationWithElem = addImageToSlide(presentation, oneSlideId, imgObj.src, imgObjId)
+            it('change object position on slide', () => {
+                expect(changeImageSize(presentationWithElem, oneSlideId, imgObjId, 150, 150).slides).toEqual([editedSlide])
+            })
+        })
+        describe('test changeText function', () => {
+            const textObjId = generateGuid()
+            const newText = 'NewText'
+            const pos = { X: 0, Y: 0 }
+            const textObj: TextObject = { id: textObjId, position: pos, text: newText, fontsize: 16, font: 'arial', type: 'text'}
+            const editedSlide = {...oneSlide, objects: [...oneSlide.objects, textObj]}
+            const presentationWithElem = addTextToSlide(presentation, oneSlideId, 'ABCDE', textObjId)
+            it('change text in textObj on slide', () => {
+                expect(changeText(presentationWithElem, oneSlideId, textObjId, newText).slides).toEqual([editedSlide])
+            })
+        })
+        describe('test changeFont function', () => {
+            const textObjId = generateGuid()
+            const newFont = 'calibri' 
+            const pos = { X: 0, Y: 0 }
+            const textObj: TextObject = { id: textObjId, position: pos, text: 'NewText', fontsize: 16, font: newFont, type: 'text'}
+            const editedSlide = {...oneSlide, objects: [...oneSlide.objects, textObj]}
+            const presentationWithElem = addTextToSlide(presentation, oneSlideId, textObj.text, textObjId)
+            it('change text in textObj on slide', () => {
+                expect(changeFont(presentationWithElem, oneSlideId, textObjId, newFont).slides).toEqual([editedSlide])
+            })
+        })
+        describe('test changeSlideBackground function', () => {
+            const newBackground: SolidBackground = {
+                color: 'red',
+                type: 'solid'
+            }
+            const editedSlide: Slide = {...oneSlide, background: newBackground}
+            it('chage background color', () => {
+                expect(changeSlideBackground(presentation, oneSlideId, newBackground).slides).toEqual([editedSlide])
             })
         })
     })
