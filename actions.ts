@@ -41,6 +41,12 @@ export const changeSlidePosition = (presentation: Presentation, arraySlideIds: s
         ...presentation,
         slides
     }
+    return {
+        ...presentation,
+        slides: presentation.slides.sort((a, b) => {
+            return presentation.slides.indexOf(a) - arraySlideIds.indexOf(b.id)
+        })
+    }
 }
 
 export const addTextToSlide = (presentation: Presentation, slideId: string, textForSlide: string, textId: string): Presentation => {
