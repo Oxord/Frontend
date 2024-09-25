@@ -1,5 +1,5 @@
-import { addImageToSlide, addSlide, addTextToSlide, changeSlidePosition, deleteSlide, generateGuid, rename } from "./actions"
-import { ImageObject, Presentation, Slide, SolidBackground, TextObject } from "./types"
+import { addImageToSlide, addSlide, addTextToSlide, changeSlideObjectPosition, changeSlidePosition, deleteObjectFromSlide, deleteSlide, generateGuid, rename } from "./actions"
+import { ImageObject, Position, Presentation, Slide, SolidBackground, TextObject } from "./types"
 
 describe('Tests', () => {
     describe('Test Functions For Presentation Type', () => {
@@ -61,7 +61,7 @@ describe('Tests', () => {
         const presentation: Presentation = {name: "EmptyName", slides: [oneSlide], selectedSlideIds: []}
         describe('test addTextToSlide function', () => {
             const newTextObjId = generateGuid()
-            const newTextObj: TextObject = { id: newTextObjId, position: {X: 0, Y: 0}, text: "Test", fontsize: 16, font: 'arial', type: 'text'}
+            const newTextObj: TextObject = { id: newTextObjId, position: {X: 0, Y: 0}, text: 'Test', fontsize: 16, font: 'arial', type: 'text'}
             const editedSlide: Slide = {...oneSlide, objects: [...oneSlide.objects, newTextObj]}
             it('add text to slide', () => {
                 expect(addTextToSlide(presentation, oneSlideId, newTextObj.text, newTextObj.id).slides).toEqual([editedSlide])
@@ -69,10 +69,33 @@ describe('Tests', () => {
         })
         describe('test addImageToSlide function', () => {
             const imgId = generateGuid()
-            const newImg: ImageObject = {id: imgId, position: {X: 0, Y: 0}, src:"src", width: 100, height: 100, type: 'image'}
+            const newImg: ImageObject = {id: imgId, position: {X: 0, Y: 0}, src: 'src', width: 100, height: 100, type: 'image'}
             const editedSlide = {...oneSlide, objects: [...oneSlide.objects, newImg]}
             it('add image to slide', () => {
                 expect(addImageToSlide(presentation, oneSlideId, newImg.src, newImg.id).slides).toEqual([editedSlide])
+            })
+        })
+        describe('test removeObjectFromSlide function', () => {
+            console.log(presentation)
+            const textObjId = generateGuid()
+            addTextToSlide(presentation, oneSlideId, 'ABC', textObjId)
+            it('delete text from slide.objects', () => {
+                expect(deleteObjectFromSlide(presentation, oneSlideId, textObjId).slides).toEqual([oneSlide])
+            })
+            const imgObjId = generateGuid()
+            addImageToSlide(presentation, oneSlideId, 'src', imgObjId)
+            it('delete img from slide.objects', () => {
+                expect(deleteObjectFromSlide(presentation, oneSlideId, imgObjId).slides).toEqual([oneSlide])
+            })
+        })
+        describe('test changeSlideObjectPosition function', () => {
+            const textObjId = generateGuid()
+            const newPos: Position = {X: 150, Y: 150}
+            const textObj: TextObject = { id: textObjId, position: newPos, text: 'ABC', fontsize: 16, font: 'arial', type: 'text'}
+            const editedSlide = {...oneSlide, objects: [...oneSlide.objects, textObj]}
+            const presentationWithElem = addTextToSlide(presentation, oneSlideId, 'ABC', textObjId)
+            it('change object position on slide', () => {
+                expect(changeSlideObjectPosition(presentationWithElem, oneSlideId, textObjId, newPos).slides).toEqual([editedSlide])
             })
         })
     })

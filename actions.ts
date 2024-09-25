@@ -84,7 +84,7 @@ export const addImageToSlide = (presentation: Presentation, slideId: string, ima
     return {...presentation}
 }
 
-export const removeObjectFromSlide = (presentation: Presentation, slideId: string, objId: string): Presentation => {
+export const deleteObjectFromSlide = (presentation: Presentation, slideId: string, objId: string): Presentation => {
     const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
     if (searchedSlide !== undefined){
         const editedSlide: Slide = {...searchedSlide, objects: searchedSlide.objects.filter((obj) => obj.id !== objId )}
@@ -106,7 +106,14 @@ export const changeSlideObjectPosition = (presentation: Presentation, slideId: s
         const searchedObj: SlideObject | undefined = searchedSlide.objects.find(obj => obj.id === objId)
         if (searchedObj !== undefined){
             const editedObj: SlideObject = {...searchedObj, position: newPos}
-            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedObj)] = editedObj]} 
+            const editedSlide: Slide = {...searchedSlide, objects: searchedSlide.objects.map(x => {
+                if (x.id === editedObj.id){
+                    return editedObj
+                }
+                else{
+                    return x
+                }
+            })} 
             return {...presentation, slides: presentation.slides.map(x => {
                 if (x.id === editedSlide.id){
                     return editedSlide
@@ -126,7 +133,14 @@ export const changeTextSize = (presentation: Presentation, slideId: string, text
         const searchedObj: SlideObject | undefined = searchedSlide.objects.find(text => text.id === textObjId)
         if (searchedObj !== undefined && searchedObj.type === 'text'){
             const editedObj: TextObject = {...searchedObj, fontsize: newFontsize}
-            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedObj)] = editedObj]} 
+            const editedSlide: Slide = {...searchedSlide, objects: searchedSlide.objects.map(x => {
+                if (x.id === editedObj.id){
+                    return editedObj
+                }
+                else{
+                    return x
+                }
+            })} 
             return {...presentation, slides: presentation.slides.map(x => {
                 if (x.id === editedSlide.id){
                     return editedSlide
@@ -146,7 +160,14 @@ export const changeImageSize = (presentation: Presentation, slideId: string, img
         const searchedObj: SlideObject | undefined = searchedSlide.objects.find(obj => obj.id === imgObjId)
         if (searchedObj !== undefined && searchedObj.type === 'image'){
             const editedObj: ImageObject = {...searchedObj, width: newWidth, height: newHeight}
-            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedObj)] = editedObj]} 
+            const editedSlide: Slide = {...searchedSlide, objects: searchedSlide.objects.map(x => {
+                if (x.id === editedObj.id){
+                    return editedObj
+                }
+                else{
+                    return x
+                }
+            })} 
             return {...presentation, slides: presentation.slides.map(x => {
                 if (x.id === editedSlide.id){
                     return editedSlide
@@ -166,7 +187,14 @@ export const changeText = (presentation: Presentation, slideId: string, textObjI
         const searchedTextObj: undefined | SlideObject = searchedSlide.objects.find(obj => obj.id === textObjId)
         if (searchedTextObj !== undefined && searchedTextObj.type === 'text'){
             const editeTextdObj: TextObject = {...searchedTextObj, text: newText}
-            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedTextObj)] = editeTextdObj]} 
+            const editedSlide: Slide = {...searchedSlide,  objects: searchedSlide.objects.map(x => {
+                if (x.id === editeTextdObj.id){
+                    return editeTextdObj
+                }
+                else{
+                    return x
+                }
+            })} 
             return {...presentation, slides: presentation.slides.map(x => {
                 if (x.id === editedSlide.id){
                     return editedSlide
@@ -186,7 +214,14 @@ export const changeFont = (presentation: Presentation, slideId: string, textObjI
         const searchedTextObj: SlideObject | undefined = searchedSlide.objects.find(obj => obj.id === textObjId)
         if (searchedTextObj !== undefined && searchedTextObj.type === 'text'){
             const editeTextdObj: TextObject = {...searchedTextObj, font: newFont}
-            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedTextObj)] = editeTextdObj]} 
+            const editedSlide: Slide = {...searchedSlide, objects: searchedSlide.objects.map(x => {
+                if (x.id === editeTextdObj.id){
+                    return editeTextdObj
+                }
+                else{
+                    return x
+                }
+            })} 
             return {...presentation, slides: presentation.slides.map(x => {
                 if (x.id === editedSlide.id){
                     return editedSlide
