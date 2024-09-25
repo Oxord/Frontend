@@ -1,21 +1,20 @@
 import { Background, ImageObject, Position, Presentation, Slide, SlideObject, SolidBackground, TextObject } from "./types"
 import { randomUUID } from "crypto"
 
+export const generateGuid = (): string => {
+    return randomUUID()
+}
 
-const rename = (presentation: Presentation, newName: string): Presentation => {
+export const rename = (presentation: Presentation, newName: string): Presentation => {
     return { 
         ...presentation, 
         name: newName,
     }
 }
 
-const generateGuid = (): string => {
-    return randomUUID()
-}
-
-const addSlide = (presentation: Presentation, slideId: string): Presentation => {
+export const addSlide = (presentation: Presentation, slideId: string): Presentation => {
     const background: SolidBackground = {
-        color: 'red',
+        color: 'white',
         type: 'solid'
     }
     const newSlide: Slide = {
@@ -28,76 +27,121 @@ const addSlide = (presentation: Presentation, slideId: string): Presentation => 
     return {...presentation, slides: [...presentation.slides, newSlide]} 
 }
 
-const deleteSlide = (presentation: Presentation, slideId: string): Presentation => {
+export const deleteSlide = (presentation: Presentation, slideId: string): Presentation => {
     return {...presentation, slides: presentation.slides.filter(slide => slide.id !== slideId)}
 }
 
-const changeSlidePosition = (presentation: Presentation, arraySlideIds: string[]): Presentation => {
-    return {...presentation, slides: arraySlideIds.map((item) => presentation.slides[item])}
+export const changeSlidePosition = (presentation: Presentation, arraySlideIds: string[]): Presentation => {
+    const slides: Slide[] = presentation.slides.reduce((acc: Slide[], slide: Slide) => {
+        const index = arraySlideIds.indexOf(slide.id);
+        acc[index] = slide;
+        return acc;
+    }, []);
+    return {
+        ...presentation,
+        slides
+    }
 }
 
-const addTextToSlide = (presentation: Presentation, slideId: string, textForSlide: string, textId: string): Presentation => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const textObjectForSlide: TextObject = { id: textId, position: {X: 0, Y: 0}, text: textForSlide, fontsize: 16, font: 'arial', type: 'text'}
-    const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, textObjectForSlide]}
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const addTextToSlide = (presentation: Presentation, slideId: string, textForSlide: string, textId: string): Presentation => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const textObjectForSlide: TextObject = { id: textId, position: {X: 0, Y: 0}, text: textForSlide, fontsize: 16, font: 'arial', type: 'text'}
+        const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, textObjectForSlide]}
+        return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+    }
+    return {...presentation}
 }
 
-const addImageToSlide = (presentation: Presentation, slideId: string, imageForSlide: string, imgId: string): Presentation => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const imageObjectForSlide: ImageObject = { id: imgId, position: {X: 0, Y: 0}, src: imageForSlide, width: 100, height: 100, type: 'image'}
-    const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, imageObjectForSlide]}
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const addImageToSlide = (presentation: Presentation, slideId: string, imageForSlide: string, imgId: string): Presentation => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const imageObjectForSlide: ImageObject = { id: imgId, position: {X: 0, Y: 0}, src: imageForSlide, width: 100, height: 100, type: 'image'}
+        const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, imageObjectForSlide]}
+        return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+    }
+    return {...presentation}
 }
 
-const removeObjectFromSlide = (presentation: Presentation, slideId: string, objId: string): Presentation => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const editedSlide: Slide = {...searchedSlide, objects: searchedSlide.objects.filter((obj) => obj.id !== objId )}
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const removeObjectFromSlide = (presentation: Presentation, slideId: string, objId: string): Presentation => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const editedSlide: Slide = {...searchedSlide, objects: searchedSlide.objects.filter((obj) => obj.id !== objId )}
+        return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+    }
+    return {...presentation}
 }
 
-const changeSlideObjectPosition = (presentation: Presentation, slideId: string, objId: string, newPos: Position) => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const searchedObj: SlideObject = searchedSlide.objects[objId]
-    const editedObj: SlideObject = {...searchedObj, position: newPos}
-    const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[objId] = editedObj]} 
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const changeSlideObjectPosition = (presentation: Presentation, slideId: string, objId: string, newPos: Position) => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const searchedObj: SlideObject | undefined = searchedSlide.objects.find(obj => obj.id === objId)
+        if (searchedObj !== undefined){
+            const editedObj: SlideObject = {...searchedObj, position: newPos}
+            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedObj)] = editedObj]} 
+            return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+        }
+    }
+    return {...presentation}
 }
 
-const changeTextSize = (presentation: Presentation, slideId: string, textObjId: string, newFontsize: number): Presentation => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const searchedObj: TextObject = searchedSlide.objects[textObjId]
-    const editedObj: TextObject = {...searchedObj, fontsize: newFontsize}
-    const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[textObjId] = editedObj]} 
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const changeTextSize = (presentation: Presentation, slideId: string, textObjId: string, newFontsize: number): Presentation => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const searchedObj: SlideObject | undefined = searchedSlide.objects.find(text => text.id === textObjId)
+        if (searchedObj !== undefined && searchedObj.type === 'text'){
+            const editedObj: TextObject = {...searchedObj, fontsize: newFontsize}
+            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedObj)] = editedObj]} 
+            return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+        }
+    }
+    return {...presentation}
 }
 
-const changeImageSize = (presentation: Presentation, slideId: string, imgObjId: string, newWidth: number, newHeight: number): Presentation => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const searchedObj: ImageObject = searchedSlide.objects[imgObjId]
-    const editedObj: ImageObject = {...searchedObj, width: newWidth, height: newHeight}
-    const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[imgObjId] = editedObj]} 
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const changeImageSize = (presentation: Presentation, slideId: string, imgObjId: string, newWidth: number, newHeight: number): Presentation => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const searchedObj: SlideObject | undefined = searchedSlide.objects.find(obj => obj.id === imgObjId)
+        if (searchedObj !== undefined && searchedObj.type === 'image'){
+            const editedObj: ImageObject = {...searchedObj, width: newWidth, height: newHeight}
+            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedObj)] = editedObj]} 
+            return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+        }
+    }
+    return {...presentation}
 }
 
-const changeText = (presentation: Presentation, slideId: string, textObjId: string, newText: string): Presentation => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const searchedTextObj: TextObject = searchedSlide.objects[textObjId]
-    const editeTextdObj: TextObject = {...searchedTextObj, text: newText}
-    const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[textObjId] = editeTextdObj]} 
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const changeText = (presentation: Presentation, slideId: string, textObjId: string, newText: string): Presentation => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const searchedTextObj: undefined | SlideObject = searchedSlide.objects.find(obj => obj.id === textObjId)
+        if (searchedTextObj !== undefined && searchedTextObj.type === 'text'){
+            const editeTextdObj: TextObject = {...searchedTextObj, text: newText}
+            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedTextObj)] = editeTextdObj]} 
+            return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+        }
+    }
+    return {...presentation}
 }
 
-const changeFont = (presentation: Presentation, slideId: string, textObjId: string, newFont: string): Presentation => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const searchedTextObj: TextObject = searchedSlide.objects[textObjId]
-    const editeTextdObj: TextObject = {...searchedTextObj, font: newFont}
-    const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[textObjId] = editeTextdObj]} 
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const changeFont = (presentation: Presentation, slideId: string, textObjId: string, newFont: string): Presentation => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const searchedTextObj: SlideObject | undefined = searchedSlide.objects.find(obj => obj.id === textObjId)
+        if (searchedTextObj !== undefined && searchedTextObj.type === 'text'){
+            const editeTextdObj: TextObject = {...searchedTextObj, font: newFont}
+            const editedSlide: Slide = {...searchedSlide, objects: [...searchedSlide.objects, searchedSlide[searchedSlide.objects.indexOf(searchedTextObj)] = editeTextdObj]} 
+            return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+        }
+    }
+    return {...presentation}
 }
 
-const changeSlideBackground = (presentation: Presentation, slideId: string, newBackground: Background): Presentation => {
-    const searchedSlide: Slide = presentation.slides[slideId]
-    const editedSlide: Slide = {...searchedSlide, background: newBackground} 
-    return {...presentation, slides: [...presentation.slides, presentation.slides[slideId] = editedSlide]}
+export const changeSlideBackground = (presentation: Presentation, slideId: string, newBackground: Background): Presentation => {
+    const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
+    if (searchedSlide !== undefined){
+        const editedSlide: Slide = {...searchedSlide, background: newBackground} 
+        return {...presentation, slides: [...presentation.slides, presentation.slides[presentation.slides.indexOf(searchedSlide)] = editedSlide]}
+    }
+    return {...presentation}
 }
