@@ -31,21 +31,14 @@ export const deleteSlide = (presentation: Presentation, slideId: string): Presen
     return {...presentation, slides: presentation.slides.filter(slide => slide.id !== slideId)}
 }
 
-export const changeSlidePosition = (presentation: Presentation, arraySlideIds: string[]): Presentation => {
-    const slides: Slide[] = presentation.slides.reduce((acc: Slide[], slide: Slide) => {
-        const index = arraySlideIds.indexOf(slide.id);
-        acc[index] = slide;
-        return acc;
-    }, []);
+export const changeSlidePosition = (presentation: Presentation, arraySlideIds: string[]): Presentation => { 
     return {
         ...presentation,
-        slides
-    }
-    return {
-        ...presentation,
-        slides: presentation.slides.sort((a, b) => {
-            return presentation.slides.indexOf(a) - arraySlideIds.indexOf(b.id)
-        })
+        slides: presentation.slides.reduce((acc: Slide[], slide: Slide) => {
+            const index = arraySlideIds.indexOf(slide.id);
+            acc[index] = slide;
+            return acc;
+        }, [])
     }
 }
 
