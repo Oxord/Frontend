@@ -8,7 +8,7 @@ import {
     changeSlideObjectPosition, 
     changeSlidePosition, 
     changeText, 
-    changeTextSize, 
+    changeFontsize, 
     deleteObjectFromSlide, 
     deleteSlide, 
     generateGuid, rename } from "./actions"
@@ -90,7 +90,11 @@ describe('Tests', () => {
             objects: [],
             selectedObjectIds: []
         }
-        const presentation: Presentation = {name: "EmptyName", slides: [oneSlide], selectedSlideIds: []}
+        const presentation: Presentation = {
+            name: "EmptyName", 
+            slides: [oneSlide], 
+            selectedSlideIds: []
+        }
         describe('test addTextToSlide function', () => {
             const newTextObjId = generateGuid()
             const newTextObj: TextObject = { 
@@ -242,7 +246,7 @@ describe('Tests', () => {
                 objects: [...oneSlide.objects, editedTextObj]
             }
             it('change fontsize on slide', () => {
-                expect(changeTextSize(newPresWithText, slideWithText.id, textObjId, newTextSize).slides).toEqual([editedSlide])
+                expect(changeFontsize(newPresWithText, slideWithText.id, textObjId, newTextSize).slides).toEqual([editedSlide])
             })
         })
         describe('test changeImageSize function', () => {

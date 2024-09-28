@@ -120,7 +120,7 @@ export const changeSlideObjectPosition = (presentation: Presentation, slideId: s
     return {...presentation}
 }
 
-export const changeTextSize = (presentation: Presentation, slideId: string, textObjId: string, newFontsize: number): Presentation => {
+export const changeFontsize = (presentation: Presentation, slideId: string, textObjId: string, newFontsize: number): Presentation => {
     const searchedSlide: Slide | undefined = presentation.slides.find(slide => slide.id === slideId)
     if (searchedSlide !== undefined){
         const searchedObj: SlideObject | undefined = searchedSlide.objects.find(text => text.id === textObjId)
