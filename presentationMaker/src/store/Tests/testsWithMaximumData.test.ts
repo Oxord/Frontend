@@ -11,7 +11,8 @@ import {
     changeFontsize, 
     deleteObjectFromSlide, 
     deleteSlide, 
-    generateGuid, rename } from "../actions"
+    generateGuid, 
+    rename } from "../actions"
 import { Circle, 
     FigureObject, 
     ImageObject, 
@@ -21,114 +22,114 @@ import { Circle,
     Slide, 
     SolidBackground, 
     TextObject, 
-    Triangle } from "../types"
+    Triangle } from "../types"    
 
-describe('Tests', () => {
-    const textObj: TextObject = {
-        id: generateGuid(), 
-        position: {X: 0, Y: 0}, 
-        text: 'textObj', 
-        font: 'arial',
-        fontsize: 16,
-        type: 'text' 
-    }
-    const imgObj: ImageObject = {
-        id: generateGuid(),
-        position: {X: 150, Y: 150},
+const TEXT_OBJ: TextObject = {
+    id: generateGuid(), 
+    position: {X: 0, Y: 0}, 
+    text: 'textObj', 
+    font: 'arial',
+    fontsize: 16,
+    type: 'text' 
+}
+const IMG_OBJ: ImageObject = {
+    id: generateGuid(),
+    position: {X: 150, Y: 150},
+    src: 'src',
+    width: 200, 
+    height: 200,
+    type: 'image'
+}
+const CIRCLE_OBJ: Circle = {
+    id: generateGuid(),
+    position: {X: 350, Y: 350},
+    color: 'red',
+    radius: 20,
+    type: 'circle'
+}
+const RECT_OBJ: Reactangle = {
+    id: generateGuid(),
+    position: {X: 350, Y: 350},
+    color: 'red',
+    width: 10,
+    height: 15,
+    type: 'rectangle'
+}
+const TRIANGLE_OBJ: Triangle = {
+    id: generateGuid(),
+    position: {X: 350, Y: 350},
+    color: 'red',
+    pointOne: {X: 370, Y: 370},
+    pointTwo: {X: 420, Y: 270},
+    positionThree: {X: 270, Y: 270},
+    type: 'triangle'
+}
+const FIRST_SLIDE: Slide = {
+    id: generateGuid(),
+    background:  {
+        color: 'white',
+        type: 'solid'
+    },
+    objects: [TEXT_OBJ, IMG_OBJ, CIRCLE_OBJ, RECT_OBJ, TRIANGLE_OBJ],
+    selectedObjectIds: [TEXT_OBJ.id, IMG_OBJ.id]
+}
+const SECOND_SLIDE: Slide = {
+    id: generateGuid(),
+    background:  {
         src: 'src',
-        width: 200, 
-        height: 200,
         type: 'image'
-    }
-    const circleObj: Circle = {
-        id: generateGuid(),
-        position: {X: 350, Y: 350},
-        color: 'red',
-        radius: 20,
-        type: 'circle'
-    }
-    const rectObj: Reactangle = {
-        id: generateGuid(),
-        position: {X: 350, Y: 350},
-        color: 'red',
-        width: 10,
-        length: 15,
-        type: 'rectangle'
-    }
-    const triangleObj: Triangle = {
-        id: generateGuid(),
-        position: {X: 350, Y: 350},
-        color: 'red',
-        pointOne: {X: 370, Y: 370},
-        pointTwo: {X: 420, Y: 270},
-        positionThree: {X: 270, Y: 270},
-        type: 'triangle'
-    }
-    const firstSlide: Slide = {
-        id: generateGuid(),
-        background:  {
-            color: 'white',
-            type: 'solid'
-        },
-        objects: [textObj, imgObj, circleObj, rectObj, triangleObj],
-        selectedObjectIds: [textObj.id, imgObj.id]
-    }
-    const secondSlide: Slide = {
-        id: generateGuid(),
-        background:  {
-            src: 'src',
-            type: 'image'
-        },
-        objects: [textObj, circleObj, rectObj],
-        selectedObjectIds: [circleObj.id, rectObj.id]
-    }
-    const presentation: Presentation = {
-        name: 'PresName', 
-        slides: [firstSlide, secondSlide], 
-        selectedSlideIds: [secondSlide.id, firstSlide.id]
-    }
-    const newSlide: Slide = {
-        id: generateGuid(),
-        background: {
-            color: 'white',
-            type: 'solid'
-        },
-        objects: [],
-        selectedObjectIds: []
-    }
+    },
+    objects: [TEXT_OBJ, CIRCLE_OBJ, RECT_OBJ],
+    selectedObjectIds: [CIRCLE_OBJ.id, RECT_OBJ.id]
+}
+const PRESENTATION: Presentation = {
+    name: 'PresName', 
+    slides: [FIRST_SLIDE, SECOND_SLIDE], 
+    selectedSlideIds: [SECOND_SLIDE.id, FIRST_SLIDE.id]
+}
+const NEW_SLIDE: Slide = {
+    id: generateGuid(),
+    background: {
+        color: 'white',
+        type: 'solid'
+    },
+    objects: [],
+    selectedObjectIds: []
+}
+describe('Tests with maximum data', () => {
     describe('Test Functions For Presentation Type', () => {
         describe('test rename function', () => {
             const newName: string = 'NewName'
             const renamedPres: Presentation = {
-                ...presentation, 
+                ...PRESENTATION, 
                 name: newName
             }
             it('rename presentation', () => {
-                expect(rename(presentation, newName)).toEqual(renamedPres)
+                expect(rename(PRESENTATION, newName)).toEqual(renamedPres)
             })
         })
         describe('test addSlide function', () => {
             const PresentationWithNewSlide: Presentation = {
-                ...presentation, 
-                slides: [ ...presentation.slides, newSlide ] 
+                ...PRESENTATION, 
+                slides: [ ...PRESENTATION.slides, NEW_SLIDE ] 
             }
             it('add new slide to presentation', () => {
-                expect(addSlide(presentation, newSlide.id)).toEqual(PresentationWithNewSlide)
+                expect(addSlide(PRESENTATION, NEW_SLIDE.id)).toEqual(PresentationWithNewSlide)
             })
         })
         describe('test deleteSlide function', () => {
             const PresentationWithNewSlide: Presentation = {
-                ...presentation, 
-                slides: [ ...presentation.slides, newSlide ] 
+                ...PRESENTATION, 
+                slides: [ ...PRESENTATION.slides, NEW_SLIDE ] 
             }
             it('delete slide from presentations.slides', () => {
-                expect(deleteSlide(PresentationWithNewSlide, newSlide.id).slides).toEqual(presentation.slides)
+                expect(deleteSlide(PresentationWithNewSlide, NEW_SLIDE.id)).toEqual(PRESENTATION)
             })
         })
         describe('test changeSlidePosition function', () => {
-            const slideIds = [secondSlide.id, firstSlide.id]
+            const slideIds = [SECOND_SLIDE.id, FIRST_SLIDE.id]
             it('change slides position', () => {
-                expect(changeSlidePosition(presentation, slideIds).slides).toEqual([secondSlide, firstSlide])
+                expect(changeSlidePosition(PRESENTATION, slideIds).slides).toEqual([SECOND_SLIDE, FIRST_SLIDE])
             })
         })
     })
@@ -144,21 +145,15 @@ describe('Tests', () => {
                 type: 'text'
             }
             const editedSlide: Slide = {
-                ...firstSlide, 
-                objects: [...firstSlide.objects, newTextObj]
+                ...FIRST_SLIDE, 
+                objects: [...FIRST_SLIDE.objects, newTextObj]
             }
             const editedPres = {
-                ...presentation,
-                slides: presentation.slides.map(x => {
-                    if (x.id === editedSlide.id){
-                        return editedSlide
-                    }
-                    else{
-                        return x
-                    }})
+                ...PRESENTATION,
+                slides: [editedSlide, SECOND_SLIDE]
             }
             it('add text to slide', () => {
-                expect(addTextToSlide(presentation, firstSlide.id, newTextObj.text, newTextObj.id)).toEqual(editedPres)
+                expect(addTextToSlide(PRESENTATION, FIRST_SLIDE.id, newTextObj.text, newTextObj.id)).toEqual(editedPres)
             })  
         })
         describe('test addImageToSlide function', () => {
@@ -171,21 +166,15 @@ describe('Tests', () => {
                 type: 'image'
             }
             const editedSlide = {
-                ...firstSlide, 
-                objects: [...firstSlide.objects, newImg]
-            }
+                ...FIRST_SLIDE, 
+                objects: [...FIRST_SLIDE.objects, newImg]
+            }//явное созданеи новой презентации
             const editedPres = {
-                ...presentation,
-                slides: presentation.slides.map(x => {
-                    if (x.id === editedSlide.id){
-                        return editedSlide
-                    }
-                    else{
-                        return x
-                    }})
+                ...PRESENTATION,
+                slides: [editedSlide, SECOND_SLIDE]
             }
             it('add image to slide', () => {
-                expect(addImageToSlide(presentation, firstSlide.id, newImg.src, newImg.id)).toEqual(editedPres)
+                expect(addImageToSlide(PRESENTATION, FIRST_SLIDE.id, newImg.src, newImg.id)).toEqual(editedPres)
             })
         })
         describe('test removeObjectFromSlide function', () => {
@@ -199,35 +188,23 @@ describe('Tests', () => {
                 type: 'text'
             }
             const slideWithText: Slide = {
-                ...firstSlide, 
-                objects: [...firstSlide.objects, newTextObj]
+                ...FIRST_SLIDE, 
+                objects: [...FIRST_SLIDE.objects, newTextObj]
             }
             const presWithTextOnSlide = {
-                ...presentation,
-                slides: presentation.slides.map(x => {
-                    if (x.id === slideWithText.id){
-                        return slideWithText
-                    }
-                    else{
-                        return x
-                    }})
+                ...PRESENTATION,
+                slides: [slideWithText, SECOND_SLIDE]
             }
             const slideWithoutText: Slide = {
-                ...firstSlide, 
-                objects: [...firstSlide.objects.filter(slideObj => slideObj.id !== newTextObj.id)]
+                ...FIRST_SLIDE, 
+                objects: [...FIRST_SLIDE.objects.filter(slideObj => slideObj.id !== newTextObj.id)]
             }
-            const editedPresWithoutTextOnSlide: Presentation = {
-                ...presWithTextOnSlide,
-                slides: presWithTextOnSlide.slides.map(x => {
-                    if (x.id === slideWithoutText.id){
-                        return slideWithoutText
-                    }
-                    else{
-                        return x
-                    }})
+            const editedPresWithoutTextOnSlide = {
+                ...PRESENTATION,
+                slides: [slideWithoutText, SECOND_SLIDE]
             }
             it('delete text from slide.objects', () => {
-                expect(deleteObjectFromSlide(presWithTextOnSlide, firstSlide.id, newTextObj.id)).toEqual(editedPresWithoutTextOnSlide)
+                expect(deleteObjectFromSlide(presWithTextOnSlide, FIRST_SLIDE.id, newTextObj.id)).toEqual(editedPresWithoutTextOnSlide)
             })
             const newImgObjId = generateGuid()
             const newImgObj: ImageObject = { 
@@ -239,32 +216,20 @@ describe('Tests', () => {
                 type: 'image'
             }
             const slideWithImg: Slide = {
-                ...firstSlide, 
-                objects: [...firstSlide.objects, newImgObj]
+                ...FIRST_SLIDE, 
+                objects: [...FIRST_SLIDE.objects, newImgObj]
             }
             const presWithImgOnSlide = {
-                ...presentation,
-                slides: presentation.slides.map(x => {
-                    if (x.id === slideWithText.id){
-                        return slideWithImg
-                    }
-                    else{
-                        return x
-                    }})
-            }
+                    ...PRESENTATION,
+                    slides: [slideWithImg, SECOND_SLIDE]
+                }
             const slideWithoutImg: Slide = {
-                ...firstSlide, 
-                objects: firstSlide.objects.filter(slideObj => slideObj.id !== newImgObj.id)
+                ...FIRST_SLIDE, 
+                objects: FIRST_SLIDE.objects.filter(slideObj => slideObj.id !== newImgObj.id)
             }
             const editedPresWithoutImgOnSlide: Presentation = {
                 ...presWithImgOnSlide,
-                slides: presWithTextOnSlide.slides.map(x => {
-                    if (x.id === slideWithoutImg.id){
-                        return slideWithoutImg
-                    }
-                    else{
-                        return x
-                    }})
+                slides: [slideWithoutImg, SECOND_SLIDE]
             }
             it('delete img from slide.objects', () => {
                 expect(deleteObjectFromSlide(presWithImgOnSlide, slideWithImg.id, newImgObjId)).toEqual(editedPresWithoutImgOnSlide)
@@ -273,143 +238,93 @@ describe('Tests', () => {
         describe('test changeSlideObjectPosition function', () => {
             const newPos: Position = {X: 150, Y: 150}
             const editedObj: FigureObject = {
-                ...circleObj, 
+                ...CIRCLE_OBJ, 
                 position: newPos
             }
             const editedSlide = {
-                ...firstSlide, 
-                objects: firstSlide.objects.map(x => {
-                    if (x.id === editedObj.id){
-                        return editedObj
-                    }
-                    return x
-                })
+                ...FIRST_SLIDE, 
+                objects: [TEXT_OBJ, IMG_OBJ, editedObj, RECT_OBJ, TRIANGLE_OBJ]
             }
             const editedPres: Presentation = {
-                ...presentation, 
-                slides: presentation.slides.map(x => {
-                    if(x.id === editedSlide.id){
-                        return editedSlide
-                    }
-                    return x
-                })
+                ...PRESENTATION, 
+                slides: [editedSlide, SECOND_SLIDE]
             }
             it('change object position on slide', () => {
-                expect(changeSlideObjectPosition(presentation, firstSlide.id, circleObj.id, newPos)).toEqual(editedPres)
+                expect(changeSlideObjectPosition(PRESENTATION, FIRST_SLIDE.id, CIRCLE_OBJ.id, newPos)).toEqual(editedPres)
             })
         })
         describe('test changeFontSize function', () => {
             const newFontsize = 25
             const editedObj: TextObject = {
-                ...textObj, 
+                ...TEXT_OBJ, 
                 fontsize: newFontsize
             }
             const editedSlide = {
-                ...firstSlide, 
-                objects: firstSlide.objects.map(x => {
-                    if (x.id === editedObj.id){
-                        return editedObj
-                    }
-                    return x
-                })
+                ...FIRST_SLIDE, 
+                objects: [editedObj, IMG_OBJ, CIRCLE_OBJ, RECT_OBJ, TRIANGLE_OBJ],
             }
-            const editedPres: Presentation = {
-                ...presentation, 
-                slides: presentation.slides.map(x => {
-                    if(x.id === editedSlide.id){
-                        return editedSlide
-                    }
-                    return x
-                })
+            const editedPres = {
+                ...PRESENTATION,
+                slides: [editedSlide, SECOND_SLIDE]
             }
             it('change fontsize on slide', () => {
-                expect(changeFontsize(presentation, firstSlide.id, textObj.id, newFontsize)).toEqual(editedPres)
+                expect(changeFontsize(PRESENTATION, FIRST_SLIDE.id, TEXT_OBJ.id, newFontsize)).toEqual(editedPres)
             })
         })
         describe('test changeImageSize function', () => {
             const newHeight = 200
             const newWidth = 200
             const editedObj: ImageObject = {
-                ...imgObj, 
+                ...IMG_OBJ, 
                 height: newHeight, 
                 width: newWidth
             }
             const editedSlide = {
-                ...firstSlide, 
-                objects: firstSlide.objects.map(x => {
-                    if (x.id === editedObj.id){
-                        return editedObj
-                    }
-                    return x
-                })
+                ...FIRST_SLIDE, 
+                objects: [TEXT_OBJ, editedObj, CIRCLE_OBJ, RECT_OBJ, TRIANGLE_OBJ],
             }
-            const editedPres: Presentation = {
-                ...presentation, 
-                slides: presentation.slides.map(x => {
-                    if(x.id === editedSlide.id){
-                        return editedSlide
-                    }
-                    return x
-                })
+            const editedPres = {
+                ...PRESENTATION,
+                slides: [editedSlide, SECOND_SLIDE]
             }
             it('change object position on slide', () => {
-                expect(changeImageSize(presentation, firstSlide.id, imgObj.id, newHeight, newWidth)).toEqual(editedPres)
+                expect(changeImageSize(PRESENTATION, FIRST_SLIDE.id, IMG_OBJ.id, newHeight, newWidth)).toEqual(editedPres)
             })
         })
         describe('test changeText function', () => {
             const newText = 'NewText'
             const editedObj: TextObject = {
-                ...textObj, 
+                ...TEXT_OBJ, 
                 text: newText
             }
             const editedSlide = {
-                ...firstSlide, 
-                objects: firstSlide.objects.map(x => {
-                    if (x.id === editedObj.id){
-                        return editedObj
-                    }
-                    return x
-                })
+                ...FIRST_SLIDE, 
+                objects: [editedObj, IMG_OBJ, CIRCLE_OBJ, RECT_OBJ, TRIANGLE_OBJ],
             }
-            const editedPres: Presentation = {
-                ...presentation, 
-                slides: presentation.slides.map(x => {
-                    if(x.id === editedSlide.id){
-                        return editedSlide
-                    }
-                    return x
-                })
+            const editedPres = {
+                ...PRESENTATION,
+                slides: [editedSlide, SECOND_SLIDE]
             }
             it('change text in textObj on slide', () => {
-                expect(changeText(presentation, firstSlide.id, textObj.id, newText)).toEqual(editedPres)
+                expect(changeText(PRESENTATION, FIRST_SLIDE.id, TEXT_OBJ.id, newText)).toEqual(editedPres)
             })
         })
         describe('test changeFont function', () => {
             const newFont = 'calibri' 
             const editedObj: TextObject = {
-                ...textObj, 
+                ...TEXT_OBJ, 
                 font: newFont
             }
             const editedSlide = {
-                ...firstSlide, 
-                objects: firstSlide.objects.map(x => {
-                    if (x.id === editedObj.id){
-                        return editedObj
-                    }
-                    return x
-                })
+                ...FIRST_SLIDE, 
+                objects: [editedObj, IMG_OBJ, CIRCLE_OBJ, RECT_OBJ, TRIANGLE_OBJ],
             }
-            const editedPres: Presentation = {
-                ...presentation, 
-                slides: presentation.slides.map(x => {
-                    if(x.id === editedSlide.id){
-                        return editedSlide
-                    }
-                    return x
-                })
+            const editedPres = {
+                ...PRESENTATION,
+                slides: [editedSlide, SECOND_SLIDE]
             }
             it('change text in textObj on slide', () => {
-                expect(changeFont(presentation, firstSlide.id, textObj.id, newFont)).toEqual(editedPres)
+                expect(changeFont(PRESENTATION, FIRST_SLIDE.id, TEXT_OBJ.id, newFont)).toEqual(editedPres)
             })
         })
         describe('test changeSlideBackground function', () => {
@@ -418,20 +333,15 @@ describe('Tests', () => {
                 type: 'solid'
             }
             const editedSlide = {
-                ...firstSlide, 
+                ...FIRST_SLIDE, 
                 background: newBackground
             }
-            const editedPres: Presentation = {
-                ...presentation, 
-                slides: presentation.slides.map(x => {
-                    if(x.id === editedSlide.id){
-                        return editedSlide
-                    }
-                    return x
-                })
+            const editedPres = {
+                ...PRESENTATION,
+                slides: [editedSlide, SECOND_SLIDE]
             }
             it('chage background color', () => {
-                expect(changeSlideBackground(presentation, firstSlide.id, newBackground)).toEqual(editedPres)
+                expect(changeSlideBackground(PRESENTATION, FIRST_SLIDE.id, newBackground)).toEqual(editedPres)
             })
         })
     })

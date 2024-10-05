@@ -1,14 +1,17 @@
-import { ReactNode } from "react"
+// import { ReactNode } from "react"
+
+import { FigureType } from "../../store/types"
 
 type toolbarProps = {
-    tool: ReactNode
+    onAddFigure: (figureType: FigureType) => void,
+    onAddSlide: () => void,
 }
 
-export const Toolbar = ({ tool }: toolbarProps) => {
+export const Toolbar = () => {
     return(
         <div className="">
             <div className="">
-                {tool}
+                <button></button>
             </div>
         </div>
     )

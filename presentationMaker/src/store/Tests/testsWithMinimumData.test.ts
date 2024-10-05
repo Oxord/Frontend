@@ -11,7 +11,8 @@ import {
     changeFontsize, 
     deleteObjectFromSlide, 
     deleteSlide, 
-    generateGuid, rename } from "../actions"
+    generateGuid, 
+    rename } from "../actions"
 import { ImageObject, 
     Position, 
     Presentation, 
@@ -20,7 +21,7 @@ import { ImageObject,
     SolidBackground, 
     TextObject } from "../types"
 
-describe('Tests', () => {
+describe('Tests with minimum data', () => {
     describe('Test Functions For Presentation Type', () => {
         const presentation: Presentation = {
             name: 'PresName', 
