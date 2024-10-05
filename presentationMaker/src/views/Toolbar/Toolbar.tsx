@@ -3,7 +3,6 @@
 import { FigureType } from "../../store/types"
 
 type toolbarProps = {
-    onAddFigure: (figureType: FigureType) => void,
     onAddSlide: () => void,
 }
 
