@@ -1,10 +1,10 @@
 export type Presentation = {
     name: string
-    slides: Slide[]
+    slides: SlideType[]
     selectedSlideIds: string[]
 }
 
-export type Slide = {
+export type SlideType = {
     id: string
     background: Background
     objects: SlideObject[]
@@ -71,7 +71,7 @@ export type Reactangle = FigureBase & {
 export type Triangle = FigureBase & {
     pointOne: Position
     pointTwo: Position
-    positionThree: Position
+    pointThree: Position
     type: 'triangle'
 }
 

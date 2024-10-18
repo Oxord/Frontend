@@ -19,7 +19,7 @@ import { Circle,
     Position, 
     Presentation, 
     Reactangle, 
-    Slide, 
+    SlideType, 
     SolidBackground, 
     TextObject, 
     Triangle } from "../types"    
@@ -64,7 +64,7 @@ const TRIANGLE_OBJ: Triangle = {
     positionThree: {X: 270, Y: 270},
     type: 'triangle'
 }
-const FIRST_SLIDE: Slide = {
+const FIRST_SLIDE: SlideType = {
     id: generateGuid(),
     background:  {
         color: 'white',
@@ -73,7 +73,7 @@ const FIRST_SLIDE: Slide = {
     objects: [TEXT_OBJ, IMG_OBJ, CIRCLE_OBJ, RECT_OBJ, TRIANGLE_OBJ],
     selectedObjectIds: [TEXT_OBJ.id, IMG_OBJ.id]
 }
-const SECOND_SLIDE: Slide = {
+const SECOND_SLIDE: SlideType = {
     id: generateGuid(),
     background:  {
         src: 'src',
@@ -87,7 +87,7 @@ const PRESENTATION: Presentation = {
     slides: [FIRST_SLIDE, SECOND_SLIDE], 
     selectedSlideIds: [SECOND_SLIDE.id, FIRST_SLIDE.id]
 }
-const NEW_SLIDE: Slide = {
+const NEW_SLIDE: SlideType = {
     id: generateGuid(),
     background: {
         color: 'white',
@@ -144,7 +144,7 @@ describe('Tests with maximum data', () => {
                 font: 'arial', 
                 type: 'text'
             }
-            const editedSlide: Slide = {
+            const editedSlide: SlideType = {
                 ...FIRST_SLIDE, 
                 objects: [...FIRST_SLIDE.objects, newTextObj]
             }
@@ -187,7 +187,7 @@ describe('Tests with maximum data', () => {
                 font: 'arial', 
                 type: 'text'
             }
-            const slideWithText: Slide = {
+            const slideWithText: SlideType = {
                 ...FIRST_SLIDE, 
                 objects: [...FIRST_SLIDE.objects, newTextObj]
             }
@@ -195,7 +195,7 @@ describe('Tests with maximum data', () => {
                 ...PRESENTATION,
                 slides: [slideWithText, SECOND_SLIDE]
             }
-            const slideWithoutText: Slide = {
+            const slideWithoutText: SlideType = {
                 ...FIRST_SLIDE, 
                 objects: [...FIRST_SLIDE.objects.filter(slideObj => slideObj.id !== newTextObj.id)]
             }
@@ -215,7 +215,7 @@ describe('Tests with maximum data', () => {
                 height: 400, 
                 type: 'image'
             }
-            const slideWithImg: Slide = {
+            const slideWithImg: SlideType = {
                 ...FIRST_SLIDE, 
                 objects: [...FIRST_SLIDE.objects, newImgObj]
             }
@@ -223,7 +223,7 @@ describe('Tests with maximum data', () => {
                     ...PRESENTATION,
                     slides: [slideWithImg, SECOND_SLIDE]
                 }
-            const slideWithoutImg: Slide = {
+            const slideWithoutImg: SlideType = {
                 ...FIRST_SLIDE, 
                 objects: FIRST_SLIDE.objects.filter(slideObj => slideObj.id !== newImgObj.id)
             }

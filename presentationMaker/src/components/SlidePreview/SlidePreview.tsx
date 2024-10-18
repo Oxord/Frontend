@@ -1,12 +1,16 @@
-import { Slide } from "../../store/types"
+import { SlideType } from "../../store/types"
+import { Slide } from "../../views/Slide/Slide";
+
+
 
 export type slidePreviewProps = {
-    slide: Slide
+    slide: SlideType
 }
+
+const scale = 0.15;
 
 export const SlidePreview = ({slide}: slidePreviewProps ) => {
     return (
-        <div>{slide.id}</div>
-        //скорее всего возвращаем то же, что и в WorkingArea, только уменьшенное
+        <Slide slide={slide} scale={scale}/>
     )
 }

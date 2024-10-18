@@ -1,45 +1,38 @@
 import { SlideObject } from "../../store/types"
-import { Circle } from "./Circle/Circle"
 import { ImageObject } from "./ImageObject/ImageObject"
-import { Rectangle } from "./Rectangle/Rectangle"
+import { Circle } from "./Shapes/Circle"
+import { Rectangle } from "./Shapes/Rectangle"
+import { Triangle } from "./Shapes/Triangle"
 import { TextObject } from "./TextObject/TextObject"
-import { Triangle } from "./Triangle/Triangle"
+
 
 type slideObjectProps = {
     elem: SlideObject
+    scale: number
 }
 
-export const SlideElem = ( {elem}: slideObjectProps ) => {
+export const SlideElem = ( {elem, scale}: slideObjectProps ) => {
+    let figure = <></>;
+
     switch (elem.type){
         case 'text':
-            return (
-                <div style={{left: elem.position.X,  top: elem.position.Y}} >
-                    <TextObject text={elem.text} font={elem.font} fontSize={elem.fontsize}/>
-                </div>
-            )
+            figure = <TextObject text={elem.text} font={elem.font} fontSize={elem.fontsize * scale}/>
+            break
         case 'image': 
-            return(
-                <div style={{left: elem.position.X,  top: elem.position.Y}}>
-                    <ImageObject src={elem.src} width={elem.width} height={elem.height}/>
-                </div>
-            )
+            figure = <ImageObject src={elem.src} width={elem.width * scale} height={elem.height * scale}/>
+            break
         case 'circle': 
-            return(
-                <div style={{left: elem.position.X,  top: elem.position.Y}}>
-                    <Circle radius={elem.radius}/>
-                </div>
-            )
+            figure = <Circle radius={elem.radius * scale}/>
+            break
         case 'rectangle': 
-            return(
-                <div style={{left: elem.position.X,  top: elem.position.Y}}>
-                    <Rectangle length={elem.width} height={elem.height}/>
-                </div>
-            )
+            figure = <Rectangle width={elem.width * scale} height={elem.height * scale}/>
+            break
         case 'triangle': 
-            return(
-                <div style={{left: elem.position.X,  top: elem.position.Y}}>
-                    <Triangle/>
-                </div>
-            )   
+            figure = <Triangle PointOne={elem.pointOne} PointTwo={elem.pointTwo} PointThree={elem.pointThree}/>
     }
+    return(
+        <div style={{left: elem.position.X,  top: elem.position.Y}}>
+            {figure}
+        </div>  
+    ) 
 }

@@ -16,7 +16,7 @@ import {
 import { ImageObject, 
     Position, 
     Presentation, 
-    Slide, 
+    SlideType, 
     SlideObject, 
     SolidBackground, 
     TextObject } from "../types"
@@ -33,7 +33,7 @@ describe('Tests with minimum data', () => {
             color: 'white',
             type: 'solid'
         }
-        const newSlide: Slide = {
+        const newSlide: SlideType = {
             id: newSlideId,
             background,
             objects: [],
@@ -91,7 +91,7 @@ describe('Tests with minimum data', () => {
             color: 'black',
             type: 'solid'
         }
-        const oneSlide: Slide = {
+        const oneSlide: SlideType = {
             id: oneSlideId,
             background: background,
             objects: [],
@@ -112,7 +112,7 @@ describe('Tests with minimum data', () => {
                 font: 'arial', 
                 type: 'text'
             }
-            const editedSlide: Slide = {
+            const editedSlide: SlideType = {
                 ...oneSlide, 
                 objects: [...oneSlide.objects, newTextObj]
             }
@@ -148,7 +148,7 @@ describe('Tests with minimum data', () => {
                 fontsize: 16,
                 type: 'text' 
             } 
-            const SlideWithText: Slide = {
+            const SlideWithText: SlideType = {
                 id: generateGuid(),
                 background: oneSlide.background,
                 objects: [newTextObj],
@@ -173,7 +173,7 @@ describe('Tests with minimum data', () => {
                 height: 150,
                 type: 'image'
             }
-            const SlideWithImg: Slide = {
+            const SlideWithImg: SlideType = {
                 id: generateGuid(),
                 background: oneSlide.background,
                 objects: [newImgObj],
@@ -205,7 +205,7 @@ describe('Tests with minimum data', () => {
             const editedTextObj: TextObject = {
                 ...newTextObj, position: newPos
             }
-            const slideWithText: Slide = {
+            const slideWithText: SlideType = {
                 id: generateGuid(),
                 background: oneSlide.background,
                 objects: [newTextObj],
@@ -238,7 +238,7 @@ describe('Tests with minimum data', () => {
             const editedTextObj: TextObject = {
                 ...newTextObj, fontsize: newTextSize
             }
-            const slideWithText: Slide = {
+            const slideWithText: SlideType = {
                 id: generateGuid(),
                 background: oneSlide.background,
                 objects: [newTextObj],
@@ -271,7 +271,7 @@ describe('Tests with minimum data', () => {
             const editedImgObj: ImageObject = {
                 ...newImgObj, height: newHeight, width: newWidth
             }
-            const slideWithImg: Slide = {
+            const slideWithImg: SlideType = {
                 id: generateGuid(),
                 background: oneSlide.background,
                 objects: [newImgObj],
@@ -303,7 +303,7 @@ describe('Tests with minimum data', () => {
             const editedTextObj: TextObject = {
                 ...newTextObj, text: newText
             }
-            const slideWithText: Slide = {
+            const slideWithText: SlideType = {
                 id: generateGuid(),
                 background: oneSlide.background,
                 objects: [newTextObj],
@@ -335,7 +335,7 @@ describe('Tests with minimum data', () => {
             const editedTextObj: TextObject = {
                 ...newTextObj, font: newFont
             }
-            const slideWithText: Slide = {
+            const slideWithText: SlideType = {
                 id: generateGuid(),
                 background: oneSlide.background,
                 objects: [newTextObj],
@@ -358,7 +358,7 @@ describe('Tests with minimum data', () => {
                 color: 'red',
                 type: 'solid'
             }
-            const editedSlide: Slide = {...oneSlide, background: newBackground}
+            const editedSlide: SlideType = {...oneSlide, background: newBackground}
             it('chage background color', () => {
                 expect(changeSlideBackground(presentation, oneSlideId, newBackground).slides).toEqual([editedSlide])
             })

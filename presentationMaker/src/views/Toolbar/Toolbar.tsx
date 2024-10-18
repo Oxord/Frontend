@@ -1,17 +1,28 @@
-// import { ReactNode } from "react"
-
-import { FigureType } from "../../store/types"
+import { InsertTool } from "../InsertTool/InsertTool"
 
 type toolbarProps = {
     onAddSlide: () => void,
+    onRemove: () => void
 }
+const id = 'hello'
 
-export const Toolbar = () => {
+const print = () => {
+    action(presentation)
+}
+export const Toolbar = ({ onAddSlide, onRemove }: toolbarProps) => {
     return(
         <div className="">
             <div className="">
-                <button></button>
+                <button onClick={onAddSlide}>Add slide</button>
+                <button onClick={onRemove}>Remove</button>
+                <InsertTool 
+                    onAddFigure={() => {}}
+                    onAddImage={() => {}}
+                    onAddText={() => {}}
+                    onClickInsert={() => {}}
+                />
             </div>
         </div>
     )
 }
+
