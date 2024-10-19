@@ -1,18 +1,27 @@
 import { Presentation } from "../../store/types"
-import { SlidePreview } from "../../components/SlidePreview/SlidePreview"
+import { Slide } from "../Slide/Slide"
 
 export type slidesListProps = {
     presentation: Presentation
 }
 
-export const SliedList = ( {presentation}: slidesListProps) => {
+const SLIDE_PREVIEW_SCALE = 0.2
+
+const SliedList = ( {presentation}: slidesListProps) => {
     return (
         <div>
-            {presentation.slides && presentation.slides.map(slide => {
-            return(
-                <SlidePreview slide={slide} key={slide.id}/>
-            )
-            })} 
+            {presentation.slides.map(slide =>
+                <div key={slide.id}>
+                    <Slide
+                        slide={slide}
+                        scale={SLIDE_PREVIEW_SCALE}
+                    ></Slide>
+                </div>
+            )}
         </div>
     )
+}
+
+export{
+    SliedList
 }

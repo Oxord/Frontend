@@ -1,20 +1,26 @@
-import { addSlide } from "../../store/actions"
-import { Presentation } from "../../store/types"
+import { PresNameInput } from "../PresNameInput/PresNameInput"
 import { Toolbar } from "../Toolbar/Toolbar"
-type TopPanelProps = {
-    pres: Presentation
-}
-const TopPanel = ({pres}: TopPanelProps) => {
 
-    //fun add slide..
-
+const TopPanel = () => {
+    const onAddImage = () => {}
+    const onAddText = () => {}
+    const onClickInsert = () => {}
+    const onExport = () => {}
+    const onAddSlide = () => {}
+    const onRemove = () => {}
+    const onAddFigure = () => {}
+    const onChange = () => {}
     return(
         <div>
-            <input>Название презентации</input>{/*вынести в отлельный компонент*/}
-            <Toolbar 
-                pres={pres}
-                onAddSlide={() => {}}
-                onRemove={() => {console.log('removed')}}
+            <PresNameInput onChange={onChange}/>
+            <Toolbar
+                onAddSlide={onAddSlide}
+                onRemove={onRemove}
+                onAddFigure={onAddFigure}
+                onAddImage={onAddImage}
+                onAddText={onAddText}
+                onClickInsert={onClickInsert}
+                onExport={onExport}
             />
         </div>
     )
