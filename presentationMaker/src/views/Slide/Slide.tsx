@@ -14,9 +14,11 @@ type SlideProps = {
 
 const Slide = ({slide, scale = 1,}: SlideProps) => {
     const slideElements = slide.objects.map(obj => {
-        return (
-            <SlideElem elem={obj} key={obj.id} scale={scale}/>
-        )
+        if (obj){
+            return (
+                <SlideElem elem={obj} key={obj.id} scale={scale}/>
+            )
+        }
     })
     const slideStyles:CSSProperties = {
         // backgroundColor: slide.background,

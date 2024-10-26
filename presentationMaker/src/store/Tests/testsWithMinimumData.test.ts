@@ -20,25 +20,9 @@ import { ImageObject,
     SlideObject, 
     SolidBackground, 
     TextObject } from "../types"
-
+import { presentation, newSlide, newSlideId } from "../MinData"
 describe('Tests with minimum data', () => {
     describe('Test Functions For Presentation Type', () => {
-        const presentation: Presentation = {
-            name: 'PresName', 
-            slides: [], 
-            selectedSlideIds: []
-        }
-        const newSlideId = generateGuid()
-        const background: SolidBackground = {
-            color: 'white',
-            type: 'solid'
-        }
-        const newSlide: SlideType = {
-            id: newSlideId,
-            background,
-            objects: [],
-            selectedObjectIds: []
-        }
         describe('test rename function', () => {
             const newName: string = 'NewName'
             const renamedPres: Presentation = {

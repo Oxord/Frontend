@@ -1,3 +1,4 @@
+import { PaletteBar } from "../../components/PaletteBar/PaletteBar"
 import { PresNameInput } from "../PresNameInput/PresNameInput"
 import { Toolbar } from "../Toolbar/Toolbar"
 
@@ -22,6 +23,7 @@ const TopPanel = () => {
                 onClickInsert={onClickInsert}
                 onExport={onExport}
             />
+            <PaletteBar/>
         </div>
     )
 }

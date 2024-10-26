@@ -5,7 +5,7 @@ type PresNameInputProps = {
 const PresNameInput = ({onChange}: PresNameInputProps) =>  {
     return(
         <div>
-            <input onChange={onChange}>Название презентации</input>
+            <input onChange={onChange} value={"Название презентации"}/>
         </div>
     )
 }

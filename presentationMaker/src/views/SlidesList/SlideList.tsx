@@ -7,9 +7,9 @@ export type slidesListProps = {
 
 const SLIDE_PREVIEW_SCALE = 0.2
 
-const SliedList = ( {presentation}: slidesListProps) => {
+const SlideList = ( {presentation}: slidesListProps) => {
     return (
-        <div>
+        <div style={{display: "flex", flexDirection: "column"}}>
             {presentation.slides.map(slide =>
                 <div key={slide.id}>
                     <Slide
@@ -23,5 +23,5 @@ const SliedList = ( {presentation}: slidesListProps) => {
 }
 
 export{
-    SliedList
+    SlideList
 }

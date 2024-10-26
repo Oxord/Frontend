@@ -26,12 +26,13 @@ export const InsertTool = ({ onClickInsert, onAddFigure, onAddImage, onAddText }
                             <div onClick={() => {onAddFigure('triangle')}}>
                                 <svg>
                                     <polygon points="1, 1, 2, 2, 3, 3">
-
                                     </polygon>
                                 </svg>
                             </div>
                             <div onClick={() => {onAddFigure('circle')}}>
-                                <circle radius="5"></circle>
+                                <svg>
+                                    <circle radius="5"></circle>
+                                </svg>
                             </div>
                         </div>}
                     </div>    

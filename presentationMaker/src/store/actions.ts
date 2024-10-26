@@ -6,10 +6,10 @@ import { Background,
     SlideObject, 
     SolidBackground, 
     TextObject } from "./types"
-import { randomUUID } from "crypto"
+import { v4 } from 'uuid';
 
 export const generateGuid = (): string => {
-    return randomUUID()
+    return v4()
 }
 
 export const rename = (presentation: Presentation, newName: string): Presentation => {
