@@ -1,0 +1,12 @@
+.topPanel{
+    display: flex;
+    margin-top: 25px;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.topPanel__icon_and_name{
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+}

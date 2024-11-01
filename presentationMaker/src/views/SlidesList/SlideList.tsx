@@ -1,21 +1,19 @@
+import { SlidePreview } from "../../components/SlidePreview/SlidePreview"
 import { Presentation } from "../../store/types"
-import { Slide } from "../Slide/Slide"
+import style from './SlideList.module.css'
 
 export type slidesListProps = {
     presentation: Presentation
 }
 
-const SLIDE_PREVIEW_SCALE = 0.2
-
 const SlideList = ( {presentation}: slidesListProps) => {
     return (
-        <div style={{display: "flex", flexDirection: "column"}}>
+        <div className={style.slideList}>
             {presentation.slides.map(slide =>
-                <div key={slide.id}>
-                    <Slide
+                <div key={slide.id} className={style.slideList__slide_prewiev}>
+                    <SlidePreview
                         slide={slide}
-                        scale={SLIDE_PREVIEW_SCALE}
-                    ></Slide>
+                    />
                 </div>
             )}
         </div>

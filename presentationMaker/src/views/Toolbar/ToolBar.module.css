@@ -1,0 +1,100 @@
+.toolBar{
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.toolBar__tool{
+    min-width: 170px;
+    max-width: 250px;
+    height: 50px;
+    background-color: rgba(51, 205, 199, 1);
+    color: white;
+    font-size: 24px;
+    font-family: "inter";
+    border-radius: 20px;
+    border: none;
+}
+
+.toolBar__tool_notAvailable{
+    background-color: rgba(51, 205, 199, 0.3);
+}
+
+.toolBar__tool_export{
+    background-color: rgba(255, 113, 0, 1);
+}
+
+.toolBar__tool_textProperties{
+    width: 345px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    background-color: rgba(51, 205, 199, 1);
+    color: white;
+    font-size: 24px;
+    border-radius: 20px;
+}
+
+.toolBar__tool_textProperties_notAvailable{
+    background-color: rgba(51, 205, 199, 0.3);
+}
+
+.toolBar__tool_textProperties__property{
+    width: 170px;
+    height: 50px;
+    color: white;
+    font-size: 24px;
+    font-family: "inter";
+    background: none;
+    border-radius: 20px;
+    border: none;
+}
+
+.toolBar__tool_textProperties__property_textSize{
+    width: 90px;
+}
+
+.toolBar__colors{
+    width: 180px;
+    height: 50px;
+    border-radius: 5px;
+    border: 1px solid rgba(51, 205, 199, 0.5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.toolBar__colors__colorBlock{
+    height: 50px;
+    padding-top: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.toolBar__colors__colorBlock__Icon{
+    padding-top: 1px;
+}
+
+.toolBar__colors__colorBlock__Icon__textColor{
+    width: 32px;
+    height: 37px;
+}
+
+.toolBar__colors__colorBlock__Icon__fillColor{
+    width: 37px;
+    height: 34px;
+}
+
+.toolBar__colors__colorBlock__color{
+    width: 51px;
+    height: 5px;
+    border-radius: 5px;
+    background-color: black;
+}

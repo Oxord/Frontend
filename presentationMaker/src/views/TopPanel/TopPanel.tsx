@@ -1,29 +1,21 @@
-import { PaletteBar } from "../../components/PaletteBar/PaletteBar"
+import { Favicon } from "../Favicon/Favicon"
 import { PresNameInput } from "../PresNameInput/PresNameInput"
-import { Toolbar } from "../Toolbar/Toolbar"
+import { ExportTool } from "../Toolbar/ExportTool"
+import styles from './TopPanel.module.css'
 
-const TopPanel = () => {
-    const onAddImage = () => {}
-    const onAddText = () => {}
-    const onClickInsert = () => {}
-    const onExport = () => {}
-    const onAddSlide = () => {}
-    const onRemove = () => {}
-    const onAddFigure = () => {}
-    const onChange = () => {}
+type TopPanelProps = {
+    onChangePresName: () => void
+    onExport: () => void
+}
+
+const TopPanel = ({onChangePresName, onExport}: TopPanelProps) => {
     return(
-        <div>
-            <PresNameInput onChange={onChange}/>
-            <Toolbar
-                onAddSlide={onAddSlide}
-                onRemove={onRemove}
-                onAddFigure={onAddFigure}
-                onAddImage={onAddImage}
-                onAddText={onAddText}
-                onClickInsert={onClickInsert}
-                onExport={onExport}
-            />
-            <PaletteBar/>
+        <div className={styles.topPanel}>
+            <div className={styles.topPanel__icon_and_name}>
+                <Favicon/>
+                <PresNameInput onChange={onChangePresName}/>
+            </div>
+            <ExportTool onExport={onExport}/>
         </div>
     )
 }

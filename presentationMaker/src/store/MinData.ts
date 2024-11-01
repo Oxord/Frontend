@@ -1,24 +1,24 @@
 import { generateGuid } from "./actions"
 import { Presentation, SlideType, SolidBackground } from "./types"
 
-const newSlideId = generateGuid()
+const NEW_SLIDE_ID = generateGuid()
 const background: SolidBackground = {
     color: 'white',
     type: 'solid'
 }
-const newSlide: SlideType = {
-    id: newSlideId,
+const NEW_SLIDE: SlideType = {
+    id: NEW_SLIDE_ID,
     background,
     objects: [],
     selectedObjectIds: []
 }
-const presentation: Presentation = {
+const PRESENTATION: Presentation = {
     name: 'PresName', 
-    slides: [newSlide], 
+    slides: [NEW_SLIDE], 
     selectedSlideIds: []
 }
 export {
-    presentation,
-    newSlide,
-    newSlideId
+    PRESENTATION,
+    NEW_SLIDE,
+    NEW_SLIDE_ID
 }

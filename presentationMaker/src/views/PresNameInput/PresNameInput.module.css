@@ -1,0 +1,12 @@
+.input{
+    font-size: 22px;
+    color: black;
+    padding: 10px;
+    font-family: "inter";
+}
+
+.inputForm{
+    max-width: 291px;
+    border: black;
+    margin-left: 20px;
+}

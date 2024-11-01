@@ -1,11 +1,13 @@
+import style from './PresNameInput.module.css'
+
 type PresNameInputProps = {
     onChange: () => void
 }
 
 const PresNameInput = ({onChange}: PresNameInputProps) =>  {
     return(
-        <div>
-            <input onChange={onChange} value={"Название презентации"}/>
+        <div className={style.inputForm}>
+            <input onChange={onChange} value={"Название презентации"} className={style.input}/>
         </div>
     )
 }

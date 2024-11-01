@@ -6,6 +6,6 @@ export type TextObjectProps = {
 
 export const TextObject = ({ text, font, fontSize }: TextObjectProps) => {
   return (
-      <p style={{ font: font, fontSize: fontSize }}>{text}</p>
+      <div style={{ font: font, fontSize: fontSize }}>{text}</div>
   )
 }

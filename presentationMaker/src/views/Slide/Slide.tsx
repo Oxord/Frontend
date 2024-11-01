@@ -1,18 +1,41 @@
-
 import { CSSProperties } from "react"
 import { SlideElem } from "../../components/SlideObjects/SlideElem"
 import { SlideType } from "../../store/types"
-const SLIDE_WIDTH = 935
-const SLIDE_HEIGHT = 525
 
 type SlideProps = {
     slide: SlideType,
-    scale?: number,
-    // isSelected: boolean,
-    // className: string,
+    scale: number,
+    width?: number,
+    height?: number,
 }
 
-const Slide = ({slide, scale = 1,}: SlideProps) => {
+const Slide = ({slide, scale, width, height}: SlideProps) => {
+    let slideStyle: CSSProperties
+    if (slide.background.type === 'image') {
+        slideStyle = {
+            display: 'block',
+            backgroundImage: `url(${slide.background.src})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            width: `${width}px`,
+            height: `${height}px`,
+            backgroundRepeat: 'no-repeat',
+            overflow: 'hidden',
+        }
+    }
+    else{
+        slideStyle = {
+            display: 'block',
+            backgroundColor: slide.background.color,
+            backgroundSize: 'contain',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            width: `${width}px`,
+            height: `${height}px`,
+        }
+    }
     const slideElements = slide.objects.map(obj => {
         if (obj){
             return (
@@ -20,13 +43,8 @@ const Slide = ({slide, scale = 1,}: SlideProps) => {
             )
         }
     })
-    const slideStyles:CSSProperties = {
-        // backgroundColor: slide.background,
-        width: `${SLIDE_WIDTH * scale}px`,
-        height: `${SLIDE_HEIGHT * scale}px`,
-    }
     return (
-        <div style={slideStyles}>
+        <div style={slideStyle}>
             {slideElements}
         </div>
     )

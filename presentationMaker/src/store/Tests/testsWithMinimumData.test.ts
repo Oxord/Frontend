@@ -20,52 +20,52 @@ import { ImageObject,
     SlideObject, 
     SolidBackground, 
     TextObject } from "../types"
-import { presentation, newSlide, newSlideId } from "../MinData"
+import { PRESENTATION, NEW_SLIDE, NEW_SLIDE_ID } from "../MinData"
 describe('Tests with minimum data', () => {
     describe('Test Functions For Presentation Type', () => {
         describe('test rename function', () => {
             const newName: string = 'NewName'
             const renamedPres: Presentation = {
-                ...presentation, 
+                ...PRESENTATION, 
                 name: newName
             }
             it('rename presentation', () => {
-                expect(rename(presentation, newName)).toEqual(renamedPres)
+                expect(rename(PRESENTATION, newName)).toEqual(renamedPres)
             })
         })
         describe('test addSlide function', () => {
             
             const PresentationWithNewSlide: Presentation = {
-                ...presentation, 
-                slides: [ ...presentation.slides, newSlide ] 
+                ...PRESENTATION, 
+                slides: [ ...PRESENTATION.slides, NEW_SLIDE ] 
             }
             it('add new slide to presentation', () => {
-                expect(addSlide(presentation, newSlideId)).toEqual(PresentationWithNewSlide)
+                expect(addSlide(PRESENTATION, NEW_SLIDE_ID)).toEqual(PresentationWithNewSlide)
             })
         })
         describe('test deleteSlide function', () => {
             const PresentationWithNewSlide: Presentation = {
-                ...presentation, 
-                slides: [ ...presentation.slides, newSlide ] 
+                ...PRESENTATION, 
+                slides: [ ...PRESENTATION.slides, NEW_SLIDE ] 
             }
             it('delete slide from presentations.slides', () => {
-                expect(deleteSlide(PresentationWithNewSlide, newSlideId).slides).toEqual([])
+                expect(deleteSlide(PresentationWithNewSlide, NEW_SLIDE_ID).slides).toEqual([])
             })
         })
         describe('test changeSlidePosition function', () => {
-            const firstSlideId = newSlide.id
+            const firstSlideId = NEW_SLIDE.id
             const secondSlideId = generateGuid()
             const newSlideSecond = {
-                ...newSlide, 
+                ...NEW_SLIDE, 
                 id: secondSlideId
             }
             const presentationWithTwoSlides = {
-                ...presentation, 
-                slides: [newSlide, newSlideSecond]
+                ...PRESENTATION, 
+                slides: [NEW_SLIDE, newSlideSecond]
             }
             const slideIds = [secondSlideId, firstSlideId]
             it('change slides position', () => {
-                expect(changeSlidePosition(presentationWithTwoSlides, slideIds).slides).toEqual([newSlideSecond, newSlide])
+                expect(changeSlidePosition(presentationWithTwoSlides, slideIds).slides).toEqual([newSlideSecond, NEW_SLIDE])
             })
         })
     })

@@ -12,7 +12,7 @@ const TEXT_OBJ: TextObject = {
 const IMG_OBJ: ImageObject = {
     id: generateGuid(),
     position: {X: 150, Y: 150},
-    src: 'src',
+    src: 'https://media.licdn.com/dms/image/v2/D4E12AQFyZaPBHc_7bA/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1705229834365?e=2147483647&v=beta&t=4U3KzLzxygWDJ-Y14qEilcL3dZ_jnDwtVgRMrceBMhg',
     width: 200, 
     height: 200,
     type: 'image'
@@ -43,18 +43,22 @@ const TRIANGLE_OBJ: Triangle = {
 }
 const FIRST_SLIDE: SlideType = {
     id: generateGuid(),
+    // background:  {
+    //     color: 'red',
+    //     type: 'solid'
+    // },
     background:  {
-        color: 'white',
-        type: 'solid'
+        src: 'https://i.ytimg.com/vi/4Sr9RJkVeIg/hqdefault.jpg',
+        type: 'image'
     },
     objects: [TEXT_OBJ, IMG_OBJ, CIRCLE_OBJ, RECT_OBJ, TRIANGLE_OBJ],
     selectedObjectIds: [TEXT_OBJ.id, IMG_OBJ.id]
 }
 const SECOND_SLIDE: SlideType = {
     id: generateGuid(),
-    background:  {
-        src: 'src',
-        type: 'image'
+    background: {
+        color: 'blue',
+        type: 'solid'
     },
     objects: [TEXT_OBJ, CIRCLE_OBJ, RECT_OBJ],
     selectedObjectIds: [CIRCLE_OBJ.id, RECT_OBJ.id]
