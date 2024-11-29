@@ -19,6 +19,7 @@
 
 .toolBar__tool_notAvailable{
     background-color: rgba(51, 205, 199, 0.3);
+    pointer-events: none;
 }
 
 .toolBar__tool_export{

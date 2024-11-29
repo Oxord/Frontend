@@ -1,4 +1,5 @@
 import { generateGuid } from "./actions"
+import { EditorType } from "./EditorType"
 import { Circle, ImageObject, Presentation, Reactangle, SlideType, TextObject, Triangle } from "./types"
 
 const TEXT_OBJ: TextObject = {
@@ -20,7 +21,7 @@ const IMG_OBJ: ImageObject = {
 const CIRCLE_OBJ: Circle = {
     id: generateGuid(),
     position: {X: 350, Y: 350},
-    color: 'red',
+    color: 'blue',
     radius: 20,
     type: 'circle'
 }
@@ -34,19 +35,17 @@ const RECT_OBJ: Reactangle = {
 }
 const TRIANGLE_OBJ: Triangle = {
     id: generateGuid(),
-    position: {X: 350, Y: 350},
+    position: {X: 50, Y: 50},
     color: 'red',
-    pointOne: {X: 370, Y: 370},
-    pointTwo: {X: 420, Y: 270},
-    pointThree: {X: 270, Y: 270},
+    pointOne: {X: 0, Y: 44},
+    pointTwo: {X: 22, Y: 4},
+    pointThree: {X: 44, Y: 44},
+    width: 45,
+    height: 45,
     type: 'triangle'
 }
 const FIRST_SLIDE: SlideType = {
     id: generateGuid(),
-    // background:  {
-    //     color: 'red',
-    //     type: 'solid'
-    // },
     background:  {
         src: 'https://i.ytimg.com/vi/4Sr9RJkVeIg/hqdefault.jpg',
         type: 'image'
@@ -57,7 +56,7 @@ const FIRST_SLIDE: SlideType = {
 const SECOND_SLIDE: SlideType = {
     id: generateGuid(),
     background: {
-        color: 'blue',
+        color: 'white',
         type: 'solid'
     },
     objects: [TEXT_OBJ, CIRCLE_OBJ, RECT_OBJ],
@@ -78,6 +77,10 @@ const NEW_SLIDE: SlideType = {
     selectedObjectIds: []
 }
 
+const editor: EditorType = {
+    presentation: PRESENTATION,
+}
+
 export {
     PRESENTATION, 
     NEW_SLIDE,
@@ -87,5 +90,6 @@ export {
     IMG_OBJ,
     TEXT_OBJ,
     CIRCLE_OBJ, 
-    TRIANGLE_OBJ
+    TRIANGLE_OBJ,
+    editor
 }

@@ -4,16 +4,17 @@ import { ExportTool } from "../Toolbar/ExportTool"
 import styles from './TopPanel.module.css'
 
 type TopPanelProps = {
+    presentationName: string
     onChangePresName: () => void
     onExport: () => void
 }
 
-const TopPanel = ({onChangePresName, onExport}: TopPanelProps) => {
+const TopPanel = ({onChangePresName, onExport, presentationName}: TopPanelProps) => {
     return(
         <div className={styles.topPanel}>
             <div className={styles.topPanel__icon_and_name}>
                 <Favicon/>
-                <PresNameInput onChange={onChangePresName}/>
+                <PresNameInput onChange={onChangePresName} presentationName={presentationName}/>
             </div>
             <ExportTool onExport={onExport}/>
         </div>

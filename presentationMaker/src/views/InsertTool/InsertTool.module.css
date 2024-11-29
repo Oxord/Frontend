@@ -4,3 +4,55 @@
     display: flex;
     flex-direction: column;   
 }
+
+.insertSection{
+    background-color: rgba(0, 155, 149, 1);
+    width: 170px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    height: 100px;
+    justify-content: space-between;
+}
+
+.insertSection button{
+    border: none;
+    background: none;
+    color: white;
+    font-size: 18px;
+    font-family: "inter";
+    padding-top: 3px;
+}
+
+.insertSection__figure_objects {
+    position: absolute;
+    margin-top: -14%;
+    margin-left: 100%;
+    display: flex;
+    flex-direction: row;
+    width: 170px;
+    height: 50px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 155, 149, 0.5);
+}
+
+.insertSection__figure_objects__figure{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    height: 50px;
+}
+
+.insertSection__image_objects{
+    position: absolute;
+    margin-top: -14%;
+    margin-left: 96%;
+    display: flex;
+    flex-direction: column;
+    width: 170px;
+    height: 50px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(0, 155, 149, 0.5);
+}

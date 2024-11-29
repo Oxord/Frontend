@@ -72,6 +72,8 @@ export type Triangle = FigureBase & {
     pointOne: Position
     pointTwo: Position
     pointThree: Position
+    width: number
+    height: number
     type: 'triangle'
 }
 
