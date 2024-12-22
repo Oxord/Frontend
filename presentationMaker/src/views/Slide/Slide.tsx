@@ -1,4 +1,4 @@
-import { CSSProperties, useState } from "react"
+import { CSSProperties } from "react"
 import { SlideElem } from "../../components/SlideObjects/SlideElem"
 import { SlideType } from "../../store/types"
 
@@ -9,18 +9,18 @@ type SlideProps = {
     height?: number,
     isSelected: boolean | null,
     showSelection: boolean,
+    selectedElemsId: string[]
+    onElemClick: (objId: string) => void
 } 
 
-const Slide = ({slide, scale, width, height, isSelected, showSelection}: SlideProps) => {
+const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemClick, selectedElemsId}: SlideProps) => {
     const slideStyle: CSSProperties = {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
+        position: 'relative',
         maxWidth: '100%',
         maxHeight: '100%',
         width: `${width}px`,
         height: `${height}px`,
+        'transform': `scale(${scale})`,
     }
     if (slide.background.type === 'image') {
         slideStyle.backgroundImage = `url(${slide.background.src})`
@@ -34,16 +34,6 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection}: SlidePr
     if(isSelected){
         slideStyle.border = '2px solid red'
     }
-    const [selectedElems, setSelectedElems] = useState(slide.selectedObjectIds)
-
-    const onElemClick = (elemId: string) => {
-        if (selectedElems.includes(elemId)){
-            setSelectedElems( selectedElems.filter(e => e !== elemId) )
-        }
-        else{
-            setSelectedElems( [...selectedElems,  elemId] )
-        }
-    }
 
     const slideElements = slide.objects.map(obj => {
         if (obj){
@@ -51,8 +41,8 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection}: SlidePr
                 <SlideElem 
                     elem={obj} 
                     key={obj.id} 
-                    scale={scale} 
-                    isSelected={selectedElems.includes(obj.id)} 
+                    // scale={scale} 
+                    isSelected={selectedElemsId? selectedElemsId.includes(obj.id): false} 
                     onElemClick={() => onElemClick(obj.id)} 
                     showSelection={showSelection}
                 />

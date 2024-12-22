@@ -17,11 +17,6 @@
     border: none;
 }
 
-.toolBar__tool_notAvailable{
-    background-color: rgba(51, 205, 199, 0.3);
-    pointer-events: none;
-}
-
 .toolBar__tool_export{
     background-color: rgba(255, 113, 0, 1);
 }
@@ -42,23 +37,33 @@
     background-color: rgba(51, 205, 199, 0.3);
 }
 
-.toolBar__tool_textProperties__property{
-    width: 170px;
+.toolBar__tool_textProperties__font_input{
+    width: 100px;
     height: 50px;
     color: white;
-    font-size: 24px;
+    font-size: 20px;
     font-family: "inter";
     background: none;
     border-radius: 20px;
     border: none;
+    padding-left: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.toolBar__tool_textProperties__property_textSize{
-    width: 90px;
+.toolBar__tool_textProperties__textSize{
+    width: 35px;
+}
+
+.toolBar__tool_textProperties__textSize input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
 .toolBar__colors{
-    width: 180px;
+    width: 50px;
     height: 50px;
     border-radius: 5px;
     border: 1px solid rgba(51, 205, 199, 0.5);
@@ -98,4 +103,41 @@
     height: 5px;
     border-radius: 5px;
     background-color: black;
+}
+
+.toolBar__tool_notAvailable{
+    display: none;
+    background-color: rgba(51, 205, 199, 0.3);
+    pointer-events: none;
+}
+
+.objectList{
+    z-index: 1;
+    position: absolute;
+    display: flex;
+    flex-direction: column;   
+}
+
+.insertSection{
+    background-color: rgba(0, 155, 149, 1);
+    width: 170px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    height: 80px;
+    justify-content: space-between;
+}
+
+.insertSection button{
+    border: none;
+    background: none;
+    color: white;
+    font-size: 18px;
+    font-family: "inter";
+    padding-top: 3px;
+}
+
+.toolBar__colors_textColor{
+    transform: scale(0.7);
+    margin-right: 10px;
 }

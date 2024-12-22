@@ -1,15 +1,17 @@
 import { useState } from 'react'
-import style from './Popup.module.css'
-import { dispatch } from '../../store/editor'
-import { insertImage } from '../../store/Actions/insertImage'
+import { dispatch } from '../../../store/editor'
+import { insertImage } from '../../../store/Actions/insertImage'
+import style from '../Popup.module.css'
+import { changeBackgroundImage } from '../../../store/Actions/changeBackgroundImage'
 
 
-type FormProps = {
+type ImageFormProps = {
     onClose: () => void
     slideId: string
+    isInsert: boolean
 }
 
-const Form = ({slideId, onClose}: FormProps): JSX.Element => {
+const ImageForm = ({slideId, onClose, isInsert}: ImageFormProps): JSX.Element => {
 
     const [inputValue, setInputValue] = useState('')
 
@@ -21,7 +23,12 @@ const Form = ({slideId, onClose}: FormProps): JSX.Element => {
     const onAddImage = () => {
         const src = inputValue
         if (src) {
-            dispatch(insertImage, {slideId, src})
+            if (isInsert) {
+                dispatch(insertImage, {slideId, src})
+            }
+            else{
+                dispatch(changeBackgroundImage, {slideId, src})
+            }
         }
         else{
             alert('Не удалось добавить файл:(')
@@ -47,5 +54,5 @@ const Form = ({slideId, onClose}: FormProps): JSX.Element => {
 }
 
 export{
-    Form
+    ImageForm
 }

@@ -183,6 +183,7 @@ export const changeImageSize = (presentation: Presentation, slideId: string, img
 
 export const changeText = (presentation: Presentation, slideId: string, textObjId: string, newText: string): Presentation => {
     const searchedSlide: SlideType | undefined = presentation.slides.find(slide => slide.id === slideId)
+    
     if (searchedSlide !== undefined){
         const searchedTextObj: undefined | SlideObject = searchedSlide.objects.find(obj => obj.id === textObjId)
         if (searchedTextObj !== undefined && searchedTextObj.type === 'text'){

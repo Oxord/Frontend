@@ -6,7 +6,7 @@ const TEXT_OBJ: TextObject = {
     id: generateGuid(), 
     position: {X: 0, Y: 0}, 
     text: 'textObj', 
-    font: 'arial',
+    font: 'fantasy',
     fontsize: 16,
     type: 'text' 
 }
@@ -54,7 +54,7 @@ const FIRST_SLIDE: SlideType = {
     selectedObjectIds: [TEXT_OBJ.id, IMG_OBJ.id]
 }
 const SECOND_SLIDE: SlideType = {
-    id: generateGuid(),
+    id: '361a7d46-e882-4d8d-9353-66d90c57d157',//generateGuid(),
     background: {
         color: 'white',
         type: 'solid'

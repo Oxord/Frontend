@@ -4,8 +4,8 @@ import style from './InsertTool.module.css'
 import { insertImage } from "../../store/Actions/insertImage"
 import { dispatch } from "../../store/editor"
 import { PopupCover } from "../../components/Popup/PopupCover"
-import { Popup } from "../../components/Popup/Popup"
-import { Form } from "../../components/Popup/Form"
+import { Popup } from '../../components/Popup/Popup'
+import { ImageForm } from '../../components/Forms/ImageForm/ImageForm'
 
 export type InsertToolProps = {
     onAddFigure: (figureType: FigureType) => void
@@ -30,7 +30,6 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
             
             reader.onloadend = () => {
                 const src = reader.result; 
-                console.log(src)
                 if (src) {
                     dispatch(insertImage, {slideId, src})
                 }
@@ -112,13 +111,6 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                                             <button onClick={changePopupOpened}>
                                                 Из другого сервиса
                                             </button>
-                                            <PopupCover isVisible={popupOpened}/>
-                                            <Popup isVisible={popupOpened}>
-                                                <Form
-                                                    slideId={slideId} 
-                                                    onClose={changePopupOpened} 
-                                                />
-                                            </Popup>
                                         </div>
                                     }  
                             </div>
@@ -130,6 +122,14 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                             </div>
                         </div>
                     }
+                    <PopupCover isVisible={popupOpened}/>
+                    <Popup isVisible={popupOpened}>
+                        <ImageForm
+                            slideId={slideId} 
+                            onClose={changePopupOpened} 
+                            isInsert={true}
+                        />
+                    </Popup>
             </div>
         </>
         

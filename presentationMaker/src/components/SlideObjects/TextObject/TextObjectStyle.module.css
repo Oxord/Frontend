@@ -1,0 +1,14 @@
+.textObject{
+    border: none; 
+    background: none;
+    width: 100%; 
+    height: auto; 
+    resize: none;
+    font-family: inherit;
+    font-size: inherit; 
+    line-height: inherit;
+    color: inherit; 
+    padding: 0;
+    margin: 0; 
+    outline: none;
+}

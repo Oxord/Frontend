@@ -6,9 +6,11 @@ export type slidesListProps = {
     presentation: Presentation
     selectedSlideId: string
     onSendData: (slide: SlideType) => void
+    selectedElemsId: string[]
+    onElemClick?: (objId: string) => void
 }
 
-const SlideList = ( {presentation, selectedSlideId, onSendData}: slidesListProps ) => {    
+const SlideList = ( {presentation, selectedSlideId, onSendData, selectedElemsId}: slidesListProps ) => {    
     return (
         <div className={style.slideList}>
             {presentation.slides.map(slide =>
@@ -16,6 +18,7 @@ const SlideList = ( {presentation, selectedSlideId, onSendData}: slidesListProps
                     <SlidePreview
                         slide={slide}
                         isSelected={slide.id == selectedSlideId}
+                        selectedElemsId={selectedElemsId}
                     />
                 </div>
             )}
