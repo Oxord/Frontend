@@ -1,0 +1,64 @@
+.elem{
+    position: 'absolute';
+    padding: 5px 5px 5px 5px;
+    --elem-width-medium: 50%;
+    --elem-width-right: 100%;
+    --elem-height-medium: 50%;
+    --elem-heigth_bottom: 100%;
+}
+
+.elem_selected{
+    border: 2.5px solid rgba(138, 180, 248, 1)
+}
+
+.figure__point {
+    width: 10px;
+    height: 10px;
+    background-color: #60a5fa;
+    position: absolute;
+    border-radius: 5px;
+}
+
+.point_top_left {
+    left: -5px;
+    top: -5px;
+}
+
+.point_top {
+    right: calc(var(--elem-width-medium) - 5px);
+    top: -5px;
+}
+
+.point_top_right {
+    left: calc(var(--elem-width-right) - 5px);
+    top: -5px;
+}
+
+.point_medium_left {
+    left: -5px;
+    top: calc(var(--elem-height-medium) - 5px);
+}
+
+.point_medium_right {
+    left: calc(var(--elem-heigth_bottom) - 5px);
+    top: calc(var(--elem-height-medium) - 5px);
+}
+
+.point_bottom_left {
+    left: -5px;
+    top: calc(var(--elem-heigth_bottom) - 5px);
+}
+
+.point_bottom {
+    right: calc(var(--elem-width-medium) - 5px);
+    top: calc(var(--elem-heigth_bottom) - 5px);
+}
+
+.point_bottom_right {
+    left: calc(var(--elem-heigth_bottom) - 5px);
+    top: calc(var(--elem-heigth_bottom) - 5px);
+}
+
+.disable {
+    display: none;
+}

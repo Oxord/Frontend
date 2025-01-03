@@ -1,19 +1,20 @@
-import { useContext, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { insertFigure } from "../../store/Actions/insertFigure"
-import { insertTextField } from "../../store/Actions/insertTextField"
-import { removeObj } from "../../store/Actions/removeObj"
 import { dispatch } from "../../store/editor"
 import { InsertTool } from "../InsertTool/InsertTool"
 import style from './ToolBar.module.css'
 import { Popup } from "../../components/Popup/Popup"
-import { ImageForm } from "../../components/Forms/ImageForm/ImageForm"
 import { PopupCover } from "../../components/Popup/PopupCover"
-import { ColorForm } from "../../components/Forms/ColorForm/ColorForm"
 import { changeTextFont } from "../../store/Actions/changeTextFont"
+import { changeTextSize } from "../../store/Actions/changeTextSize"
+import { removeObj } from "../../store/Actions/removeObj"
+import { changeBackgroundColor } from "../../store/Actions/changeBackgroundColor"
+import { changeBackgroundImage } from "../../store/Actions/changeBackgroundImage"
+import { Form } from "../../components/Forms/Form"
+import { insertImage } from "../../store/Actions/insertImage"
 type toolbarProps = {
     onAddSlide: () => void
-    isRemoveObjAvailable: boolean
-    onClickInsert: () => void
+    onAddText: () => void
     onExport: () => void
     onRemoveSlide: () => void
     slideId: string
@@ -21,21 +22,13 @@ type toolbarProps = {
     selectedElems: string[]
     selectedElemType: string
     selectedElemColor:  string | null
-    
 }
 
-const Toolbar = ({ onAddSlide, selectedElems, onRemoveSlide, slideId, isRemoveSlideAvailable, selectedElemType, selectedElemColor }: toolbarProps) => {
-    const onAddText: React.ChangeEventHandler = () => {
-        dispatch(insertTextField, {slideId})
-    }
+const Toolbar = ({ onAddSlide, onAddText, selectedElems, onRemoveSlide, slideId, isRemoveSlideAvailable, selectedElemType, selectedElemColor }: toolbarProps) => {
 
     const onAddFigure = (figureType: string) => {
         dispatch(insertFigure, {slideId, figureType})
-    }
-
-    const onRemoveObj = () => {
-        dispatch(removeObj, {slideId, selectedElems})
-    }    
+    }  
 
     let removeSlideClassName = style.toolBar__tool
     if (isRemoveSlideAvailable) {
@@ -88,25 +81,66 @@ const Toolbar = ({ onAddSlide, selectedElems, onRemoveSlide, slideId, isRemoveSl
         ref.current.click()
     }
 
-    const [fontValue, setFontValue] = useState('')
-
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const [fontValue, setFontValue] = useState('arial')
+    const onChangeFont: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        setFontValue(event.target.value)
+    }
+    const setFontSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
           console.log(fontValue);
           const elemId = selectedElems[0]
-          dispatch(changeTextFont, {slideId, elemId, fontValue})  
+          dispatch(changeTextFont, {slideId, elemId, newFont: fontValue})  
         }
-      }
+    }
 
-    const onChangeFont: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-        setFontValue(event.target.value)
+    const onRemoveObject = () => {
+        dispatch(removeObj, {slideId, selectedElems})
+    }  
+
+    const [textSize, setTextSize] = useState<number>(16)
+    const onChangeTextSize: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        setTextSize(Number(event.target.value))
+    }
+    const setTextSizeSubmit = (event: React.KeyboardEvent<HTMLInputElement> ) => {
+        if (event.key === '1') {
+          console.log(textSize);
+          const elemId = selectedElems[0]
+          dispatch(changeTextSize, {slideId, elemId, newFontSize: textSize})  
+        }
+    }
+
+    const [inputColor, setInputColor] = useState('black')
+
+    const handleInputColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputColor(event.target.value)
+    }
+
+    const onChangeBackground = () => {
+        const color = inputColor
+        dispatch(changeBackgroundColor, {slideId, color})
+    }
+
+    const [inputImgValue, setInputImgValue] = useState('')
+
+    const handleInputImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputImgValue(event.target.value)
+    }
+
+    const onAddImage = () => {
+        const src = inputImgValue
+        if (src) {
+            dispatch(changeBackgroundImage, {slideId, src})
+        }
+        else{
+            alert('Не удалось добавить файл:(')
+        }
     }
 
     return(
         <div className={style.toolBar}>
             <button onClick={onAddSlide} className={style.toolBar__tool}>+ New Slide</button>
             <button onClick={onRemoveSlide} className={removeSlideClassName}>Remove Slide</button>
-            <button onClick={onRemoveObj} className={removeObjectClassName}>Remove Obj</button>
+            <button onClick={onRemoveObject} className={removeObjectClassName}>Remove Obj</button>
             <InsertTool 
                 onAddFigure={onAddFigure}
                 onAddText={onAddText}
@@ -120,7 +154,7 @@ const Toolbar = ({ onAddSlide, selectedElems, onRemoveSlide, slideId, isRemoveSl
                     && <div className={style.objectList + ' ' + style.insertSection}>
                             <button onClick={() => {onClickChangeBackground('color')}}>Set color</button>
                             <button onClick={handleClick}>Set local image
-                                <input id='image' type='file' style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
+                                <input id='image' type='file' style={{display: 'none'}} ref={ref}></input>
                             </button>   
                             <button onClick={() => {onClickChangeBackground('image')}}>Set outher image</button>
                     </div>
@@ -129,8 +163,18 @@ const Toolbar = ({ onAddSlide, selectedElems, onRemoveSlide, slideId, isRemoveSl
             {selectedElemType === 'text' && 
                 <>
                     <div className={textPropertyClassName}>
-                        <input className={style.toolBar__tool_textProperties__font_input} type="text" defaultValue={"ar"} onChange={onChangeFont} onKeyDown={handleKeyDown}/>
-                        <input className={style.toolBar__tool_textProperties__font_input + ' ' + style.toolBar__tool_textProperties__textSize} type="number" defaultValue={16}/>
+                        <input className={style.toolBar__tool_textProperties__font_input} 
+                            type="text" 
+                            defaultValue={fontValue} 
+                            onChange={onChangeFont} 
+                            onKeyDown={setFontSubmit}
+                        />
+                        <input className={style.toolBar__tool_textProperties__font_input + ' ' + style.toolBar__tool_textProperties__textSize} 
+                            type="number" 
+                            defaultValue={textSize}
+                            onChange={onChangeTextSize}
+                            onKeyDown={setTextSizeSubmit}
+                        />
                         <div className={style.toolBar__colors_textColor}>
                             <div className={style.toolBar__colors__colorBlock}>
                                 <div className={style.toolBar__colors__colorBlock__Icon}>
@@ -153,14 +197,20 @@ const Toolbar = ({ onAddSlide, selectedElems, onRemoveSlide, slideId, isRemoveSl
             }    
             <PopupCover isVisible={popupOpened}/>
             <Popup isVisible={popupOpened}>
-                {popupType === 'image' && <ImageForm
-                    slideId={slideId} 
-                    onClose={changePopupOpened}
-                    isInsert={false} 
+                {popupType === 'image' && <Form
+                        title='URL изображения:'
+                        inputType='text'
+                        handleInputChange={handleInputImgChange}
+                        onSubmit={onAddImage}
+                        onClose={changePopupOpened}
                     />}
-                {popupType === 'color' && <ColorForm 
-                    slideId={slideId}
-                    onClose={changePopupOpened}/>}
+                {popupType === 'color' && <Form
+                        title='Выберите цвет'
+                        inputType='color'
+                        handleInputChange={handleInputColorChange}
+                        onSubmit={onChangeBackground}
+                        onClose={changePopupOpened}
+                    />   }
             </Popup>
         </div>
     )

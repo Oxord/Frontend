@@ -1,6 +1,6 @@
 import { CSSProperties, useState } from "react"
-import { dispatch } from "../../../store/editor"
-import { changeText } from "../../../store/Actions/changeText"
+// import { dispatch } from "../../../store/editor"
+// import { changeText } from "../../../store/Actions/changeText"
 
 export type TextObjectProps = {
   text: string
@@ -30,21 +30,21 @@ export const TextObject = ({ text, font, fontSize, isReadOnly, elemId }: TextObj
   // const fontContext = React.createContext(font) 
 
   const [textAreaValue, setTextAreaValue] = useState(text)
-  const changeTextAreaValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTextAreaValue(event.target.value)
-    const obj = {
-      slideId: '361a7d46-e882-4d8d-9353-66d90c57d157',
-      textObjtId: elemId,
-      newText: textAreaValue
-    }
-    dispatch(changeText, obj)
-  }
+  // const changeTextAreaValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setTextAreaValue(event.target.value)
+  //   // const obj = {
+  //   //   slideId: '361a7d46-e882-4d8d-9353-66d90c57d157',
+  //   //   textObjtId: elemId,
+  //   //   newText: textAreaValue
+  //   // }
+  //   // dispatch(changeText, obj)
+  // }
 
   // if (!textAreaValue){
     
   // }
 
   return (
-      <textarea style={textObjectStyle} readOnly={isReadOnly} onChange={changeTextAreaValue}>{textAreaValue}</textarea>
+      <textarea style={textObjectStyle} readOnly={isReadOnly}>{textAreaValue}</textarea>
   )
 }

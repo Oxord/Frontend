@@ -23,6 +23,8 @@ export const SlidePreview = ({slide, isSelected, selectedElemsId}: slidePreviewP
             showSelection={false} 
             selectedElemsId={selectedElemsId}
             onElemClick={() => {}} 
+            onChangeSlideObjectPosition={() => {}}
+            onChangeSlideObjectSize={() => {}}
         />
     )
 }

@@ -10,18 +10,25 @@ import { generateGuid } from './store/actions'
 import { addSlide } from './store/Actions/addSlide'
 import { deleteSlide } from './store/Actions/deleteSlide'
 import { useEffect, useState } from 'react'
-import { SlideType } from './store/types'
+import { Position, SizeType, SlideType } from './store/types'
 import { PopupCover } from './components/Popup/PopupCover'
 import { Popup } from './components/Popup/Popup'
-import { ImageForm } from './components/Forms/ImageForm/ImageForm'
-import { ColorForm } from './components/Forms/ColorForm/ColorForm'
+import { insertTextField } from './store/Actions/insertTextField'
+import { changeSlideObjectPosition } from './store/Actions/changeSlideObjectPosition'
+import { changeSlidePosition } from './store/Actions/changeSlidePosition'
+import { changeSlideObjectSize } from './store/Actions/changeSlideObjectSize'
+import { Form } from './components/Forms/Form'
+import { changeBackgroundColor } from './store/Actions/changeBackgroundColor'
+import { insertImage } from './store/Actions/insertImage'
+import { changeBackgroundImage } from './store/Actions/changeBackgroundImage'
 
 type AppProps = {
     editor: EditorType
 }
 
+
 function App({editor}: AppProps) {
-    //выделенны объекты по аналогии
+
     const [selectedSlideId, setSelectedSlideId] = useState(editor.presentation.slides[0].id)
     useEffect(() => {
         if (editor.presentation.slides.length > 0) {
@@ -29,14 +36,14 @@ function App({editor}: AppProps) {
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor.presentation.slides.length])
-    console.log(selectedSlideId)
+
     const slide: SlideType | undefined = editor.presentation.slides.find(s => s.id === selectedSlideId)
 
-    const [selectedElems, setSelectedElems] = useState([] as string[])
+    const [selectedElems, setSelectedElems] = useState<string[]>([])
     useEffect(() => {
         setSelectedElems([])
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [slide?.id])
+    }, [selectedSlideId])
     
     let selectedElemType: string = ''
     let selectedElemColor: string | null = null
@@ -67,33 +74,43 @@ function App({editor}: AppProps) {
             setSelectedElems( selectedElems?.filter(e => e !== elemId) )
         }
         else{
-            if (selectedElems === undefined){
-                setSelectedElems([elemId])
-            } 
-            else{
-              setSelectedElems([...selectedElems, elemId])
-            }
-        }
+            setSelectedElems([...selectedElems, elemId])
+        }   
     }
 
     const onChangePresName: React.ChangeEventHandler = (event) => {
         dispatch(renamePresentationTitle, (event.target as HTMLInputElement).value)
     }
 
-    const onAddSlide: React.ChangeEventHandler = () => {
+    const onAddSlide = () => {
         const slideId = generateGuid()
         dispatch(addSlide, {slideId})  
     }
 
     const onExport = () => {}
     
-    const onRemoveSlide: React.ChangeEventHandler = () => {
+    const onRemoveSlide = () => {
         dispatch(deleteSlide, selectedSlideId)
     }
 
-    const onClickSlide = (slide: SlideType) => {
-        setSelectedSlideId(slide.id)
+    const onClickSlide = (slideId: string) => {
+        setSelectedSlideId(slideId)
+    } 
+
+    const onAddText = () => {
+        dispatch(insertTextField, {selectedSlideId})
     }
+
+    const onChangeSlideObjectPosition = (elemId: string, newPos: Position) => {        
+        dispatch(changeSlideObjectPosition, {selectedSlideId, elemId, newPos})
+    }
+    const onChangeSlideObjectSize = (elemId: string, newSize: SizeType) => {
+        dispatch(changeSlideObjectSize, {selectedSlideId, elemId, newSize})
+    }
+    const onChangeSlidePosition = (newOrder: string[]) => {
+        dispatch(changeSlidePosition, newOrder)
+    } 
+
     const SLIDE_WIDTH = 950
     const SLIDE_HEIGHT = 525
     const selectedSlide = editor.presentation.slides.find(s => s.id === selectedSlideId)
@@ -102,19 +119,48 @@ function App({editor}: AppProps) {
     const changePopupOpened = () => {
         setPopupOpened(!popupOpened)
     }
+
+    const [inputColor, setInputColor] = useState('black')
+
+    const handleInputColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputColor(event.target.value)
+    }
+
+    const onChangeBackground = () => {
+        const color = inputColor
+        dispatch(changeBackgroundColor, {selectedSlideId, color})
+    }
+
+    const [inputImgValue, setInputImgValue] = useState('')
+
+    const handleInputImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputImgValue(event.target.value)
+    }
+
+    const onAddImage = () => {
+        const src = inputImgValue
+        if (src) {
+            dispatch(changeBackgroundImage, {selectedSlideId, src})
+        }
+        else{
+            alert('Не удалось добавить файл:(')
+        }
+    }
+
     return (
         <>
             <TopPanel
-                onChangePresName={onChangePresName}
+                onChangePresName={() => onChangePresName}
                 onExport={onExport}
                 presentationName={editor.presentation.name}
             />
             <Toolbar 
                 onAddSlide={onAddSlide}
-                isRemoveObjAvailable={selectedElems? true: false}
                 onRemoveSlide={onRemoveSlide}
-                onChangeBackground={changePopupOpened}
                 onExport={onExport}
+                onAddText={onAddText}
+                // onChangeBackground={changePopupOpened}
+                // isRemoveObjAvailable={selectedElems? true: false}
                 slideId={selectedSlideId}
                 isRemoveSlideAvailable={editor.presentation.slides.length > 1}
                 selectedElems={selectedElems}//fix this moment
@@ -125,8 +171,9 @@ function App({editor}: AppProps) {
                 <SlideList 
                     presentation={editor.presentation}
                     selectedSlideId={selectedSlideId}
-                    onSendData={onClickSlide}
+                    onChangeSlide={onClickSlide}
                     selectedElemsId={selectedElems? selectedElems: []}//fix this moment
+                    onChangeSlidePosition={onChangeSlidePosition}
                 />
                 {selectedSlide &&
                 <div className={styles.slides__workArea}>
@@ -138,19 +185,27 @@ function App({editor}: AppProps) {
                         showSelection={true}
                         onElemClick={onElemClick}
                         selectedElemsId={selectedElems? selectedElems: []}//fix this moment
-                        />
+                        onChangeSlideObjectPosition={onChangeSlideObjectPosition}
+                        onChangeSlideObjectSize={onChangeSlideObjectSize}
+                    />
                 </div>}
             </div>
             <PopupCover isVisible={popupOpened}/>
                 <Popup isVisible={popupOpened}>
-                    <ColorForm
-                        slideId={selectedSlide?.id}
+                    <Form
+                        title='Выберите цвет'
+                        inputType='color'
+                        handleInputChange={handleInputColorChange}
+                        onSubmit={onChangeBackground}
                         onClose={changePopupOpened}
-                    />
-                    <ImageForm
-                        slideId={selectedSlide?.id} 
-                        onClose={changePopupOpened} 
-                    />
+                    />                    
+                    <Form
+                        title='Выберите изображение'
+                        inputType='text'
+                        handleInputChange={handleInputImgChange}
+                        onSubmit={onAddImage}
+                        onClose={changePopupOpened}
+                    /> 
             </Popup> 
             
         </>

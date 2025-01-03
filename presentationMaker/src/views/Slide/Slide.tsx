@@ -1,4 +1,4 @@
-import { CSSProperties } from "react"
+import { CSSProperties, useRef } from "react"
 import { SlideElem } from "../../components/SlideObjects/SlideElem"
 import { SlideType } from "../../store/types"
 
@@ -11,9 +11,11 @@ type SlideProps = {
     showSelection: boolean,
     selectedElemsId: string[]
     onElemClick: (objId: string) => void
+    onChangeSlideObjectPosition: () => void
+    onChangeSlideObjectSize: () => void
 } 
 
-const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemClick, selectedElemsId}: SlideProps) => {
+const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemClick, selectedElemsId, onChangeSlideObjectPosition, onChangeSlideObjectSize}: SlideProps) => {
     const slideStyle: CSSProperties = {
         position: 'relative',
         maxWidth: '100%',
@@ -35,6 +37,8 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
         slideStyle.border = '2px solid red'
     }
 
+    const slideRef = useRef<HTMLDivElement>(null)
+
     const slideElements = slide.objects.map(obj => {
         if (obj){
             return (
@@ -45,12 +49,15 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
                     isSelected={selectedElemsId? selectedElemsId.includes(obj.id): false} 
                     onElemClick={() => onElemClick(obj.id)} 
                     showSelection={showSelection}
+                    onChangeSlideObjectPosition={onChangeSlideObjectPosition}
+                    onChangeSlideObjectSize={onChangeSlideObjectSize}
+                    slideRef={slideRef}
                 />
             )
         }
     })
     return (
-        <div style={slideStyle}>
+        <div style={slideStyle} ref={slideRef}>
             {slideElements}
         </div>
     )

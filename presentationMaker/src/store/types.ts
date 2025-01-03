@@ -28,11 +28,18 @@ export type SlideObject = TextObject | ImageObject | FigureObject
 export type ObjectBase = {
     id: string
     position: Position
+    width: number
+    height: number
 }
 
 export type Position = {
     X: number
     Y: number
+}
+
+export type SizeType = {
+    width: number
+    height: number
 }
 
 export type TextObject = ObjectBase & {
@@ -44,8 +51,6 @@ export type TextObject = ObjectBase & {
 
 export type ImageObject = ObjectBase & {
     src: string
-    width: number
-    height: number
     type: 'image'
 }
 
@@ -63,8 +68,6 @@ export type Circle = FigureBase & {
 }
 
 export type Reactangle = FigureBase & {
-    width: number
-    height: number
     type: 'rectangle'
 }
 
@@ -72,11 +75,10 @@ export type Triangle = FigureBase & {
     pointOne: Position
     pointTwo: Position
     pointThree: Position
-    width: number
-    height: number
     type: 'triangle'
 }
 
 export type {
     FigureType,
+    
 }

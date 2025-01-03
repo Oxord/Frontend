@@ -6,7 +6,7 @@ const TEXT_OBJ: TextObject = {
     id: generateGuid(), 
     position: {X: 0, Y: 0}, 
     text: 'textObj', 
-    font: 'fantasy',
+    font: 'arial',
     fontsize: 16,
     type: 'text' 
 }

@@ -5,7 +5,8 @@ import { insertImage } from "../../store/Actions/insertImage"
 import { dispatch } from "../../store/editor"
 import { PopupCover } from "../../components/Popup/PopupCover"
 import { Popup } from '../../components/Popup/Popup'
-import { ImageForm } from '../../components/Forms/ImageForm/ImageForm'
+import { Form } from "../../components/Forms/Form"
+import { changeBackgroundImage } from "../../store/Actions/changeBackgroundImage"
 
 export type InsertToolProps = {
     onAddFigure: (figureType: FigureType) => void
@@ -68,6 +69,22 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
         }
     }
 
+    const [inputImgValue, setInputImgValue] = useState('')
+
+    const handleInputImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputImgValue(event.target.value)
+    }
+
+    const onAddImageFromURL = () => {
+        const src = inputImgValue
+        if (src) {
+            dispatch(insertImage, {slideId, src})
+        }
+        else{
+            alert('Не удалось добавить файл:(')
+        }
+    }
+
     return(
         <>
             <div className={''}>
@@ -124,10 +141,12 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                     }
                     <PopupCover isVisible={popupOpened}/>
                     <Popup isVisible={popupOpened}>
-                        <ImageForm
-                            slideId={slideId} 
-                            onClose={changePopupOpened} 
-                            isInsert={true}
+                        <Form
+                            title='URL изображения:'
+                            inputType='text'
+                            handleInputChange={handleInputImgChange}
+                            onSubmit={onAddImageFromURL}
+                            onClose={changePopupOpened}
                         />
                     </Popup>
             </div>
