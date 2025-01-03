@@ -8,11 +8,11 @@ import styles from './TopPanel.module.css'
 type TopPanelProps = {
     presentationName: string
     onChangePresName: () => void
+    onImport: () => void
     onExport: () => void
-    // onImport: () => void
 }
 
-const TopPanel = ({presentationName, onChangePresName, onExport, }: TopPanelProps) => { //onImport
+const TopPanel = ({presentationName, onChangePresName, onImport, onExport}: TopPanelProps) => {
 
     return(
         <div className={styles.topPanel}>
@@ -21,7 +21,7 @@ const TopPanel = ({presentationName, onChangePresName, onExport, }: TopPanelProp
                 <PresNameInput onChange={onChangePresName} presentationName={presentationName}/>
             </div>
             <div className={styles.topPanel__InOutTool}>
-                {/* <ImportTool onImport={onImport}/> */}
+                <ImportTool onImport={onImport}/>
                 <ExportTool onExport={onExport}/>
             </div>
         </div>

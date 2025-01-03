@@ -164,9 +164,9 @@ function App({editor}: AppProps) {
         URL.revokeObjectURL(url)  
     }
 
-    // const onImport = (editor: EditorType) => {
-    //     importEditor(editor)    
-    // }
+    const onImport = (editor: EditorType) => {
+        importEditor(editor)    
+    }
 
     return (
         <div>
