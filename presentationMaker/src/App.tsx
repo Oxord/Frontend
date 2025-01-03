@@ -4,7 +4,7 @@ import { SlideList } from './views/SlidesList/SlideList'
 import { Toolbar } from './views/Toolbar/Toolbar'
 import { TopPanel } from './views/TopPanel/TopPanel'
 import { EditorType } from './store/EditorType'
-import { dispatch } from './store/editor'
+import { dispatch, importEditor } from './store/editor'
 import { renamePresentationTitle } from './store/Actions/renamePresentation'
 import { generateGuid } from './store/actions'
 import { addSlide } from './store/Actions/addSlide'
@@ -19,7 +19,6 @@ import { changeSlidePosition } from './store/Actions/changeSlidePosition'
 import { changeSlideObjectSize } from './store/Actions/changeSlideObjectSize'
 import { Form } from './components/Forms/Form'
 import { changeBackgroundColor } from './store/Actions/changeBackgroundColor'
-import { insertImage } from './store/Actions/insertImage'
 import { changeBackgroundImage } from './store/Actions/changeBackgroundImage'
 
 type AppProps = {
@@ -79,7 +78,8 @@ function App({editor}: AppProps) {
     }
 
     const onChangePresName: React.ChangeEventHandler = (event) => {
-        dispatch(renamePresentationTitle, (event.target as HTMLInputElement).value)
+        const newName = (event.target as HTMLInputElement).value
+        dispatch(renamePresentationTitle, {newName})
     }
 
     const onAddSlide = () => {
@@ -87,20 +87,19 @@ function App({editor}: AppProps) {
         dispatch(addSlide, {slideId})  
     }
 
-    const onExport = () => {}
     
     const onRemoveSlide = () => {
         dispatch(deleteSlide, selectedSlideId)
     }
-
+    
     const onClickSlide = (slideId: string) => {
         setSelectedSlideId(slideId)
     } 
-
+    
     const onAddText = () => {
         dispatch(insertTextField, {selectedSlideId})
     }
-
+    
     const onChangeSlideObjectPosition = (elemId: string, newPos: Position) => {        
         dispatch(changeSlideObjectPosition, {selectedSlideId, elemId, newPos})
     }
@@ -110,33 +109,33 @@ function App({editor}: AppProps) {
     const onChangeSlidePosition = (newOrder: string[]) => {
         dispatch(changeSlidePosition, newOrder)
     } 
-
+    
     const SLIDE_WIDTH = 950
     const SLIDE_HEIGHT = 525
     const selectedSlide = editor.presentation.slides.find(s => s.id === selectedSlideId)
-
+    
     const [popupOpened, setPopupOpened] = useState(false)
     const changePopupOpened = () => {
         setPopupOpened(!popupOpened)
     }
-
+    
     const [inputColor, setInputColor] = useState('black')
-
+    
     const handleInputColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputColor(event.target.value)
     }
-
+    
     const onChangeBackground = () => {
         const color = inputColor
         dispatch(changeBackgroundColor, {selectedSlideId, color})
     }
-
+    
     const [inputImgValue, setInputImgValue] = useState('')
-
+    
     const handleInputImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputImgValue(event.target.value)
     }
-
+    
     const onAddImage = () => {
         const src = inputImgValue
         if (src) {
@@ -147,12 +146,35 @@ function App({editor}: AppProps) {
         }
     }
 
+    const onExport = () => {
+        const data = {
+            name: editor.presentation.name,
+            slides: editor.presentation.slides
+        };
+        const jsonString = JSON.stringify(data, null, 2)
+        const blob = new Blob([jsonString], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'presentation.json' 
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)  
+    }
+
+    // const onImport = (editor: EditorType) => {
+    //     importEditor(editor)    
+    // }
+
     return (
-        <>
+        <div>
             <TopPanel
-                onChangePresName={() => onChangePresName}
-                onExport={onExport}
                 presentationName={editor.presentation.name}
+                onChangePresName={onChangePresName}
+                onExport={onExport}
+                // onImport={onImport}
             />
             <Toolbar 
                 onAddSlide={onAddSlide}
@@ -207,8 +229,7 @@ function App({editor}: AppProps) {
                         onClose={changePopupOpened}
                     /> 
             </Popup> 
-            
-        </>
+        </div>
     )
 }
 

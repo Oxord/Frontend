@@ -1,21 +1,40 @@
 import { EditorType } from './EditorType.ts'
 import {editor} from './MaxData.ts'
 
-let _editor = editor
-let _handler = null
+let _editor: EditorType
+let _handler = null 
+
+setEditor(editor)
+
 
 function getEditor() {
     return _editor
 }
 
 function setEditor(newEditor: EditorType) {
-    _editor = newEditor
+    const serializedValue = localStorage.getItem('editor')
+    if (serializedValue) {
+        _editor = JSON.parse(serializedValue)
+    } 
+    else{
+        _editor = newEditor
+    }
 }
 
-function dispatch(modifyFn: Function , payload?: Object): void {
+async function importEditor(editor: EditorType){
+    await saveToLocalStorageAsync(editor)
+    console.log(editor)
+}
+
+const saveToLocalStorage = (editor: EditorType) => {
+    const serializedValue = JSON.stringify(editor)
+    localStorage.setItem('editor', serializedValue)  
+}
+
+function dispatch(modifyFn: Function , payload?: Object) {
     const newEditor = modifyFn(_editor, payload)
+    saveToLocalStorage(newEditor)
     setEditor(newEditor)
-    console.log(2)
     if (_handler) {
         _handler()
     }
@@ -25,8 +44,14 @@ function addEditorChangeHandler(handler: Function): void {
     _handler = handler
 }
 
+async function saveToLocalStorageAsync(editor: EditorType) {
+    const serializedValue = JSON.stringify(editor)
+    localStorage.setItem('editor', serializedValue)  
+}
+
 export {
     getEditor,
     dispatch,
     addEditorChangeHandler,
+    importEditor
 }

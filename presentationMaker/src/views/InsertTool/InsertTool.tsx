@@ -6,7 +6,6 @@ import { dispatch } from "../../store/editor"
 import { PopupCover } from "../../components/Popup/PopupCover"
 import { Popup } from '../../components/Popup/Popup'
 import { Form } from "../../components/Forms/Form"
-import { changeBackgroundImage } from "../../store/Actions/changeBackgroundImage"
 
 export type InsertToolProps = {
     onAddFigure: (figureType: FigureType) => void

@@ -51,7 +51,7 @@ const FIRST_SLIDE: SlideType = {
         type: 'image'
     },
     objects: [TEXT_OBJ, IMG_OBJ, CIRCLE_OBJ, RECT_OBJ, TRIANGLE_OBJ],
-    selectedObjectIds: [TEXT_OBJ.id, IMG_OBJ.id]
+    // selectedObjectIds: [TEXT_OBJ.id, IMG_OBJ.id]
 }
 const SECOND_SLIDE: SlideType = {
     id: '361a7d46-e882-4d8d-9353-66d90c57d157',//generateGuid(),
@@ -60,12 +60,12 @@ const SECOND_SLIDE: SlideType = {
         type: 'solid'
     },
     objects: [TEXT_OBJ, CIRCLE_OBJ, RECT_OBJ],
-    selectedObjectIds: [CIRCLE_OBJ.id, RECT_OBJ.id]
+    // selectedObjectIds: [CIRCLE_OBJ.id, RECT_OBJ.id]
 }
 const PRESENTATION: Presentation = {
     name: 'PresName', 
     slides: [FIRST_SLIDE, SECOND_SLIDE], 
-    selectedSlideIds: [SECOND_SLIDE.id, FIRST_SLIDE.id]
+    // selectedSlideIds: [SECOND_SLIDE.id, FIRST_SLIDE.id]
 }
 const NEW_SLIDE: SlideType = {
     id: generateGuid(),
@@ -74,7 +74,7 @@ const NEW_SLIDE: SlideType = {
         type: 'solid'
     },
     objects: [],
-    selectedObjectIds: []
+    // selectedObjectIds: []
 }
 
 const editor: EditorType = {

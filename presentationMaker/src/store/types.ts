@@ -1,14 +1,12 @@
 export type Presentation = {
     name: string
     slides: SlideType[]
-    selectedSlideIds: string[]
 }
 
 export type SlideType = {
     id: string
     background: Background
     objects: SlideObject[]
-    selectedObjectIds: string[]
 }
 
 export type Background = SolidBackground | ImageBackground
