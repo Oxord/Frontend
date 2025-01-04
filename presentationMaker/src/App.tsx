@@ -4,7 +4,7 @@ import { SlideList } from './views/SlidesList/SlideList'
 import { Toolbar } from './views/Toolbar/Toolbar'
 import { TopPanel } from './views/TopPanel/TopPanel'
 import { EditorType } from './store/EditorType'
-import { dispatch, importEditor } from './store/editor'
+import { dispatch, importEditor, validateEditor } from './store/editor'
 import { renamePresentationTitle } from './store/Actions/renamePresentation'
 import { generateGuid } from './store/actions'
 import { addSlide } from './store/Actions/addSlide'
@@ -42,7 +42,7 @@ function App({editor}: AppProps) {
     useEffect(() => {
         setSelectedElems([])
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedSlideId])
+    }, [selectedSlideId, slide?.objects.length])
     
     let selectedElemType: string = ''
     let selectedElemColor: string | null = null
@@ -147,21 +147,28 @@ function App({editor}: AppProps) {
     }
 
     const onExport = () => {
-        const data = {
-            name: editor.presentation.name,
-            slides: editor.presentation.slides
-        };
-        const jsonString = JSON.stringify(data, null, 2)
-        const blob = new Blob([jsonString], { type: 'application/json' })
-        const url = URL.createObjectURL(blob)
-
-        const a = document.createElement('a')
-        a.href = url
-        a.download = 'presentation.json' 
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        URL.revokeObjectURL(url)  
+        const validEditor = validateEditor()
+        if (validEditor){
+            const data = {
+                name: editor.presentation.name,
+                slides: editor.presentation.slides
+            }
+    
+            const jsonString = JSON.stringify(data, null, 2)
+            const blob = new Blob([jsonString], { type: 'application/json' })
+            const url = URL.createObjectURL(blob)
+    
+            const a = document.createElement('a')
+            a.href = url
+            a.download = 'presentation.json' 
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+            URL.revokeObjectURL(url)  
+        }
+        else{
+            alert('Некорректные данные! Такую презентацию нельзя экспортировать')
+        }
     }
 
     const onImport = (editor: EditorType) => {

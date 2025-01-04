@@ -14,7 +14,9 @@ function insertFigure(editor: EditorType, {slideId, figureType}: {slideId: strin
                     type: 'circle',  
                     color: 'red', 
                     radius: 30, 
-                    position: {X: 150, Y: 150} 
+                    position: {X: 150, Y: 150}, 
+                    width: 50,
+                    height: 50
                 }
                 break
             case 'rectangle': 

@@ -1,9 +1,10 @@
 import { EditorType } from './EditorType.ts'
-import {editor} from './MaxData.ts'
+import { editor } from './initialData.ts'
+import { validate } from './Validate.ts'
 
 let _editor: EditorType
 let _handler = null 
-const KEY = 'editor'
+const KEY = 'presentation'
 
 setEditor(editor)
 
@@ -12,18 +13,31 @@ function getEditor() {
     return _editor
 }
 
-function setEditor(newEditor: EditorType) {
-    const serializedValue = localStorage.getItem(KEY)
-    if (serializedValue) {
-        _editor = JSON.parse(serializedValue)
+function validateEditor(): EditorType | null {
+    const content = localStorage.getItem(KEY)
+    if (content) {
+        const validEditor = validate(content)
+        if (validEditor) {
+            return validEditor
+        }
     } 
+    return null
+}
+
+function setEditor(newEditor: EditorType) {
+    const validEditor = validateEditor()
+    if (validEditor) {
+        _editor = validEditor
+    }
     else{
         _editor = newEditor
     }
 }
 
-function importEditor(editor: EditorType){
+
+function importEditor(editor: EditorType) {
     saveToLocalStorage(editor)
+    console.log(editor)      
     setEditor(editor)
     if (_handler) {
         _handler()
@@ -31,8 +45,8 @@ function importEditor(editor: EditorType){
 }
 
 const saveToLocalStorage = (editor: EditorType) => {
-    const serializedValue = JSON.stringify(editor)
-    localStorage.setItem(KEY, serializedValue)  
+    const presentation = JSON.stringify(editor.presentation)
+    localStorage.setItem(KEY, presentation)  
 }
 
 function dispatch(modifyFn: Function , payload?: Object) {
@@ -52,5 +66,6 @@ export {
     getEditor,
     dispatch,
     addEditorChangeHandler,
-    importEditor
+    importEditor,
+    validateEditor
 }

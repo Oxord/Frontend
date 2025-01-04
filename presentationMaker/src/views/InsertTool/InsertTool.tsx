@@ -93,7 +93,7 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                         <div className={style.objectList + ' ' + style.insertSection}>
                             <div>
                                 <button className={''} onClick={() => {changeFigureInsertOpened(); if(imageInsertOpend){changeImageInsertOpend()}}}>
-                                    Фигура
+                                    Figure
                                 </button>    
                                     {figureInsertOpened && <div className={style.insertSection__figure_objects}>
                                         <div onClick={() => {onAddFigure('circle'); changeInsertToolOpened()}} className={style.insertSection__figure_objects__figure}>
@@ -114,7 +114,7 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                                     </div>}
                             </div>
                             <div>
-                                <button onClick={() => {changeImageInsertOpend(); if(figureInsertOpened){changeFigureInsertOpened()}}}>Картинка
+                                <button onClick={() => {changeImageInsertOpend(); if(figureInsertOpened){changeFigureInsertOpened()}}}>Image
                                 </button>
                                     {imageInsertOpend &&
                                         <div className={style.insertSection__image_objects}>
@@ -122,7 +122,7 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                                                 <label form='image'>
                                                     С компьютера
                                                 </label>
-                                                <input id='image' type='file' style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
+                                                <input id='image' type='file' accept=".jpg, .jpeg, .png, .gif" style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
                                             </button>
                                             <button onClick={changePopupOpened}>
                                                 Из другого сервиса
@@ -134,7 +134,7 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                                 <button onClick={() => {
                                     changeInsertToolOpened();
                                     onAddText()}
-                                }>Текстовое поле</button>
+                                }>Text field</button>
                             </div>
                         </div>
                     }

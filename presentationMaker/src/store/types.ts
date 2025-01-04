@@ -58,7 +58,7 @@ export type FigureBase = ObjectBase & {
 
 export type FigureObject = Circle | Reactangle | Triangle
 
-type FigureType = FigureObject['type']
+export type FigureType = FigureObject['type']
 
 export type Circle = FigureBase & {
     radius: number
@@ -74,9 +74,4 @@ export type Triangle = FigureBase & {
     pointTwo: Position
     pointThree: Position
     type: 'triangle'
-}
-
-export type {
-    FigureType,
-    
 }
