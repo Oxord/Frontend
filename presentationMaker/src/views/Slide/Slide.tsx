@@ -1,4 +1,4 @@
-import { CSSProperties, useRef } from "react"
+import { CSSProperties, useRef, useState } from "react"
 import { SlideElem } from "../../components/SlideObjects/SlideElem"
 import { SlideType } from "../../store/types"
 
@@ -9,13 +9,13 @@ type SlideProps = {
     height?: number,
     isSelected: boolean | null,
     showSelection: boolean,
-    selectedElemsId: string[]
+    selectedElemId: string
     onElemClick: (objId: string) => void
     onChangeSlideObjectPosition: () => void
     onChangeSlideObjectSize: () => void
 } 
 
-const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemClick, selectedElemsId, onChangeSlideObjectPosition, onChangeSlideObjectSize}: SlideProps) => {
+const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemClick, selectedElemId, onChangeSlideObjectPosition, onChangeSlideObjectSize}: SlideProps) => {
     const slideStyle: CSSProperties = {
         position: 'relative',
         maxWidth: '100%',
@@ -39,25 +39,33 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
 
     const slideRef = useRef<HTMLDivElement>(null)
 
+    const [isPointActive, setPointActive] = useState(false)
+
     const slideElements = slide.objects.map(obj => {
         if (obj){
             return (
-                <SlideElem 
-                    elem={obj} 
-                    key={obj.id} 
-                    // scale={scale} 
-                    isSelected={selectedElemsId? selectedElemsId.includes(obj.id): false} 
-                    onElemClick={() => onElemClick(obj.id)} 
-                    showSelection={showSelection}
-                    onChangeSlideObjectPosition={onChangeSlideObjectPosition}
-                    onChangeSlideObjectSize={onChangeSlideObjectSize}
-                    slideRef={slideRef}
-                />
+                <div onMouseDown={() => onElemClick(obj.id)}>
+                    <SlideElem 
+                        elem={obj} 
+                        key={obj.id} 
+                        // scale={scale} 
+                        isSelected={selectedElemId === obj.id} 
+                        // onElemClick={() => onElemClick(obj.id)} 
+                        showSelection={showSelection}
+                        onChangeSlideObjectPosition={onChangeSlideObjectPosition}
+                        onChangeSlideObjectSize={onChangeSlideObjectSize}
+                        slideRef={slideRef}
+                        isPointActive={isPointActive}
+                    />
+                </div>   
             )
         }
     })
     return (
-        <div style={slideStyle} ref={slideRef}>
+        <div style={slideStyle} ref={slideRef}
+            onMouseDown={() => setPointActive(true)}
+            onMouseUp={() => setPointActive(false)}
+        >
             {slideElements}
         </div>
     )

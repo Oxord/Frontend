@@ -2,13 +2,13 @@
 import {EditorType} from "../EditorType.ts";
 import { SlideType } from "../types.ts";
 
-function removeObj(editor: EditorType, {slideId, selectedElems}: {slideId: string, selectedElems: string[]}): EditorType {
+function removeObj(editor: EditorType, {slideId, selectedElemId}: {slideId: string, selectedElemId: string}): EditorType {
     const slide: SlideType | undefined = editor.presentation.slides.find(s => s.id === slideId)
-    if (slide === undefined || selectedElems.length === 0){
+    if (slide === undefined){
         return editor
     }
     else{
-        const editedSlide: SlideType = { ...slide, objects: slide.objects.filter(s => !selectedElems.includes(s.id)) }
+        const editedSlide: SlideType = { ...slide, objects: slide.objects.filter(s => s.id !== selectedElemId) }
     
         return {
             presentation: {

@@ -16,15 +16,17 @@ function useDragAndDrop(
         const maxXCoord: number | undefined = slideRef.current?.offsetWidth
         const maxYCoord: number | undefined = slideRef.current?.offsetHeight
 
+        const indent = 10
+
         let objectWidth = 0
         let objectHeight = 0
 
         function isInSlide(position: Position | undefined): boolean {
             if (position && maxXCoord && maxYCoord) {
-                if (position.X > minXCoord - 5 &&
-                    position.Y > minYCoord - 5 &&
-                    position.X < maxXCoord - objectWidth - 5 &&
-                    position.Y < maxYCoord - objectHeight - 5) {
+                if (position.X > minXCoord + indent &&
+                    position.Y > minYCoord + indent &&
+                    position.X < maxXCoord - objectWidth - indent &&
+                    position.Y < maxYCoord - objectHeight - indent) {
                     return true
                 }
                 else {
@@ -49,6 +51,10 @@ function useDragAndDrop(
             if (isInSlide(newPos)) {
                 setPos(newPos)
             }
+            else {
+                slideRef.current?.removeEventListener('mousemove', onMouseMove)
+                onChangeSlideObjectPosition(newPos)
+            }
         }
 
         const onMouseUp = (event: MouseEvent) => {
@@ -59,10 +65,9 @@ function useDragAndDrop(
                     newPos.X = newPos.X - objectWidth / 2
                     newPos.Y = newPos.Y - objectHeight / 2
                 }
-                if (draggableObject.current){
-                    slideRef.current.removeEventListener('mousemove', onMouseMove)
-                }
-                onChangeSlideObjectPosition(newPos)
+                if (isInSlide(newPos)) {
+                    onChangeSlideObjectPosition(newPos)
+                }                
             }
         }
 

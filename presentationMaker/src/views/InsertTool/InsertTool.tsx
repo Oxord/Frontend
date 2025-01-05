@@ -16,10 +16,10 @@ export type InsertToolProps = {
 
 export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId }: InsertToolProps) => {
     
-    const ref = useRef(null)
+    const ref = useRef<HTMLInputElement | null>(null)
     
     const handleClick = () => {
-        ref.current.click()
+        if (ref.current) ref.current.click()
     }
     
     const onAddImage: React.ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -88,7 +88,7 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
         <>
             <div className={''}>
                 <button onClick={changeInsertToolOpened}
-                className={insertButtonStyle}>Вставка</button>
+                className={insertButtonStyle}>Insert</button>
                     {insertToolOpened && 
                         <div className={style.objectList + ' ' + style.insertSection}>
                             <div>

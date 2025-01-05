@@ -12,6 +12,7 @@ import { changeBackgroundColor } from "../../store/Actions/changeBackgroundColor
 import { changeBackgroundImage } from "../../store/Actions/changeBackgroundImage"
 import { Form } from "../../components/Forms/Form"
 import { insertImage } from "../../store/Actions/insertImage"
+import { changeSlideObjectColor } from "../../store/Actions/changeSlideObjectColor"
 type toolbarProps = {
     onAddSlide: () => void
     onAddText: () => void
@@ -19,12 +20,12 @@ type toolbarProps = {
     onRemoveSlide: () => void
     slideId: string
     isRemoveSlideAvailable: boolean
-    selectedElems: string[]
+    selectedElemId: string
     selectedElemType: string
     selectedElemColor:  string | null
 }
 
-const Toolbar = ({ onAddSlide, onAddText, selectedElems, onRemoveSlide, slideId, isRemoveSlideAvailable, selectedElemType, selectedElemColor }: toolbarProps) => {
+const Toolbar = ({ onAddSlide, onAddText, selectedElemId, onRemoveSlide, slideId, isRemoveSlideAvailable, selectedElemType, selectedElemColor }: toolbarProps) => {
 
     const onAddFigure = (figureType: string) => {
         dispatch(insertFigure, {slideId, figureType})
@@ -39,7 +40,7 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElems, onRemoveSlide, slideId,
     }
     
     let removeObjectClassName = style.toolBar__tool
-    if (selectedElems.length > 0){
+    if (selectedElemId){
         removeObjectClassName = style.toolBar__tool
     }
     else{
@@ -88,13 +89,13 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElems, onRemoveSlide, slideId,
     const setFontSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
           console.log(fontValue);
-          const elemId = selectedElems[0]
+          const elemId = selectedElemId
           dispatch(changeTextFont, {slideId, elemId, newFont: fontValue})  
         }
     }
 
     const onRemoveObject = () => {
-        dispatch(removeObj, {slideId, selectedElems})
+        dispatch(removeObj, {slideId, selectedElemId})
     }  
 
     const [textSize, setTextSize] = useState<number>(16)
@@ -104,7 +105,7 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElems, onRemoveSlide, slideId,
     const setTextSizeSubmit = (event: React.KeyboardEvent<HTMLInputElement> ) => {
         if (event.key === '1') {
           console.log(textSize);
-          const elemId = selectedElems[0]
+          const elemId = selectedElemId
           dispatch(changeTextSize, {slideId, elemId, newFontSize: textSize})  
         }
     }
@@ -136,11 +137,23 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElems, onRemoveSlide, slideId,
         }
     }
 
+    const [figureColor, setFigureColor] = useState('black')
+    
+    const handleFigureColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFigureColor(event.target.value)
+    }
+
+    const onChangeFigureColor = () => {
+        const color = figureColor
+        const elemId = selectedElemId
+        dispatch(changeSlideObjectColor, {slideId, elemId, color})
+    }
+
     return(
         <div className={style.toolBar}>
-            <button onClick={onAddSlide} className={style.toolBar__tool}>+ New Slide</button>
+            <button onClick={onAddSlide} className={style.toolBar__tool}>New Slide</button>
             <button onClick={onRemoveSlide} className={removeSlideClassName}>Remove Slide</button>
-            <button onClick={onRemoveObject} className={removeObjectClassName}>Remove Obj</button>
+            <button onClick={onRemoveObject} className={removeObjectClassName}>Remove Element</button>
             <InsertTool 
                 onAddFigure={onAddFigure}
                 onAddText={onAddText}
@@ -205,12 +218,13 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElems, onRemoveSlide, slideId,
                         onClose={changePopupOpened}
                     />}
                 {popupType === 'color' && <Form
-                        title='Выберите цвет'
+                        title='Выберите цвет фона'
                         inputType='color'
                         handleInputChange={handleInputColorChange}
                         onSubmit={onChangeBackground}
                         onClose={changePopupOpened}
                     />   }
+                
             </Popup>
         </div>
     )

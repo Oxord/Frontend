@@ -1,8 +1,8 @@
 import { EditorType } from "../EditorType"
-import { SizeType } from "../types"
 
-function changeSlideObjectSize(editor: EditorType, {slideId, elemId, newSize}: {selectedSlideId: string, elemId: string, newSize: SizeType}): EditorType {
-    const newEditor = {
+function changeSlideObjectColor( 
+    editor: EditorType, { slideId, elemId, color }: { slideId: string, elemId: string, color: string }): EditorType {
+    return {
         ...editor,
         presentation: {
             ...editor.presentation,
@@ -11,11 +11,15 @@ function changeSlideObjectSize(editor: EditorType, {slideId, elemId, newSize}: {
                     return {
                         ...slide,
                         objects: slide.objects.map(object => {
-                            if (object.id === elemId) {
+                            if (object.id === elemId && (
+                                object.type === 'text' ||
+                                object.type === 'circle' ||
+                                object.type === 'rectangle' ||
+                                object.type === 'triangle'
+                            )) {
                                 return {
                                     ...object,
-                                    width: newSize.width,
-                                    height: newSize.height
+                                    color: color
                                 }
                             }
                             return object
@@ -26,9 +30,8 @@ function changeSlideObjectSize(editor: EditorType, {slideId, elemId, newSize}: {
             })
         }
     }
-    return newEditor
 }
 
 export {
-    changeSlideObjectSize,
+    changeSlideObjectColor,
 }

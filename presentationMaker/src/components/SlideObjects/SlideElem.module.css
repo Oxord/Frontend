@@ -1,10 +1,13 @@
 .elem{
-    position: 'absolute';
     padding: 5px 5px 5px 5px;
     --elem-width-medium: 50%;
     --elem-width-right: 100%;
     --elem-height-medium: 50%;
     --elem-heigth_bottom: 100%;
+}
+
+.elem:hover {
+    cursor: pointer;
 }
 
 .elem_selected{

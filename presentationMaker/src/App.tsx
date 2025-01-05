@@ -4,7 +4,7 @@ import { SlideList } from './views/SlidesList/SlideList'
 import { Toolbar } from './views/Toolbar/Toolbar'
 import { TopPanel } from './views/TopPanel/TopPanel'
 import { EditorType } from './store/EditorType'
-import { dispatch, importEditor, validateEditor } from './store/editor'
+import { dispatch, validateEditor } from './store/editor'
 import { renamePresentationTitle } from './store/Actions/renamePresentation'
 import { generateGuid } from './store/actions'
 import { addSlide } from './store/Actions/addSlide'
@@ -38,16 +38,16 @@ function App({editor}: AppProps) {
 
     const slide: SlideType | undefined = editor.presentation.slides.find(s => s.id === selectedSlideId)
 
-    const [selectedElems, setSelectedElems] = useState<string[]>([])
+    const [selectedElemId, setSelectedElemId] = useState('')
     useEffect(() => {
-        setSelectedElems([])
+        setSelectedElemId('')
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedSlideId, slide?.objects.length])
     
     let selectedElemType: string = ''
     let selectedElemColor: string | null = null
-    if (selectedElems.length === 1){
-        const selectedElem = slide?.objects.find(o => o.id === selectedElems[0])
+    if (selectedElemId){
+        const selectedElem = slide?.objects.find(o => o.id === selectedElemId)
         selectedElemType = selectedElem? selectedElem?.type: ''
         switch (selectedElem?.type){
             case 'circle': 
@@ -69,12 +69,7 @@ function App({editor}: AppProps) {
     }
 
     const onElemClick = (elemId: string) => {
-        if (selectedElems?.includes(elemId)){
-            setSelectedElems( selectedElems?.filter(e => e !== elemId) )
-        }
-        else{
-            setSelectedElems([...selectedElems, elemId])
-        }   
+        setSelectedElemId(elemId)     
     }
 
     const onChangePresName: React.ChangeEventHandler = (event) => {
@@ -100,11 +95,11 @@ function App({editor}: AppProps) {
         dispatch(insertTextField, {selectedSlideId})
     }
     
-    const onChangeSlideObjectPosition = (elemId: string, newPos: Position) => {        
+    const onChangeSlideObjectPosition: React.ChangeEventHandler = (elemId: string, newPos: Position) => {        
         dispatch(changeSlideObjectPosition, {selectedSlideId, elemId, newPos})
     }
     const onChangeSlideObjectSize = (elemId: string, newSize: SizeType) => {
-        dispatch(changeSlideObjectSize, {selectedSlideId, elemId, newSize})
+        dispatch(changeSlideObjectSize, {slideId: selectedSlideId, elemId, newSize})
     }
     const onChangeSlidePosition = (newOrder: string[]) => {
         dispatch(changeSlidePosition, newOrder)
@@ -171,28 +166,21 @@ function App({editor}: AppProps) {
         }
     }
 
-    const onImport = (editor: EditorType) => {
-        importEditor(editor)    
-    }
-
     return (
         <div>
             <TopPanel
                 presentationName={editor.presentation.name}
                 onChangePresName={onChangePresName}
                 onExport={onExport}
-                // onImport={onImport}
             />
             <Toolbar 
                 onAddSlide={onAddSlide}
                 onRemoveSlide={onRemoveSlide}
                 onExport={onExport}
                 onAddText={onAddText}
-                // onChangeBackground={changePopupOpened}
-                // isRemoveObjAvailable={selectedElems? true: false}
                 slideId={selectedSlideId}
                 isRemoveSlideAvailable={editor.presentation.slides.length > 1}
-                selectedElems={selectedElems}//fix this moment
+                selectedElemId={selectedElemId}//fix this moment
                 selectedElemType={selectedElemType}
                 selectedElemColor={selectedElemColor}
             />
@@ -201,7 +189,7 @@ function App({editor}: AppProps) {
                     presentation={editor.presentation}
                     selectedSlideId={selectedSlideId}
                     onChangeSlide={onClickSlide}
-                    selectedElemsId={selectedElems? selectedElems: []}//fix this moment
+                    selectedElemId={selectedElemId} //fix this moment
                     onChangeSlidePosition={onChangeSlidePosition}
                 />
                 {selectedSlide &&
@@ -213,29 +201,36 @@ function App({editor}: AppProps) {
                         isSelected={null}
                         showSelection={true}
                         onElemClick={onElemClick}
-                        selectedElemsId={selectedElems? selectedElems: []}//fix this moment
+                        selectedElemId={selectedElemId}//fix this moment
                         onChangeSlideObjectPosition={onChangeSlideObjectPosition}
                         onChangeSlideObjectSize={onChangeSlideObjectSize}
                     />
                 </div>}
             </div>
-            <PopupCover isVisible={popupOpened}/>
-                <Popup isVisible={popupOpened}>
-                    <Form
-                        title='Выберите цвет'
-                        inputType='color'
-                        handleInputChange={handleInputColorChange}
-                        onSubmit={onChangeBackground}
-                        onClose={changePopupOpened}
-                    />                    
-                    <Form
-                        title='Выберите изображение'
-                        inputType='text'
-                        handleInputChange={handleInputImgChange}
-                        onSubmit={onAddImage}
-                        onClose={changePopupOpened}
-                    /> 
-            </Popup> 
+            {/* <PopupCover isVisible={popupOpened}/> */}
+            {/* <Popup isVisible={popupOpened}> */}
+                {/* <Form
+                    title='Выберите цвет фона'
+                    inputType='color'
+                    handleInputChange={handleInputColorChange}
+                    onSubmit={onChangeBackground}
+                    onClose={changePopupOpened}
+                />                    
+                <Form
+                    title='Выберите изображение'
+                    inputType='text'
+                    handleInputChange={handleInputImgChange}
+                    onSubmit={onAddImage}
+                    onClose={changePopupOpened}
+                /> 
+                <Form
+                    title='Выберите цвет фигуры'
+                    inputType='color'
+                    handleInputChange={handleFigureColorChange}
+                    onSubmit={onChangeBackground}
+                    onClose={changePopupOpened}
+                />  */}
+            {/* </Popup>  */}
         </div>
     )
 }

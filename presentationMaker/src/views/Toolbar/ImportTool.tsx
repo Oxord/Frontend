@@ -4,14 +4,11 @@ import { EditorType } from '../../store/EditorType'
 import { importEditor } from '../../store/editor'
 import { validate } from '../../store/Validate'
 
-export type ImportTolProps = {
-    onImport: (editor: EditorType) => void
-}
 const ImportTool = () => {
-    const ref = useRef<HTMLInputElement | null>(null);
+    const ref = useRef<HTMLInputElement | null>(null)
 
     const handleClick = () => {
-        ref.current.click()
+        if (ref.current) ref.current.click()
     }
 
     const onImport = (editor: EditorType) => {

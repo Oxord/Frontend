@@ -4,6 +4,7 @@ import { Position } from "../types"
 function changeSlideObjectPosition(editor: EditorType, {selectedSlideId, elemId, newPos}: {selectedSlideId: string, elemId: string, newPos: Position}): EditorType {
     const objectId = elemId
     const position = newPos
+    console.log('мы сохранили новую позицию')
     return {
         ...editor,
         presentation: {

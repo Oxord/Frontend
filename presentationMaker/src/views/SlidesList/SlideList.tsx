@@ -7,11 +7,11 @@ export type slidesListProps = {
     selectedSlideId: string
     onChangeSlide: (slideId: string) => void
     onChangeSlidePosition: (newOrder: string[]) => void
-    selectedElemsId: string[]
+    selectedElemId: string
     onElemClick?: (objId: string) => void
 }
 
-const SlideList = ( {presentation, selectedSlideId, onChangeSlide, selectedElemsId, onChangeSlidePosition}: slidesListProps ) => {   
+const SlideList = ( {presentation, selectedSlideId, onChangeSlide, selectedElemId, onChangeSlidePosition}: slidesListProps ) => {   
     
     let newOrder: string[] = presentation.slides.map(slideId => slideId.id)
     let draggedSlideId: string
@@ -56,7 +56,7 @@ const SlideList = ( {presentation, selectedSlideId, onChangeSlide, selectedElems
                     <SlidePreview
                         slide={slide}
                         isSelected={slide.id == selectedSlideId}
-                        selectedElemsId={selectedElemsId}
+                        selectedElemId={selectedElemId}
                     />
                 </div>
             )}

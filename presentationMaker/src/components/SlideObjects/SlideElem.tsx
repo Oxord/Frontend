@@ -12,14 +12,15 @@ import { useResize } from "../../hooks/useResize"
 type slideObjectProps = {
     elem: SlideObject
     isSelected: boolean
-    onElemClick: () => void
+    // onElemClick: () => void
     showSelection: boolean
     onChangeSlideObjectPosition: (elemId: string, newPos: Position) => void
     onChangeSlideObjectSize: (elemId: string, newSize: SizeType) => void
     slideRef:  RefObject<HTMLElement>
+    isPointActive: boolean
 }
 
-export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChangeSlideObjectPosition, onChangeSlideObjectSize, slideRef}: slideObjectProps ) => {
+export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChangeSlideObjectPosition, onChangeSlideObjectSize, slideRef, isPointActive}: slideObjectProps ) => {
     let objectPoint: string
     let elemClassName: string = styles.elem
     if (isSelected && showSelection){
@@ -33,6 +34,8 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
 
     const objectSizes: SizeType = { width: elem.width, height: elem.height }
 
+    const draggableObject = useRef<HTMLDivElement>(null)
+
     const draggablePointTopLeft = useRef<HTMLDivElement>(null)
     const draggablePointTop = useRef<HTMLDivElement>(null)
     const draggablePointTopRight = useRef<HTMLDivElement>(null)
@@ -42,12 +45,10 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
     const draggablePointBottom = useRef<HTMLDivElement>(null)
     const draggablePointBottomRight = useRef<HTMLDivElement>(null)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const draggableObject: any = useRef<HTMLDivElement>(null)
-
     const [pos, setPos] = useState(elem.position)
     useEffect(() => {
         setPos(elem.position)
+        console.log('isSelected = ', isSelected)
     }, [elem.position])
 
     const onChangePosition = (newPos: Position) => onChangeSlideObjectPosition(elem.id, newPos)
@@ -63,7 +64,6 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
     const onChangeSize = (newSize: SizeType) => onChangeSlideObjectSize(elem.id, newSize)
 
     useResize(
-        draggableObject,
         draggablePointTopLeft,
         draggablePointTop,
         draggablePointTopRight,
@@ -78,7 +78,7 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
         size,
         onChangeSize,
         onChangePosition,
-        isSelected
+        isPointActive
     )
     
     const topLeftPoint = objectPoint + ' ' + styles.point_top_left
@@ -95,10 +95,10 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
         top: pos.Y,
         position: 'absolute'
     }
-    let figure = <></>
+    let element = <></>
     switch (elem.type){
         case 'text':
-            figure = <TextObject 
+            element = <TextObject 
                         text={elem.text} 
                         font={elem.font} 
                         fontSize={elem.fontsize * 1} 
@@ -107,7 +107,7 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
                     />
             break
         case 'image': 
-            figure = <ImageObject 
+            element = <ImageObject 
                         src={elem.src} 
                         width={elem.width * 1} 
                         height={elem.height * 1} 
@@ -116,7 +116,7 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
         case 'circle':
             elemStyle.width = elem.radius * 2
             elemStyle.height = elem.radius * 2           
-            figure = <Circle 
+            element = <Circle 
                         radius={elem.radius * 1}
                         color={elem.color}
                     />
@@ -124,7 +124,7 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
         case 'rectangle': 
             elemStyle.width = elem.width
             elemStyle.height = elem.height
-            figure = <Rectangle 
+            element = <Rectangle 
                         width={elem.width * 1} 
                         height={elem.height * 1} 
                         color={elem.color} 
@@ -133,7 +133,7 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
         case 'triangle': 
             elemStyle.width = elem.width
             elemStyle.height = elem.height
-            figure = <Triangle 
+            element = <Triangle 
                         PointOne={elem.pointOne} 
                         PointTwo={elem.pointTwo} 
                         PointThree={elem.pointThree} 
@@ -143,9 +143,9 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
                     />
     }
     return(
-        <div onClick={onElemClick}  style={elemStyle} className={elemClassName}>
-            <div ref={draggableObject}>
-                {figure}
+        <div style={elemStyle} className={elemClassName}>
+            <div ref={draggableObject}>  
+                {element}
             </div>  
             <div
                 className={topLeftPoint}
