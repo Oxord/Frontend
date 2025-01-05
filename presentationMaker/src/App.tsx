@@ -20,6 +20,8 @@ import { changeSlideObjectSize } from './store/Actions/changeSlideObjectSize'
 import { Form } from './components/Forms/Form'
 import { changeBackgroundColor } from './store/Actions/changeBackgroundColor'
 import { changeBackgroundImage } from './store/Actions/changeBackgroundImage'
+import rootReducer from './store/rootReducer'
+import { TypedUseSelectorHook, useSelector } from 'react-redux'
 
 type AppProps = {
     editor: EditorType
@@ -72,10 +74,10 @@ function App({editor}: AppProps) {
         setSelectedElemId(elemId)     
     }
 
-    const onChangePresName: React.ChangeEventHandler = (event) => {
-        const newName = (event.target as HTMLInputElement).value
-        dispatch(renamePresentationTitle, {newName})
-    }
+    // const onChangePresName: React.ChangeEventHandler = (event) => {
+    //     const newName = (event.target as HTMLInputElement).value
+    //     dispatch(renamePresentationTitle, {newName})
+    // }
 
     const onAddSlide = () => {
         const slideId = generateGuid()
@@ -95,7 +97,7 @@ function App({editor}: AppProps) {
         dispatch(insertTextField, {selectedSlideId})
     }
     
-    const onChangeSlideObjectPosition: React.ChangeEventHandler = (elemId: string, newPos: Position) => {        
+    const onChangeSlideObjectPosition = (elemId: string, newPos: Position) => {        
         dispatch(changeSlideObjectPosition, {selectedSlideId, elemId, newPos})
     }
     const onChangeSlideObjectSize = (elemId: string, newSize: SizeType) => {
@@ -166,11 +168,14 @@ function App({editor}: AppProps) {
         }
     }
 
+    type RootState = ReturnType<typeof rootReducer>
+    const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+    
+
     return (
         <div>
             <TopPanel
-                presentationName={editor.presentation.name}
-                onChangePresName={onChangePresName}
+                // onChangePresName={onChangePresName}
                 onExport={onExport}
             />
             <Toolbar 

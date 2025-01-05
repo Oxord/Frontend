@@ -6,18 +6,15 @@ import { ImportTool } from "../Toolbar/ImportTool"
 import styles from './TopPanel.module.css'
 
 type TopPanelProps = {
-    presentationName: string
-    onChangePresName: () => void
     onExport: () => void
 }
 
-const TopPanel = ({presentationName, onChangePresName, onExport}: TopPanelProps) => {
-
+const TopPanel = ({onExport}: TopPanelProps) => {
     return(
         <div className={styles.topPanel}>
             <div className={styles.topPanel__icon_and_name}>
                 <Favicon/>
-                <PresNameInput onChange={onChangePresName} presentationName={presentationName}/>
+                <PresNameInput/>
             </div>
             <div className={styles.topPanel__InOutTool}>
                 <ImportTool/>
@@ -30,3 +27,4 @@ const TopPanel = ({presentationName, onChangePresName, onExport}: TopPanelProps)
 export{
     TopPanel
 }
+

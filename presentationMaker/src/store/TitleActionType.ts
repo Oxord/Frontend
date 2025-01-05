@@ -1,0 +1,3 @@
+export enum TitleActionType {
+    CHANGE_PRESENTATION_TITLE = 'CHANGE_PRESENTATION_TITLE'
+}

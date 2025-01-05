@@ -13,6 +13,8 @@ import { changeBackgroundImage } from "../../store/Actions/changeBackgroundImage
 import { Form } from "../../components/Forms/Form"
 import { insertImage } from "../../store/Actions/insertImage"
 import { changeSlideObjectColor } from "../../store/Actions/changeSlideObjectColor"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "../../store/rootReducer"
 type toolbarProps = {
     onAddSlide: () => void
     onAddText: () => void
@@ -149,9 +151,12 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElemId, onRemoveSlide, slideId
         dispatch(changeSlideObjectColor, {slideId, elemId, color})
     }
 
+    const count = useSelector((state: RootState) => state.counter)
+    const dispatch = useDispatch()
+
     return(
         <div className={style.toolBar}>
-            <button onClick={onAddSlide} className={style.toolBar__tool}>New Slide</button>
+            <button onClick={() => dispatch({ type: 'INCREMENT' })} className={style.toolBar__tool}>{count}</button>
             <button onClick={onRemoveSlide} className={removeSlideClassName}>Remove Slide</button>
             <button onClick={onRemoveObject} className={removeObjectClassName}>Remove Element</button>
             <InsertTool 
