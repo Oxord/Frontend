@@ -10,7 +10,6 @@ function addSlide(editor: EditorType, {slideId}: {slideId: string}): EditorType 
         id: slideId,
         background: background,
         objects: [],
-        selectedObjectIds: []
     } 
     return {
         ...editor,

@@ -12,7 +12,6 @@ import { useResize } from "../../hooks/useResize"
 type slideObjectProps = {
     elem: SlideObject
     isSelected: boolean
-    // onElemClick: () => void
     showSelection: boolean
     onChangeSlideObjectPosition: (elemId: string, newPos: Position) => void
     onChangeSlideObjectSize: (elemId: string, newSize: SizeType) => void
@@ -20,7 +19,7 @@ type slideObjectProps = {
     isPointActive: boolean
 }
 
-export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChangeSlideObjectPosition, onChangeSlideObjectSize, slideRef, isPointActive}: slideObjectProps ) => {
+export const SlideElem = ( {elem, isSelected, showSelection, onChangeSlideObjectPosition, onChangeSlideObjectSize, slideRef, isPointActive}: slideObjectProps ) => {
     let objectPoint: string
     let elemClassName: string = styles.elem
     if (isSelected && showSelection){
@@ -48,7 +47,6 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
     const [pos, setPos] = useState(elem.position)
     useEffect(() => {
         setPos(elem.position)
-        console.log('isSelected = ', isSelected)
     }, [elem.position])
 
     const onChangePosition = (newPos: Position) => onChangeSlideObjectPosition(elem.id, newPos)
@@ -104,6 +102,7 @@ export const SlideElem = ( {elem, isSelected, onElemClick, showSelection, onChan
                         fontSize={elem.fontsize * 1} 
                         isReadOnly={!isSelected}
                         elemId={elem.id}
+                        textColor={elem.color}
                     />
             break
         case 'image': 

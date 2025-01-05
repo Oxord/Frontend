@@ -8,17 +8,19 @@ export type TextObjectProps = {
   fontSize: number
   isReadOnly: boolean
   elemId: string
+  textColor: string
   //добавить цвет текста
 }
 
-export const TextObject = ({ text, font, fontSize, isReadOnly, elemId }: TextObjectProps) => {
+export const TextObject = ({ text, font, fontSize, isReadOnly, elemId, textColor }: TextObjectProps) => {
   const textObjectStyle: CSSProperties = {
       border: 'none',
       background: 'none',
       position: 'relative',
       width: '100%', 
       height: 'auto',
-      maxHeight: '200px', 
+      maxHeight: '200px', //зачем тут так? потом перепроверю, как смогу дебажить
+      color: textColor,
       resize: 'none',
       fontFamily: font? font: 'arial',
       fontSize: fontSize,  

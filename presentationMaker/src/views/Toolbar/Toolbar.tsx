@@ -1,6 +1,5 @@
 import { useRef, useState } from "react"
 import { insertFigure } from "../../store/Actions/insertFigure"
-import { dispatch } from "../../store/editor"
 import { InsertTool } from "../InsertTool/InsertTool"
 import style from './ToolBar.module.css'
 import { Popup } from "../../components/Popup/Popup"
@@ -15,11 +14,12 @@ import { insertImage } from "../../store/Actions/insertImage"
 import { changeSlideObjectColor } from "../../store/Actions/changeSlideObjectColor"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "../../store/rootReducer"
-type toolbarProps = {
-    onAddSlide: () => void
+import { useAppActions } from "../../hooks/useAppActions"
+import { generateGuid } from "../../store/actions"
+import { useAppSelector } from "../../hooks/useAppSelector"
+type toolbarProps ={
     onAddText: () => void
     onExport: () => void
-    onRemoveSlide: () => void
     slideId: string
     isRemoveSlideAvailable: boolean
     selectedElemId: string
@@ -27,11 +27,12 @@ type toolbarProps = {
     selectedElemColor:  string | null
 }
 
-const Toolbar = ({ onAddSlide, onAddText, selectedElemId, onRemoveSlide, slideId, isRemoveSlideAvailable, selectedElemType, selectedElemColor }: toolbarProps) => {
+const Toolbar = ({ onAddText, selectedElemId, slideId, isRemoveSlideAvailable, selectedElemType, selectedElemColor }: toolbarProps) => {
 
     const onAddFigure = (figureType: string) => {
         dispatch(insertFigure, {slideId, figureType})
     }  
+    //заменил, но есть вопросы к выделению
 
     let removeSlideClassName = style.toolBar__tool
     if (isRemoveSlideAvailable) {
@@ -95,11 +96,11 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElemId, onRemoveSlide, slideId
           dispatch(changeTextFont, {slideId, elemId, newFont: fontValue})  
         }
     }
-
+    //сделано, но проблема с selectedSlideId
     const onRemoveObject = () => {
         dispatch(removeObj, {slideId, selectedElemId})
     }  
-
+    //сделано, но проблема с selectedSlideId
     const [textSize, setTextSize] = useState<number>(16)
     const onChangeTextSize: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         setTextSize(Number(event.target.value))
@@ -111,7 +112,7 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElemId, onRemoveSlide, slideId
           dispatch(changeTextSize, {slideId, elemId, newFontSize: textSize})  
         }
     }
-
+    //проблема с payload'ом
     const [inputColor, setInputColor] = useState('black')
 
     const handleInputColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,7 +123,7 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElemId, onRemoveSlide, slideId
         const color = inputColor
         dispatch(changeBackgroundColor, {slideId, color})
     }
-
+    //сделал, но проблема с тем, как отличать картинку от тцвета.
     const [inputImgValue, setInputImgValue] = useState('')
 
     const handleInputImgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,7 +139,8 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElemId, onRemoveSlide, slideId
             alert('Не удалось добавить файл:(')
         }
     }
-
+    //сделал changeBackgroundColor. Проблема та же
+    
     const [figureColor, setFigureColor] = useState('black')
     
     const handleFigureColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -150,13 +152,22 @@ const Toolbar = ({ onAddSlide, onAddText, selectedElemId, onRemoveSlide, slideId
         const elemId = selectedElemId
         dispatch(changeSlideObjectColor, {slideId, elemId, color})
     }
+    //сделал
 
-    const count = useSelector((state: RootState) => state.counter)
-    const dispatch = useDispatch()
+    const { addSlide } = useAppActions()
+    const onAddSlide = () => {
+        const slideId = generateGuid()
+        addSlide(slideId)        
+    }
+
+    const { removeSlide } = useAppActions()
+    const onRemoveSlide = () => {
+        removeSlide(slideId)        
+    }
 
     return(
         <div className={style.toolBar}>
-            <button onClick={() => dispatch({ type: 'INCREMENT' })} className={style.toolBar__tool}>{count}</button>
+            <button onClick={onAddSlide} className={style.toolBar__tool}>New Slide</button>
             <button onClick={onRemoveSlide} className={removeSlideClassName}>Remove Slide</button>
             <button onClick={onRemoveObject} className={removeObjectClassName}>Remove Element</button>
             <InsertTool 

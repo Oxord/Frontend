@@ -1,7 +1,7 @@
 import { EditorType } from "../EditorType"
 import { SizeType } from "../types"
 
-function changeSlideObjectSize(editor: EditorType, {slideId, elemId, newSize}: {selectedSlideId: string, elemId: string, newSize: SizeType}): EditorType {
+function changeSlideObjectSize(editor: EditorType, {slideId, elemId, newSize}: {slideId: string, elemId: string, newSize: SizeType}): EditorType {
     const newEditor = {
         ...editor,
         presentation: {

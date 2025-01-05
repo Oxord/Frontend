@@ -1,9 +1,9 @@
 import { SlidePreview } from "../../components/SlidePreview/SlidePreview"
-import { Presentation, SlideType } from "../../store/types"
+import { useAppSelector } from "../../hooks/useAppSelector"
+import { SlideType } from "../../store/types"
 import style from './SlideList.module.css'
 
 export type slidesListProps = {
-    presentation: Presentation
     selectedSlideId: string
     onChangeSlide: (slideId: string) => void
     onChangeSlidePosition: (newOrder: string[]) => void
@@ -11,9 +11,12 @@ export type slidesListProps = {
     onElemClick?: (objId: string) => void
 }
 
-const SlideList = ( {presentation, selectedSlideId, onChangeSlide, selectedElemId, onChangeSlidePosition}: slidesListProps ) => {   
+const SlideList = ( {selectedSlideId, onChangeSlide, selectedElemId, onChangeSlidePosition}: slidesListProps ) => {   
     
-    let newOrder: string[] = presentation.slides.map(slideId => slideId.id)
+    const slides = useAppSelector(state => state.slides)
+    console.log(slides)
+
+    let newOrder: string[] = slides.map(slideId => slideId.id)
     let draggedSlideId: string
 
     function onDragStart(slide: SlideType) {
@@ -27,7 +30,6 @@ const SlideList = ( {presentation, selectedSlideId, onChangeSlide, selectedElemI
     function onDrop(event: React.DragEvent<HTMLDivElement>, slide: SlideType) {
 
         event.preventDefault()
-        console.log('dropped')
         const indexOfDraggedSlideId = newOrder.indexOf(draggedSlideId)
         newOrder = newOrder.filter(id => id !== draggedSlideId)
         const indexOfSlideId = newOrder.indexOf(slide.id)
@@ -44,7 +46,7 @@ const SlideList = ( {presentation, selectedSlideId, onChangeSlide, selectedElemI
 
     return (
         <div className={style.slideList}>
-            {presentation.slides.map(slide =>
+            {slides.map(slide =>
                 <div key={slide.id} 
                     className={style.slideList__slide_prewiev} 
                     onClick={() => onChangeSlide(slide.id)}

@@ -4,14 +4,14 @@ import style from './PresNameInput.module.css'
 
 const PresNameInput = () =>  {
     const { changePresentationTitle } = useAppActions()
-    const onChangePresName: React.ChangeEventHandler = (event) => {
+    const onChangePresTitle: React.ChangeEventHandler = (event) => {
         const newName = (event.target as HTMLInputElement).value
         changePresentationTitle(newName)        
     }
-    const value = useAppSelector(state => state.title)
+    const title = useAppSelector(state => state.title)
     return(
         <div className={style.inputForm}>
-            <input onChange={onChangePresName} value={value} className={style.input}/>
+            <input onChange={onChangePresTitle} value={title} className={style.input}/>
         </div>
     )
 }

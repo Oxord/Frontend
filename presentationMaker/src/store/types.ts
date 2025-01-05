@@ -43,7 +43,8 @@ export type SizeType = {
 export type TextObject = ObjectBase & {
     text: string
     fontsize: number
-    font: string    
+    font: string 
+    color: string   
     type: 'text'
 }
 
