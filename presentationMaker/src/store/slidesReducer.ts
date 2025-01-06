@@ -1,32 +1,42 @@
 import { getDefaultImage } from "./GetDefaultImage"
 import { getDefaultFigure } from "./GetDefaultFigure"
 import { SlideActionTypes } from "./SlideActionTypes"
-import { SlidesAction } from "./SlidesAction"
+import { ChangeBackgroundColorPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction } from "./SlidesAction"
 import { SlidesState } from "./SlidesState"
-import { SlideObject, SlideType, SolidBackground, TextObject } from "./types"
+import { Background, SlideObject, SlideType, TextObject } from "./types"
 import { getDefaultTextField } from "./GetDefaultTextField"
+import { getDefaultSlide } from "./getDefaultSlide"
 
 const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesState => { 
     switch (action.type) { 
         case SlideActionTypes.ADD_SLIDE: {
-            const background: SolidBackground = {
-                color: 'white',
-                type: 'solid'
-            }
-            const newSlide: SlideType = {
-                id: action.payload,
-                background: background,
-                objects: []
-            } 
-            return [ ...state, newSlide ] 
+            const newSlide = getDefaultSlide()
+            return [...state, newSlide]; 
         }
-        case SlideActionTypes.REMOVE_SLIDE: 
-            return state.filter(item => item.id !== action.payload)
+        case SlideActionTypes.REMOVE_SLIDE: {
+            const slideId = (action.payload as RemoveSlidePayload).selectedSlideId
+            return state.filter(item => item.id !== slideId)
+        }
         case SlideActionTypes.CHANGE_SLIDE_BACKGROUND: {
-            const slide = state.find(s => s.id === SELECTED_SLIDE_ID) //тут как будто должен быть selectedSlideId
+            const slideId = (action.payload as ChangeBackgroundColorPayload).selectedSlideId
+            const value = (action.payload as ChangeBackgroundColorPayload).value
+            const type = (action.payload as ChangeBackgroundColorPayload).type
+            const slide = state.find(s => s.id === slideId)
             if (slide) {
-                //тут вопрос с тем, что нам делать с картинкой / цветом. типы бэкграундов разные.
-                const editedSlide: SlideType = { ...slide, background:  }
+                let newBackground : Background 
+                if (type === 'solid'){
+                    newBackground = {
+                        color: value,
+                        type: 'solid'
+                    }
+                }
+                else{
+                    newBackground = {
+                        src: value,
+                        type: 'image'
+                    }
+                }    
+                const editedSlide: SlideType = { ...slide, background: newBackground }
                 return state.map(x => {
                     if (x.id === slide.id){
                         return editedSlide
@@ -38,9 +48,22 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             }
             return state
         }
+        case SlideActionTypes.CHANGE_SLIDE_POSITION: {
+            const newOrder = (action.payload as ChangeSlidePositionPayload).newOrder
+            return newOrder.reduce((slideList: SlideType[], id: string) => {
+                    const slide = state.find(slide => slide.id === id)
+                    if (slide) {
+                        slideList.push(slide)
+                    }
+                    return slideList;
+                }, [])
+        }
+        //insert elements
         case SlideActionTypes.INSERT_FIGURE: {
-            const slide = state.find(s => s.id === SELECTED_SLIDE_ID) //тут как будто должен быть selectedSlideId
-            const figure = getDefaultFigure(action.payload)
+            const slideId = (action.payload as InsertFigurePayload).selectedSlideId
+            const figureType = (action.payload as InsertFigurePayload).figureType 
+            const slide = state.find(s => s.id === slideId)
+            const figure = getDefaultFigure(figureType)
             if (figure && slide){
                 const editedSlide: SlideType = { ...slide, objects: [...slide.objects, figure] }
                 return state.map(x => {
@@ -55,9 +78,11 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             return state
         }
         case SlideActionTypes.INSERT_IMAGE: {
-            const slide = state.find(s => s.id === SELECTED_SLIDE_ID) //тут как будто должен быть selectedSlideId
+            const slideId = (action.payload as InsertImagePayload).selectedSlideId
+            const src = (action.payload as InsertImagePayload).src 
+            const slide = state.find(s => s.id === slideId)
             if (slide && action.payload) {
-                const image = getDefaultImage(action.payload)
+                const image = getDefaultImage(src)
                 const editedSlide: SlideType = { ...slide, objects: [...slide.objects, image] }
                 return state.map(x => {
                     if (x.id === slide.id){
@@ -71,7 +96,8 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             return state
         }
         case SlideActionTypes.INSERT_TEXT_FIELD: {
-            const slide = state.find(s => s.id === SELECTED_SLIDE_ID) //тут как будто должен быть selectedSlideId
+            const slideId = (action.payload as InsertTextFieldPayload).selectedSlideId
+            const slide = state.find(s => s.id === slideId)
             if (slide) {
                 const textField = getDefaultTextField()
                 const editedSlide: SlideType = { ...slide, objects: [...slide.objects, textField] }
@@ -88,11 +114,14 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
         }
         //change elements
         case SlideActionTypes.CHANGE_TEXT_FONT: {
-            const slide = state.find(s => s.id === SELECTED_SLIDE_ID) //тут как будто должен быть selectedSlideId
+            const slideId = (action.payload as ChangeTextFontPayload).selectedSlideId
+            const slide = state.find(s => s.id === slideId)
             if (slide) {
-                const searchedObj = slide.objects.find(o => o.id === SELECTED_ELEM_ID) //тут как будто должен быть selectedElemId
+                const elemId = (action.payload as ChangeTextFontPayload).selectedElemId
+                const searchedObj = slide.objects.find(o => o.id === elemId) 
                 if (searchedObj && searchedObj.type === 'text') {
-                    const editedObj: TextObject = {...searchedObj, font: action.payload}
+                    const font = (action.payload as ChangeTextFontPayload).newFont
+                    const editedObj: TextObject = {...searchedObj, font}
                     const editedSlide: SlideType = {...slide, objects: slide.objects.map(x => {
                         if (x.id === editedObj.id){
                             return editedObj
@@ -114,9 +143,11 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             return state
         }
         case SlideActionTypes.REMOVE_ELEM: {
-            const slide: SlideType | undefined = state.find(s => s.id === SELECTED_ELEM_ID) //тут как будто должен быть selectedElemId
+            const slideId = (action.payload as RemoveElemPayload).selectedSlideId
+            const slide: SlideType | undefined = state.find(s => s.id === slideId)
             if (slide) {
-                const editedSlide: SlideType = { ...slide, objects: slide.objects.filter(s => s.id !== action.payload) }
+                const elemId = (action.payload as RemoveElemPayload).selectedElemId 
+                const editedSlide: SlideType = { ...slide, objects: slide.objects.filter(s => s.id !== elemId) }
                 return state.map(x => {
                     if (x.id === slide.id){
                         return editedSlide
@@ -129,11 +160,14 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             return state
         }
         case SlideActionTypes.CHANGE_ELEM_COLOR: {
-            const slide = state.find(s => s.id === SELECTED_SLIDE_ID) //тут как будто должен быть selectedSlideId
+            const slideId = (action.payload as ChangeElemColorPayload).selectedSlideId
+            const slide = state.find(s => s.id === slideId)
             if (slide) {
-                const searchedObj = slide.objects.find(o => o.id === SELECTED_ELEM_ID) //тут как будто должен быть selectedElemId
+                const elemId = (action.payload as ChangeElemColorPayload).selectedElemId
+                const searchedObj = slide.objects.find(o => o.id === elemId)
                 if (searchedObj && searchedObj.type !== 'image') {
-                    const editedObj: SlideObject = {...searchedObj, color: action.payload}
+                    const color = (action.payload as ChangeElemColorPayload).newColor
+                    const editedObj: SlideObject = {...searchedObj, color}
                     const editedSlide: SlideType = {...slide, objects: slide.objects.map(x => {
                         if (x.id === editedObj.id){
                             return editedObj
@@ -155,11 +189,14 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             return state
         }
         case SlideActionTypes.CHANGE_TEXT: {
-            const slide = state.find(s => s.id === SELECTED_SLIDE_ID) //тут как будто должен быть selectedSlideId
+            const slideId = (action.payload as ChangeTextPayload).selectedSlideId
+            const slide = state.find(s => s.id === slideId)
             if (slide) {
-                const searchedObj = slide.objects.find(o => o.id === SELECTED_ELEM_ID) //тут как будто должен быть selectedElemId
+                const elemId = (action.payload as ChangeTextPayload).selectedElemId
+                const searchedObj = slide.objects.find(o => o.id === elemId)
                 if (searchedObj && searchedObj.type === 'text') {
-                    const editedObj: SlideObject = {...searchedObj, text: action.payload}
+                    const text = (action.payload as ChangeTextPayload).newText
+                    const editedObj: SlideObject = {...searchedObj, text}
                     const editedSlide: SlideType = {...slide, objects: slide.objects.map(x => {
                         if (x.id === editedObj.id){
                             return editedObj
@@ -181,11 +218,14 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             return state
         }
         case SlideActionTypes.CHANGE_TEXT_SIZE: {
-            const slide = state.find(s => s.id === SELECTED_SLIDE_ID) //тут как будто должен быть selectedSlideId
+            const slideId = (action.payload as ChangeTextSizePayload).selectedSlideId
+            const slide = state.find(s => s.id === slideId)
             if (slide) {
-                const searchedObj = slide.objects.find(o => o.id === SELECTED_ELEM_ID) //тут как будто должен быть selectedElemId
+                const elemId = (action.payload as ChangeTextSizePayload).selectedElemId
+                const searchedObj = slide.objects.find(o => o.id === elemId)
                 if (searchedObj && searchedObj.type === 'text') {
-                    const editedObj: SlideObject = {...searchedObj, fontsize: action.payload} //тут есть проблема)))
+                    const fontsize = (action.payload as ChangeTextSizePayload).newFontsize
+                    const editedObj: SlideObject = {...searchedObj, fontsize}
                     const editedSlide: SlideType = {...slide, objects: slide.objects.map(x => {
                         if (x.id === editedObj.id){
                             return editedObj
@@ -206,29 +246,20 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             }
             return state
         }
-        case SlideActionTypes.CHANGE_SLIDE_POSITION: {
-            //тут ошибка, и всё из-за payload...
-            return [
-                action.payload.reduce((slideList: SlideType[], id: string) => {
-                    const slide = state.find(slide => slide.id === id)
-                    if (slide) {
-                        slideList.push(slide)
-                    }
-                    return slideList;
-                }, [])
-            ]
-        }
         case SlideActionTypes.CHANGE_ELEM_SIZE: {
+            const slideId = (action.payload as ChangeElemSizePayload).selectedSlideId
+            const elemId = (action.payload as ChangeElemSizePayload).selectedElemId
+            const newSize = (action.payload as ChangeElemSizePayload).newSize
             return state.map(slide => {
-                    if (slide.id === SELECTED_SLIDE_ID) { //тут как будто должен быть selectedSlideId
+                    if (slide.id === slideId) {
                         return {
                             ...slide,
                             objects: slide.objects.map(object => {
-                                if (object.id === SELECTED_ELEM_ID) { //тут как будто должен быть selectedElemId
+                                if (object.id === elemId) {
                                     return {
                                         ...object,
-                                        width: action.payload.width, //unluck, but it is frontend, the reason of this error is PAYLOAD: string
-                                        height: action.payload.height
+                                        width: newSize.width, 
+                                        height: newSize.height
                                     }
                                 }
                                 return object
@@ -239,16 +270,18 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
                 })
         }
         case SlideActionTypes.CHANGE_ELEM_POSITION: {
+            const slideId = (action.payload as ChangeElemPositionPayload).selectedSlideId
+            const elemId = (action.payload as ChangeElemPositionPayload).selectedElemId
+            const newPos = (action.payload as ChangeElemPositionPayload).newPos
             return state.map(slide => {
-                    if (slide.id === SELECTED_SLIDE_ID) { //тут как будто должен быть selectedSlideId
+                    if (slide.id === slideId) {
                         return {
                             ...slide,
                             objects: slide.objects.map(object => {
-                                if (object.id === SELECTED_ELEM_ID) { //тут как будто должен быть selectedElemId
+                                if (object.id === elemId) {
                                     return {
                                         ...object,
-                                        position: action.payload, //unluck, but it is frontend, the reason of this error is PAYLOAD: string
-                                        //so 'return' is underlined...
+                                        position: newPos
                                     }
                                 }
                                 return object

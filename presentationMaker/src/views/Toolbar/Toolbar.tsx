@@ -10,15 +10,11 @@ import { removeObj } from "../../store/Actions/removeObj"
 import { changeBackgroundColor } from "../../store/Actions/changeBackgroundColor"
 import { changeBackgroundImage } from "../../store/Actions/changeBackgroundImage"
 import { Form } from "../../components/Forms/Form"
-import { insertImage } from "../../store/Actions/insertImage"
 import { changeSlideObjectColor } from "../../store/Actions/changeSlideObjectColor"
-import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "../../store/rootReducer"
 import { useAppActions } from "../../hooks/useAppActions"
 import { generateGuid } from "../../store/actions"
-import { useAppSelector } from "../../hooks/useAppSelector"
-type toolbarProps ={
-    onAddText: () => void
+
+type toolbarProps = {
     onExport: () => void
     slideId: string
     isRemoveSlideAvailable: boolean
@@ -32,7 +28,6 @@ const Toolbar = ({ onAddText, selectedElemId, slideId, isRemoveSlideAvailable, s
     const onAddFigure = (figureType: string) => {
         dispatch(insertFigure, {slideId, figureType})
     }  
-    //заменил, но есть вопросы к выделению
 
     let removeSlideClassName = style.toolBar__tool
     if (isRemoveSlideAvailable) {

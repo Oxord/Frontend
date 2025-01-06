@@ -3,105 +3,145 @@ import { SlidesAction } from "../SlidesAction"
 import { Position, SizeType } from "../types"
 
 //change slide
-export const addSlide = (slideId: string): SlidesAction => {
+export const addSlide = (): SlidesAction => {
     return {
         type: SlideActionTypes.ADD_SLIDE,
-        payload: slideId
+        payload: null
     }
 }
 
-export const removeSlide = (slideId: string): SlidesAction => {
+export const removeSlide = (selectedSlideId: string): SlidesAction => {
     return {
         type: SlideActionTypes.REMOVE_SLIDE,
-        payload: slideId
+        payload: {
+            selectedSlideId
+        }
     }
 }
 
-export const changeBackgroundColor = (color: string): SlidesAction => {
+export const changeBackgroundColor = (selectedSlideId: string, value: string, type: 'src' | 'solid'): SlidesAction => {
     return {
         type: SlideActionTypes.CHANGE_SLIDE_BACKGROUND,
-        payload: color
+        payload: {
+            selectedSlideId, 
+            value, 
+            type
+        }
     }
 } 
-//тут либо вынести в два разных действия (картинка и цвет), либо передавать какой-то флаг того, что мы меняем.
 
 export const changeSlidePosition = (newOrder: string[]): SlidesAction => {
     return {
         type: SlideActionTypes.CHANGE_TEXT,
-        payload: newOrder
+        payload: {
+            newOrder
+        }    
     }
 }
-//тут тоже проблема... и всё из-за payload типа string
 
 //insert elements
-export const inserFigure = (figureType: string): SlidesAction => {
+export const inserFigure = (selectedSlideId: string, figureType: 'circle' | 'reactagnle' | 'triangle'): SlidesAction => {
     return {
         type: SlideActionTypes.INSERT_FIGURE,
-        payload: figureType
+        payload: {
+            selectedSlideId, 
+            figureType
+        }
     }
 }
 
-export const inserImage = (src: string): SlidesAction => {
+export const inserImage = (selectedSlideId: string, src: string): SlidesAction => {
     return {
         type: SlideActionTypes.INSERT_IMAGE,
-        payload: src
+        payload: {
+            selectedSlideId,
+            src
+        }
     }
 }
 
-export const inserTextField = (): SlidesAction => { //тут можно и пустой payload поставить
+export const inserTextField = (selectedSlideId: string): SlidesAction => { 
     return {
         type: SlideActionTypes.INSERT_IMAGE,
-        payload: ''
+        payload: {
+            selectedSlideId
+        }
     }
 }
 
 //change elements
-export const changeTextFont = (newFont: string): SlidesAction => {
+export const changeTextFont = (selectedSlideId: string, selectedElemId: string, newFont: string): SlidesAction => {
     return {
         type: SlideActionTypes.CHANGE_TEXT_FONT,
-        payload: newFont
+        payload: {
+            selectedSlideId, 
+            selectedElemId, 
+            newFont
+        }
     }
 } 
 
-export const removeElement = (elemId: string): SlidesAction => {
+export const removeElement = (selectedSlideId: string, selectedElemId: string): SlidesAction => {
     return {
         type: SlideActionTypes.REMOVE_ELEM,
-        payload: elemId
+        payload: {
+            selectedSlideId,
+            selectedElemId
+        }
     }
 } 
 
-export const changeTextSize = (newSize: number): SlidesAction => {
+export const changeTextSize = (selectedSlideId: string, selectedElemId: string, newFontsize: number): SlidesAction => {
     return {
         type: SlideActionTypes.CHANGE_TEXT_SIZE,
-        payload: newSize
+        payload: {
+            selectedSlideId,
+            selectedElemId,
+            newFontsize
+        }
     }
 } 
-//тут проблема с payload
 
-export const changeElementColor = (color: string): SlidesAction => {
+export const changeElementColor = (selectedSlideId: string, selectedElemId: string, newColor: string): SlidesAction => {
     return {
         type: SlideActionTypes.CHANGE_ELEM_COLOR,
-        payload: color
+        payload: {
+            selectedSlideId,
+            selectedElemId,
+            newColor
+        }
     }
 } 
 
-export const changeText = (newText: string): SlidesAction => {
+export const changeText = (selectedSlideId: string, selectedElemId: string, newText: string): SlidesAction => {
     return {
         type: SlideActionTypes.CHANGE_TEXT,
-        payload: newText
+        payload: {
+            selectedSlideId,
+            selectedElemId,
+            newText
+        }    
     }
 }
 
-export const changeSlideElementSize = (newSize: SizeType): SlidesAction => { //должно быть так, но будет error:(
+export const changeSlideElementSize = (selectedSlideId: string, selectedElemId: string, newSize: SizeType): SlidesAction => { 
     return {
         type: SlideActionTypes.CHANGE_TEXT,
-        payload: newSize
+        payload: {
+            selectedSlideId,
+            selectedElemId,
+            newSize
+        }
     }
 }
 
-export const changeSlideElementPosition = (newPos: Position): SlidesAction => { //должно быть так, но будет error:(
+export const changeSlideElementPosition = (selectedSlideId: string, selectedElemId: string, newPos: Position): SlidesAction => { 
     return {
         type: SlideActionTypes.CHANGE_TEXT,
-        payload: newPos
+        payload: {
+            selectedSlideId,
+            selectedElemId,
+            newPos
+        }
     }
 }
