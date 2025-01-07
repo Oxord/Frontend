@@ -11,7 +11,6 @@ function render() {
   root.render(
       <Provider store={store}>
         <App/>
-        {/* <App editor={getEditor()}/> */}
       </Provider>
   )
 }

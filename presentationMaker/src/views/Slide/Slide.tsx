@@ -10,12 +10,10 @@ type SlideProps = {
     isSelected: boolean | null,
     showSelection: boolean,
     selectedElemId: string
-    onElemClick: (objId: string) => void
-    onChangeSlideObjectPosition: () => void
-    onChangeSlideObjectSize: () => void
+    onElemClick: (elemId: string) => void
 } 
 
-const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemClick, selectedElemId, onChangeSlideObjectPosition, onChangeSlideObjectSize}: SlideProps) => {
+const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemClick, selectedElemId }: SlideProps) => {
     const slideStyle: CSSProperties = {
         position: 'relative',
         maxWidth: '100%',
@@ -41,19 +39,17 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
 
     const [isPointActive, setPointActive] = useState(false)
 
-    const slideElements = slide.objects.map(obj => {
-        if (obj){
+    const slideElements = slide.objects.map(elem => {
+        if (elem){
             return (
-                <div onMouseDown={() => onElemClick(obj.id)}>
+                <div onMouseDown={() => onElemClick(elem.id)}>
                     <SlideElem 
-                        elem={obj} 
-                        key={obj.id} 
+                        elem={elem} 
+                        key={elem.id} 
+                        slideId={slide.id}
                         // scale={scale} 
-                        isSelected={selectedElemId === obj.id} 
-                        // onElemClick={() => onElemClick(obj.id)} 
+                        isSelected={selectedElemId === elem.id} 
                         showSelection={showSelection}
-                        onChangeSlideObjectPosition={onChangeSlideObjectPosition}
-                        onChangeSlideObjectSize={onChangeSlideObjectSize}
                         slideRef={slideRef}
                         isPointActive={isPointActive}
                     />

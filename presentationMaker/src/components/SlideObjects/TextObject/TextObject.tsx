@@ -1,18 +1,17 @@
 import { CSSProperties, useState } from "react"
-// import { dispatch } from "../../../store/editor"
-// import { changeText } from "../../../store/Actions/changeText"
+import { useAppActions } from "../../../hooks/useAppActions"
 
 export type TextObjectProps = {
+  slideId: string
   text: string
   font: string
   fontSize: number
   isReadOnly: boolean
   elemId: string
   textColor: string
-  //добавить цвет текста
 }
 
-export const TextObject = ({ text, font, fontSize, isReadOnly, elemId, textColor }: TextObjectProps) => {
+export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, textColor }: TextObjectProps) => {
   const textObjectStyle: CSSProperties = {
       border: 'none',
       background: 'none',
@@ -29,24 +28,29 @@ export const TextObject = ({ text, font, fontSize, isReadOnly, elemId, textColor
       outline: 'none', 
       overflowY: 'hidden'
   }
-  // const fontContext = React.createContext(font) 
+ 
+  const { changeText } = useAppActions()
+  const [newText, setNewText] = useState(text)
 
-  const [textAreaValue, setTextAreaValue] = useState(text)
-  // const changeTextAreaValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setTextAreaValue(event.target.value)
-  //   // const obj = {
-  //   //   slideId: '361a7d46-e882-4d8d-9353-66d90c57d157',
-  //   //   textObjtId: elemId,
-  //   //   newText: textAreaValue
-  //   // }
-  //   // dispatch(changeText, obj)
-  // }
-
-  // if (!textAreaValue){
-    
-  // }
+  const onChangeText: React.ChangeEventHandler<HTMLTextAreaElement>= (event) => {
+    setNewText(event.target.value)
+    if (newText)
+      changeText(
+        slideId,
+        elemId,
+        newText
+      )
+  }
+  //тут мб возникнут проблемы потом с историей, но пока пусть будет так
 
   return (
-      <textarea style={textObjectStyle} readOnly={isReadOnly}>{textAreaValue}</textarea>
+      <textarea 
+        style={textObjectStyle} 
+        readOnly={isReadOnly} 
+        onChange={onChangeText}
+        // onkeydown={onChangeTextSubmit}
+      >
+          {newText}
+      </textarea>
   )
 }

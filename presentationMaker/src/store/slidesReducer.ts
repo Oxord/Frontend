@@ -1,13 +1,14 @@
 import { getDefaultImage } from "./GetDefaultImage"
 import { getDefaultFigure } from "./GetDefaultFigure"
 import { SlideActionTypes } from "./SlideActionTypes"
-import { ChangeBackgroundColorPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction } from "./SlidesAction"
+import { ChangeBackgroundPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction } from "./SlidesAction"
 import { SlidesState } from "./SlidesState"
 import { Background, SlideObject, SlideType, TextObject } from "./types"
 import { getDefaultTextField } from "./GetDefaultTextField"
-import { getDefaultSlide } from "./getDefaultSlide"
+import { getDefaultSlide } from "./GetDefaultSlide"
+import { initialData } from "./initialData"
 
-const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesState => { 
+const slidesReducer = (state = initialData.slides, action: SlidesAction): SlidesState => { 
     switch (action.type) { 
         case SlideActionTypes.ADD_SLIDE: {
             const newSlide = getDefaultSlide()
@@ -18,9 +19,9 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             return state.filter(item => item.id !== slideId)
         }
         case SlideActionTypes.CHANGE_SLIDE_BACKGROUND: {
-            const slideId = (action.payload as ChangeBackgroundColorPayload).selectedSlideId
-            const value = (action.payload as ChangeBackgroundColorPayload).value
-            const type = (action.payload as ChangeBackgroundColorPayload).type
+            const slideId = (action.payload as ChangeBackgroundPayload).selectedSlideId
+            const value = (action.payload as ChangeBackgroundPayload).value
+            const type = (action.payload as ChangeBackgroundPayload).type
             const slide = state.find(s => s.id === slideId)
             if (slide) {
                 let newBackground : Background 
@@ -274,11 +275,11 @@ const slidesReducer = (state = [] as SlideType[], action: SlidesAction): SlidesS
             const elemId = (action.payload as ChangeElemPositionPayload).selectedElemId
             const newPos = (action.payload as ChangeElemPositionPayload).newPos
             return state.map(slide => {
-                    if (slide.id === slideId) {
-                        return {
-                            ...slide,
-                            objects: slide.objects.map(object => {
-                                if (object.id === elemId) {
+                if (slide.id === slideId) {
+                    return {
+                        ...slide,
+                        objects: slide.objects.map(object => {
+                            if (object.id === elemId) {
                                     return {
                                         ...object,
                                         position: newPos

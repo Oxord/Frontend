@@ -12,10 +12,6 @@ function App() {
     
     const slides = useAppSelector(state => state.slides)
     const title = useAppSelector(state => state.title)
-
-    const SLIDE_WIDTH = 950
-    const SLIDE_HEIGHT = 525
-    const selectedSlide = slides.find(s => s.id === selectedSlideId)
     
     const onExport = () => { //засунуть куда-нибудь эту шнягу потом
         const validEditor = validateEditor()
@@ -68,17 +64,18 @@ function App() {
     }
     
     let selectedElemType = ''
-    let selectedElemColor: string | null = null
+    let selectedElemColor = ''
     if (selectedElemId) {
         const selectedElem = slide?.objects.find(o => o.id === selectedElemId)
         if ( selectedElem && selectedElem.type !== 'image') {
             selectedElemType = selectedElem.type
             selectedElemColor = selectedElem.color
         }
-        else{
-            selectedElemColor = null
-        }
     }
+    
+    const SLIDE_WIDTH = 950
+    const SLIDE_HEIGHT = 525
+    const selectedSlide = slides.find(s => s.id === selectedSlideId)
 
     return (
         <div>
@@ -87,19 +84,17 @@ function App() {
             />
             <Toolbar 
                 onExport={onExport}
-                // onAddText={onAddText}
-                slideId={selectedSlideId}
+                selectedSlideId={selectedSlideId}
                 isRemoveSlideAvailable={slides.length > 1}
-                selectedElemId={selectedElemId}//fix this moment
+                selectedElemId={selectedElemId}
                 selectedElemType={selectedElemType}
                 selectedElemColor={selectedElemColor}
             />
             <div className={styles.slides}>
                 <SlideList 
                     selectedSlideId={selectedSlideId}
-                    onChangeSlide={onClickSlide}
-                    selectedElemId={selectedElemId} //fix this moment
-                    // onChangeSlidePosition={onChangeSlidePosition}
+                    onClickSlide={onClickSlide}
+                    selectedElemId={selectedElemId}
                 />
                 {selectedSlide &&
                 <div className={styles.slides__workArea}>
@@ -110,9 +105,7 @@ function App() {
                         isSelected={null}
                         showSelection={true}
                         onElemClick={onElemClick}
-                        selectedElemId={selectedElemId}//fix this moment
-                        // onChangeSlideObjectPosition={onChangeSlideObjectPosition}
-                        // onChangeSlideObjectSize={onChangeSlideObjectSize}
+                        selectedElemId={selectedElemId}
                     />
                 </div>}
             </div>

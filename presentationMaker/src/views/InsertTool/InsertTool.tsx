@@ -1,20 +1,16 @@
 import { useRef, useState } from "react"
-import { FigureType } from "../../store/types"
 import style from './InsertTool.module.css'
-import { insertImage } from "../../store/Actions/insertImage"
-import { dispatch } from "../../store/editor"
 import { PopupCover } from "../../components/Popup/PopupCover"
 import { Popup } from '../../components/Popup/Popup'
 import { Form } from "../../components/Forms/Form"
+import { useAppActions } from "../../hooks/useAppActions"
 
 export type InsertToolProps = {
-    onAddFigure: (figureType: FigureType) => void
-    onAddText: () => void
+    selectedSlideId: string
     insertButtonStyle: string
-    slideId: string
 }
 
-export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId }: InsertToolProps) => {
+export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolProps) => {
     
     const ref = useRef<HTMLInputElement | null>(null)
     
@@ -22,6 +18,8 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
         if (ref.current) ref.current.click()
     }
     
+    const { insertImage } = useAppActions()
+
     const onAddImage: React.ChangeEventHandler<HTMLInputElement> = (event) => {
         const file = event.target.files?.[0]
 
@@ -30,8 +28,8 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
             
             reader.onloadend = () => {
                 const src = reader.result; 
-                if (src) {
-                    dispatch(insertImage, {slideId, src})
+                if (src as string) {
+                    insertImage(selectedSlideId, src as string)
                 }
                 else{
                     alert('Не удалось добавить файл:(')
@@ -77,12 +75,15 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
     const onAddImageFromURL = () => {
         const src = inputImgValue
         if (src) {
-            dispatch(insertImage, {slideId, src})
+            insertImage(selectedSlideId, src)
         }
         else{
             alert('Не удалось добавить файл:(')
         }
     }
+
+    const { insertFigure } = useAppActions()
+    const { insertTextField } = useAppActions()
 
     return(
         <>
@@ -96,17 +97,17 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                                     Figure
                                 </button>    
                                     {figureInsertOpened && <div className={style.insertSection__figure_objects}>
-                                        <div onClick={() => {onAddFigure('circle'); changeInsertToolOpened()}} className={style.insertSection__figure_objects__figure}>
+                                        <div onClick={() => {insertFigure(selectedSlideId, 'circle'); changeInsertToolOpened()}} className={style.insertSection__figure_objects__figure}>
                                             <svg width='45' height='45'>
                                                 <circle cx="22" cy="22" r="20" fill='none' stroke='rgba(255, 113, 0, 1)' strokeWidth={'3px'} />
                                             </svg> 
                                         </div>
-                                        <div onClick={() => {onAddFigure('rectangle'); changeInsertToolOpened()}} className={style.insertSection__figure_objects__figure}>
+                                        <div onClick={() => {insertFigure(selectedSlideId, 'rectangle'); changeInsertToolOpened()}} className={style.insertSection__figure_objects__figure}>
                                             <svg width='45' height='45' fill='none' stroke='rgba(255, 113, 0, 1)' strokeWidth={'3px'}>
                                                 <rect x="2" y="2" width="40" height="40"></rect>
                                             </svg>
                                         </div>
-                                        <div onClick={() => {onAddFigure('triangle'); changeInsertToolOpened()}} className={style.insertSection__figure_objects__figure}>
+                                        <div onClick={() => {insertFigure(selectedSlideId, 'triangle'); changeInsertToolOpened()}} className={style.insertSection__figure_objects__figure}>
                                             <svg width='45' height='45' fill='none' stroke='rgba(255, 113, 0, 1)' strokeWidth={'3px'}> 
                                                 <polygon x={'30'} y={'15'} points=" 0, 44, 22, 4, 44, 44 " />
                                             </svg>
@@ -133,7 +134,7 @@ export const InsertTool = ({ onAddFigure, onAddText, insertButtonStyle, slideId 
                             <div>
                                 <button onClick={() => {
                                     changeInsertToolOpened();
-                                    onAddText()}
+                                    insertTextField(selectedSlideId)}
                                 }>Text field</button>
                             </div>
                         </div>

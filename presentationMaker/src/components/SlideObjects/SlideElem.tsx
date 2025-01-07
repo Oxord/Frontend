@@ -8,33 +8,45 @@ import { Triangle } from "./ImageObject/Shapes/Triangle"
 import styles from './SlideElem.module.css'
 import { useDragAndDrop } from "../../hooks/useDragAndDrop"
 import { useResize } from "../../hooks/useResize"
+import { useAppActions } from "../../hooks/useAppActions"
 
 type slideObjectProps = {
-    elem: SlideObject
+    slideId: string
     isSelected: boolean
+    elem: SlideObject
     showSelection: boolean
-    onChangeSlideObjectPosition: (elemId: string, newPos: Position) => void
-    onChangeSlideObjectSize: (elemId: string, newSize: SizeType) => void
     slideRef:  RefObject<HTMLElement>
     isPointActive: boolean
 }
 
-export const SlideElem = ( {elem, isSelected, showSelection, onChangeSlideObjectPosition, onChangeSlideObjectSize, slideRef, isPointActive}: slideObjectProps ) => {
-    let objectPoint: string
+export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, isPointActive}: slideObjectProps ) => {
+    let elemPoint: string
     let elemClassName: string = styles.elem
-    if (isSelected && showSelection){
+    if (isSelected && showSelection) {
         elemClassName = styles.elem + ' ' + styles.elem_selected
-        objectPoint = styles.figure__point
+        elemPoint = styles.figure__point
     }
     else{
         elemClassName = styles.elem
-        objectPoint = styles.disable
+        elemPoint = styles.disable
     }
 
+    const { changeElementPosition } = useAppActions()
+    const draggableObject = useRef<HTMLDivElement>(null)    
+    const [pos, setPos] = useState(elem.position)
+    useEffect(() => {
+        setPos(elem.position)
+    }, [elem.position])
+    const onChangePosition = (newPos: Position) => 
+        changeElementPosition(
+            slideId,
+            elem.id,
+            newPos
+        )
+    useDragAndDrop(draggableObject, setPos, onChangePosition, isSelected, slideRef)
+    
+    const { changeElementSize } = useAppActions()
     const objectSizes: SizeType = { width: elem.width, height: elem.height }
-
-    const draggableObject = useRef<HTMLDivElement>(null)
-
     const draggablePointTopLeft = useRef<HTMLDivElement>(null)
     const draggablePointTop = useRef<HTMLDivElement>(null)
     const draggablePointTopRight = useRef<HTMLDivElement>(null)
@@ -43,24 +55,16 @@ export const SlideElem = ( {elem, isSelected, showSelection, onChangeSlideObject
     const draggablePointBottomLeft = useRef<HTMLDivElement>(null)
     const draggablePointBottom = useRef<HTMLDivElement>(null)
     const draggablePointBottomRight = useRef<HTMLDivElement>(null)
-
-    const [pos, setPos] = useState(elem.position)
-    useEffect(() => {
-        setPos(elem.position)
-    }, [elem.position])
-
-    const onChangePosition = (newPos: Position) => onChangeSlideObjectPosition(elem.id, newPos)
-
-    useDragAndDrop(draggableObject, setPos, onChangePosition, isSelected, slideRef)
-
-
     const [size, setSize] = useState(objectSizes)
     useEffect(() => {
         setSize({ width: elem.width, height: elem.height })
     }, [elem.width, elem.height])
-
-    const onChangeSize = (newSize: SizeType) => onChangeSlideObjectSize(elem.id, newSize)
-
+    const onChangeSize = (newSize: SizeType) => 
+        changeElementSize(
+            slideId,
+            elem.id, 
+            newSize
+        )
     useResize(
         draggablePointTopLeft,
         draggablePointTop,
@@ -79,14 +83,14 @@ export const SlideElem = ( {elem, isSelected, showSelection, onChangeSlideObject
         isPointActive
     )
     
-    const topLeftPoint = objectPoint + ' ' + styles.point_top_left
-    const topPoint = objectPoint + ' ' + styles.point_top
-    const topRightPoint = objectPoint + ' ' + styles.point_top_right
-    const mediumLeftPoint = objectPoint + ' ' + styles.point_medium_left
-    const mediumRightPoint = objectPoint + ' ' + styles.point_medium_right
-    const bottomLeftPoint = objectPoint + ' ' + styles.point_bottom_left
-    const bottomPoint = objectPoint + ' ' + styles.point_bottom
-    const bottomRightPoint = objectPoint + ' ' + styles.point_bottom_right
+    const topLeftPoint = elemPoint + ' ' + styles.point_top_left
+    const topPoint = elemPoint + ' ' + styles.point_top
+    const topRightPoint = elemPoint + ' ' + styles.point_top_right
+    const mediumLeftPoint = elemPoint + ' ' + styles.point_medium_left
+    const mediumRightPoint = elemPoint + ' ' + styles.point_medium_right
+    const bottomLeftPoint = elemPoint + ' ' + styles.point_bottom_left
+    const bottomPoint = elemPoint + ' ' + styles.point_bottom
+    const bottomRightPoint = elemPoint + ' ' + styles.point_bottom_right
 
     const elemStyle: CSSProperties = {
         left: pos.X,  
@@ -97,6 +101,7 @@ export const SlideElem = ( {elem, isSelected, showSelection, onChangeSlideObject
     switch (elem.type){
         case 'text':
             element = <TextObject 
+                        slideId={slideId}
                         text={elem.text} 
                         font={elem.font} 
                         fontSize={elem.fontsize * 1} 

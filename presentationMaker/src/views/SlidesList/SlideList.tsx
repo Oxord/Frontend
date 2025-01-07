@@ -1,33 +1,29 @@
 import { SlidePreview } from "../../components/SlidePreview/SlidePreview"
+import { useAppActions } from "../../hooks/useAppActions"
 import { useAppSelector } from "../../hooks/useAppSelector"
 import { SlideType } from "../../store/types"
 import style from './SlideList.module.css'
 
 export type slidesListProps = {
     selectedSlideId: string
-    onChangeSlide: (slideId: string) => void
-    onChangeSlidePosition: (newOrder: string[]) => void
+    onClickSlide: (slideId: string) => void
     selectedElemId: string
-    onElemClick?: (objId: string) => void
 }
 
-const SlideList = ( {selectedSlideId, onChangeSlide, selectedElemId, onChangeSlidePosition}: slidesListProps ) => {   
+const SlideList = ( {selectedSlideId, onClickSlide, selectedElemId}: slidesListProps ) => {  
     
     const slides = useAppSelector(state => state.slides)
-    console.log(slides)
 
+    const { changeSlidePosition } = useAppActions()
     let newOrder: string[] = slides.map(slideId => slideId.id)
     let draggedSlideId: string
-
-    function onDragStart(slide: SlideType) {
+    const onDragStart = (slide: SlideType) => {
         draggedSlideId = slide.id
     }
-
-    function onDragOver(event: React.DragEvent<HTMLDivElement>) {
+    const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault()
     }
-
-    function onDrop(event: React.DragEvent<HTMLDivElement>, slide: SlideType) {
+    const onDrop = (event: React.DragEvent<HTMLDivElement>, slide: SlideType) => {
 
         event.preventDefault()
         const indexOfDraggedSlideId = newOrder.indexOf(draggedSlideId)
@@ -41,7 +37,7 @@ const SlideList = ( {selectedSlideId, onChangeSlide, selectedElemId, onChangeSli
             newOrder.splice(indexOfSlideId + 1, 0, draggedSlideId)
         }        
 
-        onChangeSlidePosition(newOrder) 
+        changeSlidePosition(newOrder) 
     }
 
     return (
@@ -49,7 +45,7 @@ const SlideList = ( {selectedSlideId, onChangeSlide, selectedElemId, onChangeSli
             {slides.map(slide =>
                 <div key={slide.id} 
                     className={style.slideList__slide_prewiev} 
-                    onClick={() => onChangeSlide(slide.id)}
+                    onClick={() => onClickSlide(slide.id)}
                     draggable={true}
                     onDragStart={() => onDragStart(slide)}
                     onDragOver={(event: React.DragEvent<HTMLDivElement>) => onDragOver(event)}                
@@ -66,6 +62,6 @@ const SlideList = ( {selectedSlideId, onChangeSlide, selectedElemId, onChangeSli
     )
 }
 
-export{
+export { 
     SlideList
-}
+} 

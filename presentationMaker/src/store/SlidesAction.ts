@@ -6,7 +6,7 @@ export type RemoveSlidePayload = {
     selectedSlideId: string
 }
 
-export type ChangeBackgroundColorPayload = {
+export type ChangeBackgroundPayload = {
     selectedSlideId: string
     value: string
     type: 'src' | 'solid'
@@ -18,7 +18,7 @@ export type ChangeSlidePositionPayload = {
 
 export type InsertFigurePayload = {
     selectedSlideId: string
-    figureType: 'circle' | 'reactagnle' | 'triangle'
+    figureType: 'circle' | 'rectangle' | 'triangle'
 }
 
 export type InsertImagePayload = {
@@ -73,7 +73,7 @@ export type ChangeElemPositionPayload = {
 
 export type PayloadType = 
     RemoveSlidePayload | 
-    ChangeBackgroundColorPayload | 
+    ChangeBackgroundPayload | 
     ChangeSlidePositionPayload | 
     InsertFigurePayload | 
     InsertImagePayload |

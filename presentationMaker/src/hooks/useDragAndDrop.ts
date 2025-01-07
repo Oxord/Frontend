@@ -20,6 +20,7 @@ function useDragAndDrop(
 
         let objectWidth = 0
         let objectHeight = 0
+        let isObjectMoved: boolean = false
 
         function isInSlide(position: Position | undefined): boolean {
             if (position && maxXCoord && maxYCoord) {
@@ -39,6 +40,7 @@ function useDragAndDrop(
         }
 
         const onMouseMove = (event: MouseEvent) => {
+            isObjectMoved = true
             const newPos = fromEventToLocalVec(slideRef, event)
             if (newPos) {
                 if (draggableObject.current) {
@@ -61,14 +63,15 @@ function useDragAndDrop(
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMove)
                 const newPos = fromEventToLocalVec(slideRef, event)
-                if (newPos) {
+                if (newPos && isObjectMoved) {
                     newPos.X = newPos.X - objectWidth / 2
                     newPos.Y = newPos.Y - objectHeight / 2
+                    if (isInSlide(newPos)) {
+                        onChangeSlideObjectPosition(newPos)
+                    }
                 }
-                if (isInSlide(newPos)) {
-                    onChangeSlideObjectPosition(newPos)
-                }                
             }
+            isObjectMoved = false
         }
 
         const onMouseDown = () => {

@@ -1,5 +1,5 @@
 import { EditorType } from './EditorType.ts'
-import { editor } from './initialData.ts'
+import { editor } from './MaxData.ts'
 import { validate } from './Validate.ts'
 
 let _editor: EditorType

@@ -19,7 +19,7 @@ export const removeSlide = (selectedSlideId: string): SlidesAction => {
     }
 }
 
-export const changeBackgroundColor = (selectedSlideId: string, value: string, type: 'src' | 'solid'): SlidesAction => {
+export const changeBackground = (selectedSlideId: string, value: string, type: 'src' | 'solid'): SlidesAction => {
     return {
         type: SlideActionTypes.CHANGE_SLIDE_BACKGROUND,
         payload: {
@@ -40,7 +40,7 @@ export const changeSlidePosition = (newOrder: string[]): SlidesAction => {
 }
 
 //insert elements
-export const inserFigure = (selectedSlideId: string, figureType: 'circle' | 'reactagnle' | 'triangle'): SlidesAction => {
+export const insertFigure = (selectedSlideId: string, figureType: 'circle' | 'rectangle' | 'triangle'): SlidesAction => {
     return {
         type: SlideActionTypes.INSERT_FIGURE,
         payload: {
@@ -50,7 +50,7 @@ export const inserFigure = (selectedSlideId: string, figureType: 'circle' | 'rea
     }
 }
 
-export const inserImage = (selectedSlideId: string, src: string): SlidesAction => {
+export const insertImage = (selectedSlideId: string, src: string): SlidesAction => {
     return {
         type: SlideActionTypes.INSERT_IMAGE,
         payload: {
@@ -60,9 +60,9 @@ export const inserImage = (selectedSlideId: string, src: string): SlidesAction =
     }
 }
 
-export const inserTextField = (selectedSlideId: string): SlidesAction => { 
+export const insertTextField = (selectedSlideId: string): SlidesAction => { 
     return {
-        type: SlideActionTypes.INSERT_IMAGE,
+        type: SlideActionTypes.INSERT_TEXT_FIELD,
         payload: {
             selectedSlideId
         }
@@ -124,9 +124,9 @@ export const changeText = (selectedSlideId: string, selectedElemId: string, newT
     }
 }
 
-export const changeSlideElementSize = (selectedSlideId: string, selectedElemId: string, newSize: SizeType): SlidesAction => { 
+export const changeElementSize = (selectedSlideId: string, selectedElemId: string, newSize: SizeType): SlidesAction => { 
     return {
-        type: SlideActionTypes.CHANGE_TEXT,
+        type: SlideActionTypes.CHANGE_ELEM_SIZE,
         payload: {
             selectedSlideId,
             selectedElemId,
@@ -135,9 +135,9 @@ export const changeSlideElementSize = (selectedSlideId: string, selectedElemId: 
     }
 }
 
-export const changeSlideElementPosition = (selectedSlideId: string, selectedElemId: string, newPos: Position): SlidesAction => { 
+export const changeElementPosition = (selectedSlideId: string, selectedElemId: string, newPos: Position): SlidesAction => { 
     return {
-        type: SlideActionTypes.CHANGE_TEXT,
+        type: SlideActionTypes.CHANGE_ELEM_POSITION,
         payload: {
             selectedSlideId,
             selectedElemId,
