@@ -113,36 +113,36 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
         case 'image': 
             element = <ImageObject 
                         src={elem.src} 
-                        width={elem.width * 1} 
-                        height={elem.height * 1} 
+                        width={size.width * 1} 
+                        height={size.height * 1} 
                     />
             break
         case 'circle':
-            elemStyle.width = elem.width * 2
-            elemStyle.height = elem.width * 2           
+            elemStyle.width = size.width * 2
+            elemStyle.height = size.width * 2           
             element = <Circle 
-                        radius={elem.width * 1}
+                        radius={size.width * 1}
                         color={elem.color}
                     />
             break
         case 'rectangle': 
-            elemStyle.width = elem.width
-            elemStyle.height = elem.height
+            elemStyle.width = size.width
+            elemStyle.height = size.height
             element = <Rectangle 
-                        width={elem.width * 1} 
-                        height={elem.height * 1} 
+                        width={size.width * 1} 
+                        height={size.height * 1} 
                         color={elem.color} 
                     />
             break
         case 'triangle': 
-            elemStyle.width = elem.width
-            elemStyle.height = elem.height
+            elemStyle.width = size.width
+            elemStyle.height = size.height
             element = <Triangle 
                         PointOne={elem.pointOne} 
                         PointTwo={elem.pointTwo} 
                         PointThree={elem.pointThree} 
-                        width={elem.width * 1} 
-                        height={elem.height * 1} 
+                        width={size.width * 1} 
+                        height={size.height * 1} 
                         color={elem.color}
                     />
     }
