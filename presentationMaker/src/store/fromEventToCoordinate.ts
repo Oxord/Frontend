@@ -6,7 +6,7 @@ type EventType = {
     clientY: number
 }
 
-function fromEventToLocalVec(ref: RefObject<HTMLElement>, event: EventType): Position | undefined {
+function fromEventToCoordinate(ref: RefObject<HTMLElement>, event: EventType): Position | undefined {
     if (ref.current) {
         const { left, top } = ref.current.getBoundingClientRect()
         return {
@@ -18,5 +18,5 @@ function fromEventToLocalVec(ref: RefObject<HTMLElement>, event: EventType): Pos
 }
 
 export {
-    fromEventToLocalVec
+    fromEventToCoordinate
 }

@@ -1,18 +1,21 @@
-import { EditorType } from "./EditorType"
 import Ajv from 'ajv'
 import ValidateSchema from './ValidateSchema.json'
+import { stateDataType } from './stateDataType'
 
-const validate = (content: string): EditorType | null => {
+const validate = (content: string): stateDataType | null => {
     const ajv = new Ajv()
     const validate = ajv.compile(ValidateSchema)
     try{
         const jsonData = JSON.parse(content)
-        const name = jsonData.name
+        const title = jsonData.title
         const slides = jsonData.slides
-        const importEditor: EditorType = {presentation: {name, slides}}
-        const valid = validate(importEditor.presentation)
+        const importState = {
+            title: title,
+            slides: slides
+        }
+        const valid = validate(importState)
         if (valid) {
-            return importEditor
+            return importState
         }
         else{
             return null

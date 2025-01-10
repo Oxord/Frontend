@@ -12,7 +12,7 @@ const slidesReducer = (state = initialData.slides, action: SlidesAction): Slides
     switch (action.type) { 
         case SlideActionTypes.ADD_SLIDE: {
             const newSlide = getDefaultSlide()
-            return [...state, newSlide]; 
+            return [...state, newSlide]
         }
         case SlideActionTypes.REMOVE_SLIDE: {
             const slideId = (action.payload as RemoveSlidePayload).selectedSlideId
@@ -293,8 +293,8 @@ const slidesReducer = (state = initialData.slides, action: SlidesAction): Slides
                 })
         }
         default: 
-            return state 
-    } 
+            return state   
+    }
 }
 
 export{ 

@@ -1,5 +1,5 @@
 import { RefObject, useEffect } from "react"
-import { fromEventToLocalVec } from "../store/fromEvenToLocalVec"
+import { fromEventToCoordinate } from "../store/fromEventToCoordinate"
 import { Position } from "../store/types"
 function useDragAndDrop(
     draggableObject: RefObject<HTMLElement>,
@@ -41,7 +41,7 @@ function useDragAndDrop(
 
         const onMouseMove = (event: MouseEvent) => {
             isObjectMoved = true
-            const newPos = fromEventToLocalVec(slideRef, event)
+            const newPos = fromEventToCoordinate(slideRef, event)
             if (newPos) {
                 if (draggableObject.current) {
                     objectWidth = draggableObject.current.offsetWidth
@@ -62,7 +62,7 @@ function useDragAndDrop(
         const onMouseUp = (event: MouseEvent) => {
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMove)
-                const newPos = fromEventToLocalVec(slideRef, event)
+                const newPos = fromEventToCoordinate(slideRef, event)
                 if (newPos && isObjectMoved) {
                     newPos.X = newPos.X - objectWidth / 2
                     newPos.Y = newPos.Y - objectHeight / 2

@@ -3,10 +3,10 @@ import { Slide } from './views/Slide/Slide'
 import { SlideList } from './views/SlidesList/SlideList'
 import { Toolbar } from './views/Toolbar/Toolbar'
 import { TopPanel } from './views/TopPanel/TopPanel'
-import { validateEditor } from './store/editor'
 import { useEffect, useState } from 'react'
 import { SlideType } from './store/types'
 import { useAppSelector } from './hooks/useAppSelector'
+import { getStateFromLocalStorage } from './store/getStateFromLocalStorage'
 
 function App() {
     
@@ -14,8 +14,8 @@ function App() {
     const title = useAppSelector(state => state.title)
     
     const onExport = () => { //засунуть куда-нибудь эту шнягу потом
-        const validEditor = validateEditor()
-        if (validEditor) {
+        const stateLocal = getStateFromLocalStorage()
+        if (stateLocal) {
             const data = {
                 title: title,
                 slides: slides

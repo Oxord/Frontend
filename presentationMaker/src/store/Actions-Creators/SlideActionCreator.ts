@@ -32,7 +32,7 @@ export const changeBackground = (selectedSlideId: string, value: string, type: '
 
 export const changeSlidePosition = (newOrder: string[]): SlidesAction => {
     return {
-        type: SlideActionTypes.CHANGE_TEXT,
+        type: SlideActionTypes.CHANGE_SLIDE_POSITION,
         payload: {
             newOrder
         }    

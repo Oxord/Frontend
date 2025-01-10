@@ -12,7 +12,7 @@ const Form = ({ title, inputType, onSubmit, onClose, handleInputChange }: ColorF
     return(
         <div className={style.popup__form + ' ' + 'form'}>
             <div className={style.form__title}>{title}</div>
-            <input type={inputType} className={style.form__input} onChange={handleInputChange}></input>
+            <input type={inputType} className={style.form__input} accept=".jpg, .jpeg, .png, .gif" onChange={handleInputChange}></input>
             <div className={style.form__buttons}>
                 <button
                     onClick={onClose}>

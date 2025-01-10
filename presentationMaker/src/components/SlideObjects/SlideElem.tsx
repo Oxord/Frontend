@@ -16,10 +16,10 @@ type slideObjectProps = {
     elem: SlideObject
     showSelection: boolean
     slideRef:  RefObject<HTMLElement>
-    isPointActive: boolean
+    isResizePointActive: boolean
 }
 
-export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, isPointActive}: slideObjectProps ) => {
+export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, isResizePointActive}: slideObjectProps ) => {
     let elemPoint: string
     let elemClassName: string = styles.elem
     if (isSelected && showSelection) {
@@ -47,14 +47,14 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
     
     const { changeElementSize } = useAppActions()
     const objectSizes: SizeType = { width: elem.width, height: elem.height }
-    const draggablePointTopLeft = useRef<HTMLDivElement>(null)
-    const draggablePointTop = useRef<HTMLDivElement>(null)
-    const draggablePointTopRight = useRef<HTMLDivElement>(null)
-    const draggablePointMediumLeft = useRef<HTMLDivElement>(null)
-    const draggablePointMediumRight = useRef<HTMLDivElement>(null)
-    const draggablePointBottomLeft = useRef<HTMLDivElement>(null)
-    const draggablePointBottom = useRef<HTMLDivElement>(null)
-    const draggablePointBottomRight = useRef<HTMLDivElement>(null)
+    const resizePointTopLeft = useRef<HTMLDivElement>(null)
+    const resizePointTop = useRef<HTMLDivElement>(null)
+    const resizePointTopRight = useRef<HTMLDivElement>(null)
+    const resizePointMediumLeft = useRef<HTMLDivElement>(null)
+    const resizePointMediumRight = useRef<HTMLDivElement>(null)
+    const resizePointBottomLeft = useRef<HTMLDivElement>(null)
+    const resizePointBottom = useRef<HTMLDivElement>(null)
+    const resizePointBottomRight = useRef<HTMLDivElement>(null)
     const [size, setSize] = useState(objectSizes)
     useEffect(() => {
         setSize({ width: elem.width, height: elem.height })
@@ -66,21 +66,21 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
             newSize
         )
     useResize(
-        draggablePointTopLeft,
-        draggablePointTop,
-        draggablePointTopRight,
-        draggablePointMediumLeft,
-        draggablePointMediumRight,
-        draggablePointBottomLeft,
-        draggablePointBottom,
-        draggablePointBottomRight,
+        resizePointTopLeft,
+        resizePointTop,
+        resizePointTopRight,
+        resizePointMediumLeft,
+        resizePointMediumRight,
+        resizePointBottomLeft,
+        resizePointBottom,
+        resizePointBottomRight,
         setSize,
         setPos,
         slideRef,
         size,
         onChangeSize,
         onChangePosition,
-        isPointActive
+        isResizePointActive
     )
     
     const topLeftPoint = elemPoint + ' ' + styles.point_top_left
@@ -118,10 +118,10 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
                     />
             break
         case 'circle':
-            elemStyle.width = elem.radius * 2
-            elemStyle.height = elem.radius * 2           
+            elemStyle.width = elem.width * 2
+            elemStyle.height = elem.width * 2           
             element = <Circle 
-                        radius={elem.radius * 1}
+                        radius={elem.width * 1}
                         color={elem.color}
                     />
             break
@@ -153,35 +153,35 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
             </div>  
             <div
                 className={topLeftPoint}
-                ref={draggablePointTopLeft}>
+                ref={resizePointTopLeft}>
             </div>
             <div
                 className={topPoint}
-                ref={draggablePointTop}>    
+                ref={resizePointTop}>    
             </div>
             <div
                 className={topRightPoint}
-                ref={draggablePointTopRight}>
+                ref={resizePointTopRight}>
             </div>
             <div
                 className={mediumLeftPoint}
-                ref={draggablePointMediumLeft}>
+                ref={resizePointMediumLeft}>
             </div>
             <div
                 className={mediumRightPoint}
-                ref={draggablePointMediumRight}>
+                ref={resizePointMediumRight}>
             </div>
             <div
                 className={bottomLeftPoint}
-                ref={draggablePointBottomLeft}>
+                ref={resizePointBottomLeft}>
             </div>
             <div
                 className={bottomPoint}
-                ref={draggablePointBottom}>
+                ref={resizePointBottom}>
             </div>
             <div
                 className={bottomRightPoint}
-                ref={draggablePointBottomRight}>
+                ref={resizePointBottomRight}>
             </div>
         </div>
     ) 

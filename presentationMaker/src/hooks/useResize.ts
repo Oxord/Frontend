@@ -1,5 +1,5 @@
 import { RefObject, useEffect } from "react"
-import { fromEventToLocalVec } from "../store/fromEvenToLocalVec"
+import { fromEventToCoordinate } from "../store/fromEventToCoordinate"
 import { Position, SizeType } from "../store/types"
 function useResize(
     draggablePointTopLeft: RefObject<HTMLElement>,
@@ -38,11 +38,11 @@ function useResize(
                 slideRef.current.addEventListener('mousemove', onMouseMoveBottomRight)
                 slideRef.current.addEventListener('mouseup', onMouseUpBottomRight)
             }
-            startPosition = fromEventToLocalVec(slideRef, event)
+            startPosition = fromEventToCoordinate(slideRef, event)
         }
 
         const onMouseMoveBottomRight = (event: MouseEvent) => {
-            const currentPosition = fromEventToLocalVec(slideRef, event)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
             if (startPosition && currentPosition) {
                 const deltaX = currentPosition.X - startPosition.X
                 const deltaY = currentPosition.Y - startPosition.Y
@@ -66,11 +66,11 @@ function useResize(
                 slideRef.current.addEventListener('mousemove', onMouseMoveBottom)
                 slideRef.current.addEventListener('mouseup', onMouseUpBottom)
             }
-            startPosition = fromEventToLocalVec(slideRef, event)
+            startPosition = fromEventToCoordinate(slideRef, event)
         }
 
         const onMouseMoveBottom = (event: MouseEvent) => {
-            const currentPosition = fromEventToLocalVec(slideRef, event)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
             if (startPosition && currentPosition) {
                 const deltaY = currentPosition.Y - startPosition.Y
                 newSize = { width: startSize.width, height: startSize.height + deltaY }
@@ -93,11 +93,11 @@ function useResize(
                 slideRef.current.addEventListener('mousemove', onMouseMoveBottomLeft)
                 slideRef.current.addEventListener('mouseup', onMouseUpBottomLeft)
             }
-            startPosition = fromEventToLocalVec(slideRef, event)
+            startPosition = fromEventToCoordinate(slideRef, event)
         }
 
         const onMouseMoveBottomLeft = (event: MouseEvent) => {
-            const currentPosition = fromEventToLocalVec(slideRef, event)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
             if (startPosition && currentPosition) {
                 const deltaX = startPosition.X - currentPosition.X
                 const deltaY = currentPosition.Y - startPosition.Y
@@ -113,7 +113,7 @@ function useResize(
                 slideRef.current.removeEventListener('mousemove', onMouseMoveBottomLeft)
                 slideRef.current.removeEventListener('mouseup', onMouseUpBottomLeft)
             }
-            const newPosition = fromEventToLocalVec(slideRef, event)
+            const newPosition = fromEventToCoordinate(slideRef, event)
             if (newPosition) {
                 onChangePosition({ X: newPosition.X, Y: newPosition.Y - newSize.height })
             }
@@ -127,12 +127,12 @@ function useResize(
                 slideRef.current.addEventListener('mousemove', onMouseMoveMediumLeft)
                 slideRef.current.addEventListener('mouseup', onMouseUpMediumLeft)
             }
-            startPosition = fromEventToLocalVec(slideRef, event)
+            startPosition = fromEventToCoordinate(slideRef, event)
             fixedYCoord = startPosition?.Y
         }
 
         const onMouseMoveMediumLeft = (event: MouseEvent) => {
-            const currentPosition = fromEventToLocalVec(slideRef, event)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
             if (startPosition && currentPosition) {
                 const deltaX = startPosition.X - currentPosition.X
                 newSize = { width: startSize.width + deltaX, height: startSize.height }
@@ -150,7 +150,7 @@ function useResize(
                 slideRef.current.removeEventListener('mousemove', onMouseMoveMediumLeft)
                 slideRef.current.removeEventListener('mouseup', onMouseUpMediumLeft)
             }
-            const newPosition = fromEventToLocalVec(slideRef, event)
+            const newPosition = fromEventToCoordinate(slideRef, event)
             if (newPosition && fixedYCoord) {
                 onChangePosition({ X: newPosition.X, Y: fixedYCoord - newSize.height / 2})//здесь заменил
             }
@@ -164,11 +164,11 @@ function useResize(
                 slideRef.current.addEventListener('mousemove', onMouseMoveMediumRight)
                 slideRef.current.addEventListener('mouseup', onMouseUpMediumRight)
             }
-            startPosition = fromEventToLocalVec(slideRef, event)
+            startPosition = fromEventToCoordinate(slideRef, event)
         }
 
         const onMouseMoveMediumRight = (event: MouseEvent) => {
-            const currentPosition = fromEventToLocalVec(slideRef, event)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
             if (startPosition && currentPosition) {
                 const deltaX = currentPosition.X - startPosition.X
                 newSize = { width: startSize.width + deltaX, height: startSize.height }
@@ -192,11 +192,11 @@ function useResize(
                 slideRef.current.addEventListener('mousemove', onMouseMoveTopRight)
                 slideRef.current.addEventListener('mouseup', onMouseUpTopRight)
             }
-            startPosition = fromEventToLocalVec(slideRef, event)
+            startPosition = fromEventToCoordinate(slideRef, event)
         }
 
         const onMouseMoveTopRight = (event: MouseEvent) => {
-            const currentPosition = fromEventToLocalVec(slideRef, event)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
             if (startPosition && currentPosition) {
                 const deltaX = currentPosition.X - startPosition.X
                 const deltaY = startPosition.Y - currentPosition.Y
@@ -212,7 +212,7 @@ function useResize(
                 slideRef.current.removeEventListener('mouseup', onMouseUpTopRight)
             }
             onChangeSize(newSize)
-            const newPosition = fromEventToLocalVec(slideRef, event)
+            const newPosition = fromEventToCoordinate(slideRef, event)
             if (newPosition) {
                 onChangePosition({ X: newPosition.X - newSize.width, Y: newPosition.Y })
             }
@@ -225,12 +225,12 @@ function useResize(
                 slideRef.current.addEventListener('mousemove', onMouseMoveTop)
                 slideRef.current.addEventListener('mouseup', onMouseUpTop)
             }
-            startPosition = fromEventToLocalVec(slideRef, event)
+            startPosition = fromEventToCoordinate(slideRef, event)
             fixedXCoord = startPosition?.X
         }
 
         const onMouseMoveTop = (event: MouseEvent) => {
-            const currentPosition = fromEventToLocalVec(slideRef, event)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
             if (startPosition && currentPosition) {
                 const deltaY = startPosition.Y - currentPosition.Y
                 newSize = { width: startSize.width, height: startSize.height + deltaY }
@@ -247,7 +247,7 @@ function useResize(
                 slideRef.current.removeEventListener('mouseup', onMouseUpTop)
             }
             onChangeSize(newSize)
-            const newPosition = fromEventToLocalVec(slideRef, event)
+            const newPosition = fromEventToCoordinate(slideRef, event)
             if (newPosition && fixedXCoord) {
                 onChangePosition({ X: newPosition.X - newSize.width / 2, Y: newPosition.Y })
             }
@@ -260,11 +260,11 @@ function useResize(
                 slideRef.current.addEventListener('mousemove', onMouseMoveTopLeft)
                 slideRef.current.addEventListener('mouseup', onMouseUpTopLeft)
             }
-            startPosition = fromEventToLocalVec(slideRef, event)
+            startPosition = fromEventToCoordinate(slideRef, event)
         }
 
         const onMouseMoveTopLeft = (event: MouseEvent) => {
-            const currentPosition = fromEventToLocalVec(slideRef, event)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
             if (startPosition && currentPosition) {
                 const deltaX = startPosition.X - currentPosition.X
                 const deltaY = startPosition.Y - currentPosition.Y
@@ -280,7 +280,7 @@ function useResize(
                 slideRef.current.removeEventListener('mousemove', onMouseMoveTopLeft)
                 slideRef.current.removeEventListener('mouseup', onMouseUpTopLeft)
             }
-            const newPosition = fromEventToLocalVec(slideRef, event)
+            const newPosition = fromEventToCoordinate(slideRef, event)
             onChangePosition(newPosition)
         }
 

@@ -37,7 +37,11 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
 
     const slideRef = useRef<HTMLDivElement>(null)
 
-    const [isPointActive, setPointActive] = useState(false)
+    const [isResizePointActive, setIsResizePointActive] = useState(false)
+
+    const changeIsResizePointActive = () => {
+        setIsResizePointActive(!isResizePointActive)
+    }
 
     const slideElements = slide.objects.map(elem => {
         if (elem){
@@ -51,7 +55,7 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
                         isSelected={selectedElemId === elem.id} 
                         showSelection={showSelection}
                         slideRef={slideRef}
-                        isPointActive={isPointActive}
+                        isResizePointActive={isResizePointActive}
                     />
                 </div>   
             )
@@ -59,8 +63,8 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
     })
     return (
         <div style={slideStyle} ref={slideRef}
-            onMouseDown={() => setPointActive(true)}
-            onMouseUp={() => setPointActive(false)}
+            onMouseDown={changeIsResizePointActive}
+            onMouseUp={changeIsResizePointActive}
         >
             {slideElements}
         </div>

@@ -56,6 +56,7 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
     const [popupOpened, setPopupOpened] = useState(false)
     const changePopupOpened = () => {
         setPopupOpened(!popupOpened)
+        setBackgroundOpened(false)
     }
     const onClickChangePopupVisible = (newPopupType: string) => {
         changePopupType(newPopupType)

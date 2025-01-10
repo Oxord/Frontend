@@ -1,8 +1,8 @@
 import { useRef } from 'react'
 import style from './ToolBar.module.css'
-import { EditorType } from '../../store/EditorType'
-import { importEditor } from '../../store/editor'
 import { validate } from '../../store/Validate'
+import { stateDataType } from '../../store/stateDataType'
+import { importState } from '../../store/importState'
 
 const ImportTool = () => {
     const ref = useRef<HTMLInputElement | null>(null)
@@ -11,8 +11,8 @@ const ImportTool = () => {
         if (ref.current) ref.current.click()
     }
 
-    const onImport = (editor: EditorType) => {
-        importEditor(editor)    
+    const onImport = (state: stateDataType) => {
+        importState(state)    
     }
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

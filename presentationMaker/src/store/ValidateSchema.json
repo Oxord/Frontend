@@ -4,7 +4,7 @@
     "esModuleInterop": true,
     "type": "object",
     "properties": {
-      "name": { 
+      "title": { 
         "type": "string", 
         "minLength": 1 
       },
