@@ -1,7 +1,7 @@
 import { RefObject, useEffect } from "react"
 import { fromEventToCoordinate } from "../store/fromEventToCoordinate"
 import { Position, SizeType } from "../store/types"
-function useResize(
+const useResize = (
     draggablePointTopLeft: RefObject<HTMLElement>,
     draggablePointTop: RefObject<HTMLElement>,
     draggablePointTopRight: RefObject<HTMLElement>,
@@ -21,8 +21,7 @@ function useResize(
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     onChangePosition: Function,
     isPointActive: boolean
-) {
-
+) => {
     useEffect(() => {
 
         let fixedXCoord: number | undefined
@@ -138,7 +137,7 @@ function useResize(
                 newSize = { width: startSize.width + deltaX, height: startSize.height }
                 setSize(newSize)
                 if (fixedYCoord) {
-                    setPos({ X: currentPosition.X, Y: fixedYCoord - newSize.height / 2})//здесь заменил
+                    setPos({ X: currentPosition.X, Y: fixedYCoord - newSize.height / 2})
                 }
 
             }
@@ -152,7 +151,7 @@ function useResize(
             }
             const newPosition = fromEventToCoordinate(slideRef, event)
             if (newPosition && fixedYCoord) {
-                onChangePosition({ X: newPosition.X, Y: fixedYCoord - newSize.height / 2})//здесь заменил
+                onChangePosition({ X: newPosition.X, Y: fixedYCoord - newSize.height / 2})
             }
 
         }
