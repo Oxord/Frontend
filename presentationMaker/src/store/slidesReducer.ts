@@ -11,7 +11,6 @@ import { getStateFromLocalStorage } from "./getStateFromLocalStorage"
 
 const getInitialState = () => {
     const _state = getStateFromLocalStorage()
-    console.log(_state)
     if (_state) {
         return _state.slides
     }

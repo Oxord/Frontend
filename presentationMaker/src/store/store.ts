@@ -6,7 +6,6 @@ function saverState({ getState }) {
     return next => action => {
       const returnValue = next(action)
       const state = getState()
-      console.log('state after dispatch', state)
       const presentation = JSON.stringify(state)
       localStorage.setItem(KEY, presentation)  
       return returnValue

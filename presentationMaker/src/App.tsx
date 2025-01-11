@@ -6,8 +6,15 @@ import { TopPanel } from './views/TopPanel/TopPanel'
 import { useEffect, useState } from 'react'
 import { SlideType } from './store/types'
 import { useAppSelector } from './hooks/useAppSelector'
+import { HistoryType } from './store/history'
+import { HistoryContext } from './hooks/HistoryContext'
+import { useAppActions } from './hooks/useAppActions'
 
-function App() {
+type AppProprs = {
+    history: HistoryType
+}
+
+function App({history}: AppProprs) {
     const slides = useAppSelector(state => state.slides) 
 
     const [selectedSlideId, setSelectedSlideId] = useState(slides[0].id)
@@ -33,7 +40,39 @@ function App() {
     const onClickSlide = (slideId: string) => {
         setSelectedSlideId(slideId)
     }
+
     
+    const { changePresentationTitle, updateSlides } = useAppActions()
+    function onUndo() {
+        const newState = history.undo()
+        if (newState) {
+            changePresentationTitle(newState.title)
+            updateSlides(newState.slides)
+        }
+    }
+    function onRedo() {
+        const newState = history.redo()
+        if (newState) {
+            changePresentationTitle(newState.title)
+            updateSlides(newState.slides)
+        }
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.ctrlKey && event.key === 'z') {
+            onUndo()
+        }
+        if (event.ctrlKey && event.key === 'y') {
+            onRedo()
+        }
+    }
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown)
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [])
+
+
     let selectedElemType = ''
     let selectedElemColor = ''
     if (selectedElemId) {
@@ -50,33 +89,38 @@ function App() {
 
     return (
         <div>
-            <TopPanel/>
-            <Toolbar 
-                selectedSlideId={selectedSlideId}
-                isRemoveSlideAvailable={slides.length > 1}
-                selectedElemId={selectedElemId}
-                selectedElemType={selectedElemType}
-                selectedElemColor={selectedElemColor}
-            />
-            <div className={styles.slides}>
-                <SlideList 
-                    selectedSlideId={selectedSlideId}
-                    onClickSlide={onClickSlide}
-                    selectedElemId={selectedElemId}
+            <HistoryContext.Provider value={history}>
+                <TopPanel
+                    onUndo={onUndo}
+                    onRedo={onRedo}
                 />
-                {selectedSlide &&
-                <div className={styles.slides__workArea}>
-                    <Slide slide={selectedSlide} 
-                        scale={1} 
-                        width={SLIDE_WIDTH} 
-                        height={SLIDE_HEIGHT} 
-                        isSelected={null}
-                        showSelection={true}
-                        onElemClick={onElemClick}
+                <Toolbar 
+                    selectedSlideId={selectedSlideId}
+                    isRemoveSlideAvailable={slides.length > 1}
+                    selectedElemId={selectedElemId}
+                    selectedElemType={selectedElemType}
+                    selectedElemColor={selectedElemColor}
+                />
+                <div className={styles.slides}>
+                    <SlideList 
+                        selectedSlideId={selectedSlideId}
+                        onClickSlide={onClickSlide}
                         selectedElemId={selectedElemId}
                     />
-                </div>}
-            </div>
+                    {selectedSlide &&
+                    <div className={styles.slides__workArea}>
+                        <Slide slide={selectedSlide} 
+                            scale={1} 
+                            width={SLIDE_WIDTH} 
+                            height={SLIDE_HEIGHT} 
+                            isSelected={null}
+                            showSelection={true}
+                            onElemClick={onElemClick}
+                            selectedElemId={selectedElemId}
+                        />
+                    </div>}
+                </div>
+            </HistoryContext.Provider>
         </div>
     )
 }

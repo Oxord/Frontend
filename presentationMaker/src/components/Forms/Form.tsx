@@ -20,7 +20,7 @@ const Form = ({ title, inputType, onSubmit, onClose, handleInputChange }: ColorF
                 </button>
                 <button   
                     onClick={() => {onSubmit(); onClose()}}>
-                    Insert
+                    Submit
                 </button>
             </div>
         </div>

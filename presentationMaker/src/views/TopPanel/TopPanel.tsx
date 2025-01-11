@@ -1,20 +1,37 @@
-// import { EditorType } from "../../store/EditorType"
 import { Favicon } from "../Favicon/Favicon"
 import { PresNameInput } from "../PresNameInput/PresNameInput"
 import { ExportTool } from "../Toolbar/ExportTool"
 import { ImportTool } from "../Toolbar/ImportTool"
-import styles from './TopPanel.module.css'
+import style from './TopPanel.module.css'
+import { HistoryTool } from "../Toolbar/HistoryTool"
 
-const TopPanel = () => {
+type TopPanelProps = {
+    onUndo: () => void
+    onRedo: () => void
+}
+
+const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
     return(
-        <div className={styles.topPanel}>
-            <div className={styles.topPanel__icon_and_name}>
+        <div className={style.topPanel}>
+            <div className={style.topPanel__icon_and_name}>
                 <Favicon/>
                 <PresNameInput/>
             </div>
-            <div className={styles.topPanel__InOutTool}>
-                <ImportTool/>
-                <ExportTool/>
+            <div className={style.topPanel__tools}>
+                <div className={style.topPanel__tools_tools_container}>
+                    <HistoryTool 
+                        onClick={onUndo}
+                        label="Undo"
+                    />
+                    <HistoryTool 
+                        onClick={onRedo}
+                        label="Redo"
+                    />
+                </div>
+                <div className={style.topPanel__tools_tools_container}>
+                    <ImportTool/>
+                    <ExportTool/>
+                </div>
             </div>
         </div>
     )
