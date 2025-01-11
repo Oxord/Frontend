@@ -50,9 +50,10 @@
                         "text": { "type": "string" },
                         "fontsize": { "type": "number" },
                         "font": { "type": "string" },
+                        "color": { "type": "string" },
                         "type": { "const": "text" }
                     },
-                    "required": ["id", "position", "width", "height", "text", "fontsize", "font", "type"]
+                    "required": ["id", "position", "width", "height", "text", "fontsize", "font", "color", "type"]
                   },
                   { 
                     "type": "object",
@@ -135,5 +136,5 @@
         }
       }
     },
-    "required": ["name", "slides"]
+    "required": ["title", "slides"]
   }

@@ -1,5 +1,5 @@
 import { SlideActionTypes } from "./SlideActionTypes"
-import { Position, SizeType } from "./types"
+import { Position, SizeType, SlideType } from "./types"
 
 
 export type RemoveSlidePayload = {
@@ -71,6 +71,10 @@ export type ChangeElemPositionPayload = {
     newPos: Position
 }
 
+export type UpdateSlidesPayload = {
+    slides: SlideType[]
+}
+
 export type PayloadType = 
     RemoveSlidePayload | 
     ChangeBackgroundPayload | 
@@ -85,6 +89,7 @@ export type PayloadType =
     ChangeTextSizePayload |
     ChangeElemSizePayload | 
     ChangeElemPositionPayload |
+    UpdateSlidesPayload |
     null
 
 export type SlidesAction = {

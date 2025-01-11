@@ -1,6 +1,6 @@
 import { SlideActionTypes } from "../SlideActionTypes"
 import { SlidesAction } from "../SlidesAction"
-import { Position, SizeType } from "../types"
+import { Position, SizeType, SlideType } from "../types"
 
 //change slide
 export const addSlide = (): SlidesAction => {
@@ -142,6 +142,15 @@ export const changeElementPosition = (selectedSlideId: string, selectedElemId: s
             selectedSlideId,
             selectedElemId,
             newPos
+        }
+    }
+}
+
+export const updateSlides = (slides: SlideType[]) => {
+    return {
+        type: SlideActionTypes.UPDATE_SLIDES,
+        payload: {
+            slides
         }
     }
 }

@@ -5,11 +5,7 @@ import { ExportTool } from "../Toolbar/ExportTool"
 import { ImportTool } from "../Toolbar/ImportTool"
 import styles from './TopPanel.module.css'
 
-type TopPanelProps = {
-    onExport: () => void
-}
-
-const TopPanel = ({onExport}: TopPanelProps) => {
+const TopPanel = () => {
     return(
         <div className={styles.topPanel}>
             <div className={styles.topPanel__icon_and_name}>
@@ -18,7 +14,7 @@ const TopPanel = ({onExport}: TopPanelProps) => {
             </div>
             <div className={styles.topPanel__InOutTool}>
                 <ImportTool/>
-                <ExportTool onExport={onExport}/>
+                <ExportTool/>
             </div>
         </div>
     )

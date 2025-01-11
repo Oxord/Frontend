@@ -1,22 +1,19 @@
 import { applyMiddleware, createStore } from 'redux' 
 import rootReducer from './rootReducer' 
 
-function logger({ getState }) {
+function saverState({ getState }) {
+    const KEY = 'presentation'
     return next => action => {
-      console.log('will dispatch', action)
-  
-      // Call the next dispatch method in the middleware chain.
       const returnValue = next(action)
-  
-      console.log('state after dispatch', getState())
-  
-      // This will likely be the action itself, unless
-      // a middleware further in chain changed it.
+      const state = getState()
+      console.log('state after dispatch', state)
+      const presentation = JSON.stringify(state)
+      localStorage.setItem(KEY, presentation)  
       return returnValue
     }
   }
 
-const store = createStore(rootReducer, {}, applyMiddleware(logger))
+const store = createStore(rootReducer, {}, applyMiddleware(saverState, ))
 
 export {
     store

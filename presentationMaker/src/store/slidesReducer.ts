@@ -1,14 +1,26 @@
 import { getDefaultImage } from "./GetDefaultImage"
 import { getDefaultFigure } from "./GetDefaultFigure"
 import { SlideActionTypes } from "./SlideActionTypes"
-import { ChangeBackgroundPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction } from "./SlidesAction"
+import { ChangeBackgroundPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction, UpdateSlidesPayload } from "./SlidesAction"
 import { SlidesState } from "./SlidesState"
 import { Background, SlideObject, SlideType, TextObject } from "./types"
 import { getDefaultTextField } from "./GetDefaultTextField"
 import { getDefaultSlide } from "./GetDefaultSlide"
 import { initialData } from "./initialData"
+import { getStateFromLocalStorage } from "./getStateFromLocalStorage"
 
-const slidesReducer = (state = initialData.slides, action: SlidesAction): SlidesState => { 
+const getInitialState = () => {
+    const _state = getStateFromLocalStorage()
+    console.log(_state)
+    if (_state) {
+        return _state.slides
+    }
+    else {
+        return initialData.slides
+    }
+}
+
+const slidesReducer = (state = getInitialState(), action: SlidesAction): SlidesState => { 
     switch (action.type) { 
         case SlideActionTypes.ADD_SLIDE: {
             const newSlide = getDefaultSlide()
@@ -290,13 +302,17 @@ const slidesReducer = (state = initialData.slides, action: SlidesAction): Slides
                         }
                     }
                     return slide
-                })
+                })    
+        }
+        case SlideActionTypes.UPDATE_SLIDES: {
+            const slides = (action.payload as UpdateSlidesPayload).slides
+            return slides
         }
         default: 
             return state   
     }
 }
 
-export{ 
+export { 
     slidesReducer
 }

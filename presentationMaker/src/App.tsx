@@ -6,38 +6,9 @@ import { TopPanel } from './views/TopPanel/TopPanel'
 import { useEffect, useState } from 'react'
 import { SlideType } from './store/types'
 import { useAppSelector } from './hooks/useAppSelector'
-import { getStateFromLocalStorage } from './store/getStateFromLocalStorage'
 
 function App() {
-    
-    const slides = useAppSelector(state => state.slides)
-    const title = useAppSelector(state => state.title)
-    
-    const onExport = () => { //засунуть куда-нибудь эту шнягу потом
-        const stateLocal = getStateFromLocalStorage()
-        if (stateLocal) {
-            const data = {
-                title: title,
-                slides: slides
-            }
-    
-            const jsonString = JSON.stringify(data, null, 2)
-            const blob = new Blob([jsonString], { type: 'application/json' })
-            const url = URL.createObjectURL(blob)
-    
-            const a = document.createElement('a')
-            a.href = url
-            a.download = 'presentation.json' 
-            document.body.appendChild(a)
-            a.click()
-            document.body.removeChild(a)
-            URL.revokeObjectURL(url)  
-        }
-        else{
-            alert('Некорректные данные! Такую презентацию нельзя экспортировать')
-        }
-    }
-    
+    const slides = useAppSelector(state => state.slides) 
 
     const [selectedSlideId, setSelectedSlideId] = useState(slides[0].id)
     useEffect(() => {
@@ -79,11 +50,8 @@ function App() {
 
     return (
         <div>
-            <TopPanel
-                onExport={onExport}
-            />
+            <TopPanel/>
             <Toolbar 
-                onExport={onExport}
                 selectedSlideId={selectedSlideId}
                 isRemoveSlideAvailable={slides.length > 1}
                 selectedElemId={selectedElemId}

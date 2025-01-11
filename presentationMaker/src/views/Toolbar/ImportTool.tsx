@@ -1,10 +1,13 @@
 import { useRef } from 'react'
 import style from './ToolBar.module.css'
-import { validate } from '../../store/Validate'
 import { stateDataType } from '../../store/stateDataType'
-import { importState } from '../../store/importState'
+import { useAppActions } from '../../hooks/useAppActions'
+import { validateState } from '../../store/ValidateState'
 
 const ImportTool = () => {
+
+    const { updateSlides, changePresentationTitle  } = useAppActions()
+
     const ref = useRef<HTMLInputElement | null>(null)
 
     const handleClick = () => {
@@ -12,7 +15,8 @@ const ImportTool = () => {
     }
 
     const onImport = (state: stateDataType) => {
-        importState(state)    
+        updateSlides(state.slides)
+        changePresentationTitle(state.title)  
     }
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,10 +26,16 @@ const ImportTool = () => {
             reader.onload = (e) => {
                 const content = e.target?.result; 
                 if (typeof content === 'string') {
-                    const validEditor = validate(content)
-                    if (validEditor) {
-                        console.log('valid - ', validEditor)
-                        onImport(validEditor)
+                    const validState = validateState(content)
+                    if (validState) {
+                        const jsonData = JSON.parse(content)
+                        const title = jsonData.title
+                        const slides = jsonData.slides
+                        const importState = {
+                            title: title,
+                            slides: slides
+                        }    
+                    onImport(importState)
                         
                     }
                     else{

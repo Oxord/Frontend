@@ -2,7 +2,7 @@ import Ajv from 'ajv'
 import ValidateSchema from './ValidateSchema.json'
 import { stateDataType } from './stateDataType'
 
-const validate = (content: string): stateDataType | null => {
+const validateState = (content: string): stateDataType | null => {
     const ajv = new Ajv()
     const validate = ajv.compile(ValidateSchema)
     try{
@@ -28,5 +28,5 @@ const validate = (content: string): stateDataType | null => {
 }
 
 export{
-    validate
+    validateState
 }

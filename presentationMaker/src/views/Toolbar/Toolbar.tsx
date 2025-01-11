@@ -12,7 +12,6 @@ type toolbarProps = {
     selectedElemId: string
     selectedElemType: string
     selectedElemColor:  string
-    onExport: () => void
 }
 
 const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, selectedElemType, selectedElemColor }: toolbarProps) => {
