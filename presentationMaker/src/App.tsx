@@ -58,10 +58,10 @@ function App({history}: AppProprs) {
         }
     }
     const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.ctrlKey && event.key === 'z') {
+        if (event.key.toLowerCase() === 'z' && (event.ctrlKey || event.metaKey)) {
             onUndo()
         }
-        if (event.ctrlKey && event.key === 'y') {
+        if (event.key.toLocaleLowerCase() === 'y' && (event.ctrlKey || event.metaKey)) {
             onRedo()
         }
     }
