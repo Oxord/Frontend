@@ -25,10 +25,11 @@ function initHistory(store: Store): HistoryType {
                     undoStack.pop()
                     redoStack.push(previousState)
             }
-            } else if (getLastItem(redoStack)) {
+            }
+            if (getLastItem(redoStack)) {
                 const redoState = getLastItem(redoStack)
                 if (state.slides == redoState.slides && state.title == redoState.title ) {
-                    redoStack.pop()
+                    redoStack.pop() 
                     undoStack.push(previousState)
             }
             } else {
@@ -44,7 +45,6 @@ function initHistory(store: Store): HistoryType {
     }
 
     function redo() {
-        console.log(getLastItem(redoStack))
         return getLastItem(redoStack)
     }
 

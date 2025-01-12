@@ -71,6 +71,12 @@ export type ChangeElemPositionPayload = {
     newPos: Position
 }
 
+export type ImportImagePayload = {
+    selectedSlideId: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    image: any
+}
+
 export type UpdateSlidesPayload = {
     slides: SlideType[]
 }
@@ -89,6 +95,7 @@ export type PayloadType =
     ChangeTextSizePayload |
     ChangeElemSizePayload | 
     ChangeElemPositionPayload |
+    ImportImagePayload |
     UpdateSlidesPayload |
     null
 

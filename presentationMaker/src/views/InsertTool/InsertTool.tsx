@@ -4,6 +4,7 @@ import { PopupCover } from "../../components/Popup/PopupCover"
 import { Popup } from '../../components/Popup/Popup'
 import { Form } from "../../components/Forms/Form"
 import { useAppActions } from "../../hooks/useAppActions"
+import { useDispatch } from "react-redux"
 
 export type InsertToolProps = {
     selectedSlideId: string
@@ -84,6 +85,12 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
 
     const { insertFigure } = useAppActions()
     const { insertTextField } = useAppActions()
+    const { importImage } = useAppActions()
+
+    const dispatch = useDispatch()
+    const handleFetchPhoto = () => {
+        dispatch(importImage())
+    }
 
     return(
         <>
@@ -125,7 +132,7 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
                                                 </label>
                                                 <input id='image' type='file' accept=".jpg, .jpeg, .png" style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
                                             </button>
-                                            <button onClick={changePopupOpened}>
+                                            <button onClick={handleFetchPhoto}>
                                                 Из другого сервиса
                                             </button>
                                         </div>

@@ -1,7 +1,8 @@
 import { generateGuid } from "./actions"
 import { ImageObject } from "./types"
 
-export const getDefaultImage = (src: string): ImageObject => {
+export const getDefaultImage = (src: string ): ImageObject => {
+    console.log(src)
     const id = generateGuid()
     return {
         id,

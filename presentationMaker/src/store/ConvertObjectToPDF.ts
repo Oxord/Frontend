@@ -48,7 +48,7 @@ export const getTextPDF = async (pdfDoc: PDFDocument, page: PDFPage, text: TextO
 
 export const getImagePDF = async (pdfDoc: PDFDocument, page: PDFPage, img: ImageObject) => {
     const base64Data = img.src.split(',')[1]
-    const imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+    const imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0))
     
     const isPng = img.src.startsWith('data:image/png');
     const isJpg = img.src.startsWith('data:image/jpeg');

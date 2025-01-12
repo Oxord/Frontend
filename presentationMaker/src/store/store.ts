@@ -1,5 +1,6 @@
 import { applyMiddleware, createStore } from 'redux' 
 import rootReducer from './rootReducer' 
+import { thunk } from 'redux-thunk'
 
 function saverState({ getState }) {
     const KEY = 'presentation'
@@ -12,7 +13,7 @@ function saverState({ getState }) {
     }
   }
 
-const store = createStore(rootReducer, {}, applyMiddleware(saverState, ))
+const store = createStore(rootReducer, {}, applyMiddleware(thunk))
 
 export {
     store

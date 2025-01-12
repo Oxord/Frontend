@@ -1,7 +1,7 @@
 import { getDefaultImage } from "./GetDefaultImage"
 import { getDefaultFigure } from "./GetDefaultFigure"
 import { SlideActionTypes } from "./SlideActionTypes"
-import { ChangeBackgroundPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction, UpdateSlidesPayload } from "./SlidesAction"
+import { ChangeBackgroundPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, ImportImagePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction, UpdateSlidesPayload } from "./SlidesAction"
 import { SlidesState } from "./SlidesState"
 import { Background, SlideObject, SlideType, TextObject } from "./types"
 import { getDefaultTextField } from "./GetDefaultTextField"
@@ -95,6 +95,24 @@ const slidesReducer = (state = getInitialState(), action: SlidesAction): SlidesS
             const slide = state.find(s => s.id === slideId)
             if (slide && action.payload) {
                 const image = getDefaultImage(src)
+                const editedSlide: SlideType = { ...slide, objects: [...slide.objects, image] }
+                return state.map(x => {
+                    if (x.id === slide.id){
+                        return editedSlide
+                    }
+                    else{
+                        return x
+                    }
+                })
+            }
+            return state
+        }
+        case SlideActionTypes.IMPORT_IMAGE_SUCCESS: {
+            const slideId = (action.payload as ImportImagePayload).selectedSlideId
+            const slide = state.find(s => s.id === slideId)
+            if (slide) {
+                const img = (action.payload as ImportImagePayload).image
+                const image = getDefaultImage(img)
                 const editedSlide: SlideType = { ...slide, objects: [...slide.objects, image] }
                 return state.map(x => {
                     if (x.id === slide.id){

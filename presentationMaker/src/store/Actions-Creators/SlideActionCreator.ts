@@ -1,3 +1,4 @@
+import { Dispatch } from "redux"
 import { SlideActionTypes } from "../SlideActionTypes"
 import { SlidesAction } from "../SlidesAction"
 import { Position, SizeType, SlideType } from "../types"
@@ -58,6 +59,38 @@ export const insertImage = (selectedSlideId: string, src: string): SlidesAction 
             src
         }
     }
+}
+
+export const importImage = () => {
+    const API_KEY = 'yInoT3_rganJbCrJ1Dr8xyG5m2w2bst-lBQpqkdKQs8' // заменить
+    
+    return async (dispatch: Dispatch) => {
+        dispatch({ type: SlideActionTypes.IMPORT_IMAGE })
+
+        try {
+            const response = await fetch('https://api.unsplash.com/photos/random', {
+                headers: {
+                    Authorization: `Client-ID ${API_KEY}`,
+                },
+            })
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json()
+            // const base64Data = btoa(unescape(encodeURIComponent(data.urls.small)))
+            // console.log(base64Data)
+            dispatch({ 
+                type: SlideActionTypes.IMPORT_IMAGE_SUCCESS, 
+                payload: {
+                    selectedSlideId: '', 
+                    data: data
+                }  
+            })
+        } catch (error) {
+            dispatch({ type: SlideActionTypes.IMPORT_IMAGE_FAILURE, payload: error })
+        }
+    } 
+
 }
 
 export const insertTextField = (selectedSlideId: string): SlidesAction => { 
