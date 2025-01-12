@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 import { Position } from "../types"
 
 function changeSlideObjectPosition(editor: EditorType, {selectedSlideId, elemId, newPos}: {selectedSlideId: string, elemId: string, newPos: Position}): EditorType {

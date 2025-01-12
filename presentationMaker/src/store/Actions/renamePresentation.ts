@@ -1,4 +1,4 @@
-import {EditorType} from "../EditorType.ts";
+import {EditorType} from "./EditorType.ts";
 
 function renamePresentationTitle(editor: EditorType, {newName}: {newName: string}): EditorType {
     return {

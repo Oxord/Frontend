@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 import { SlideType, TextObject } from "../types"
 
 function changeText(editor: EditorType, {slideId, elemId, newText}: {slideId: string, elemId: string, newText: string}): EditorType {

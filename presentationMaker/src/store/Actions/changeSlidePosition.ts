@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType";
+import { EditorType } from "./EditorType";
 import { SlideType } from "../types";
 
 function changeSlidePosition(editor: EditorType, newOrder: string[]): EditorType {

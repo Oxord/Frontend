@@ -123,7 +123,7 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
                                                 <label form='image'>
                                                     С компьютера
                                                 </label>
-                                                <input id='image' type='file' accept=".jpg, .jpeg, .png, .gif" style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
+                                                <input id='image' type='file' accept=".jpg, .jpeg, .png" style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
                                             </button>
                                             <button onClick={changePopupOpened}>
                                                 Из другого сервиса

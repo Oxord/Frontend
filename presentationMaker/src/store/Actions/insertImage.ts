@@ -1,5 +1,5 @@
 import { generateGuid } from "../actions"
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 import { ImageObject, SlideType } from "../types"
 
 function insertImage(editor: EditorType, {slideId, src}: {slideId: string, src: string}): EditorType {

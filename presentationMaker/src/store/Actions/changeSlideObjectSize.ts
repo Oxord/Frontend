@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 import { SizeType } from "../types"
 
 function changeSlideObjectSize(editor: EditorType, {slideId, elemId, newSize}: {slideId: string, elemId: string, newSize: SizeType}): EditorType {

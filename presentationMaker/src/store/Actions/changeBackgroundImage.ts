@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 import { ImageBackground, SlideType } from "../types"
 
 function changeBackgroundImage(editor: EditorType, {slideId, src}: {slideId: string, src: string}): EditorType {

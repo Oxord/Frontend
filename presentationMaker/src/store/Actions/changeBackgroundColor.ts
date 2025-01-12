@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 import { SlideType, SolidBackground } from "../types"
 
 function changeBackgroundColor(editor: EditorType, {slideId, color}: {slideId: string, color: string}): EditorType {

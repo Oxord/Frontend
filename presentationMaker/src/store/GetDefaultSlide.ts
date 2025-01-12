@@ -4,7 +4,7 @@ import { SolidBackground } from "./types"
 export const getDefaultSlide = () => {
     const slideId = generateGuid()
     const background: SolidBackground = {
-        color: 'white',
+        color: '#ffffff',
         type: 'solid'
     }
     return {

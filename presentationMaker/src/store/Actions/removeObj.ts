@@ -1,5 +1,5 @@
 
-import {EditorType} from "../EditorType.ts";
+import {EditorType} from "./EditorType.ts";
 import { SlideType } from "../types.ts";
 
 function removeObj(editor: EditorType, {slideId, selectedElemId}: {slideId: string, selectedElemId: string}): EditorType {

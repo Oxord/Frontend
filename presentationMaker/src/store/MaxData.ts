@@ -1,5 +1,5 @@
 import { generateGuid } from "./actions"
-import { EditorType } from "./EditorType"
+import { EditorType } from "./Actions/EditorType"
 import { Circle, ImageObject, Presentation, Reactangle, SlideType, TextObject, Triangle } from "./types"
 
 const TEXT_OBJ: TextObject = {

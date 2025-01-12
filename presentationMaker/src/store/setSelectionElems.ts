@@ -1,4 +1,4 @@
-import {EditorType, SelectionElemsType } from "./EditorType.ts";
+import {EditorType, SelectionElemsType } from "./Actions/EditorType.ts";
 
 function setSelectionElems(editor: EditorType, newSelection: SelectionElemsType): EditorType {
     return {

@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 
 function changeSlideObjectColor( 
     editor: EditorType, { slideId, elemId, color }: { slideId: string, elemId: string, color: string }): EditorType {

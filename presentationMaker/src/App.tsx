@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 import { SlideType } from './store/types'
 import { useAppSelector } from './hooks/useAppSelector'
 import { HistoryType } from './store/history'
-import { HistoryContext } from './hooks/HistoryContext'
+import { HistoryContext } from './hooks/historyContext'
 import { useAppActions } from './hooks/useAppActions'
 
 type AppProprs = {

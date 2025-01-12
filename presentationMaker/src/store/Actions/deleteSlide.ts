@@ -1,5 +1,5 @@
 
-import {EditorType} from "../EditorType.ts";
+import {EditorType} from "./EditorType.ts";
 
 function deleteSlide(editor: EditorType, slideId: string): EditorType {
     if (editor.presentation.slides.length === 1) {

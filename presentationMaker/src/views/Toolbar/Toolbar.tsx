@@ -90,7 +90,7 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
     
 
     const { changeBackground } = useAppActions()
-    const [newBackgroundValue, setNewBackgroundValue] = useState('black')
+    const [newBackgroundValue, setNewBackgroundValue] = useState('#000000')
     const handleBackgroundChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNewBackgroundValue(event.target.value)
     }

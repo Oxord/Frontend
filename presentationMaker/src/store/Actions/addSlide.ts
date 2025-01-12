@@ -1,4 +1,4 @@
-import {EditorType} from "../EditorType.ts";
+import {EditorType} from "./EditorType.ts";
 import { SlideType, SolidBackground } from "../types.ts";
 
 function addSlide(editor: EditorType, {slideId}: {slideId: string}): EditorType {

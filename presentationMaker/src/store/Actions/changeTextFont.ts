@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 import { SlideType, TextObject } from "../types"
 
 function changeTextFont(editor: EditorType, {slideId, elemId, newFont}: {slideId: string, elemId: string, newFont: string}): EditorType {

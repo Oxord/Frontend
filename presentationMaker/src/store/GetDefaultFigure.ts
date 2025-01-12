@@ -9,7 +9,7 @@ export const getDefaultFigure = (figureType: string): FigureObject | null => {
             figure = { 
                 id: id,  
                 type: 'circle',  
-                color: 'black', 
+                color: '#000000', 
                 radius: 30, 
                 position: {X: 50, Y: 50}, 
                 width: 30,
@@ -20,7 +20,7 @@ export const getDefaultFigure = (figureType: string): FigureObject | null => {
             figure = { 
                 id: id,  
                 type: 'rectangle', 
-                color: 'black', 
+                color: '#000000', 
                 width: 50, 
                 height: 50, 
                 position: {X: 50, Y: 50} 
@@ -30,7 +30,7 @@ export const getDefaultFigure = (figureType: string): FigureObject | null => {
             figure = {
                 id: id,
                 type: 'triangle',
-                color: 'black',
+                color: '#000000',
                 pointOne: {X: 0, Y: 44},
                 pointTwo: {X: 22, Y: 4},
                 pointThree: {X: 44, Y: 44},

@@ -1,4 +1,4 @@
-import { EditorType } from "../EditorType"
+import { EditorType } from "./EditorType"
 import { SlideType, TextObject } from "../types"
 
 function changeTextSize(editor: EditorType, {slideId, elemId, newFontSize}: {slideId: string, elemId: string, newFontSize: number}): EditorType {

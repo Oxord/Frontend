@@ -1,6 +1,6 @@
 
 import { generateGuid } from "../actions.ts";
-import {EditorType} from "../EditorType.ts";
+import {EditorType} from "./EditorType.ts";
 import { SlideType, TextObject } from "../types.ts";
 
 function insertTextField(editor: EditorType, {selectedSlideId}: {selectedSlideId: string}): EditorType {

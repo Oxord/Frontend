@@ -57,7 +57,7 @@ export type FigureBase = ObjectBase & {
     color: string
 }
 
-export type FigureObject = Circle | Reactangle | Triangle
+export type FigureObject = Circle | Rectangle | Triangle
 
 export type FigureType = FigureObject['type']
 
@@ -66,7 +66,7 @@ export type Circle = FigureBase & {
     type: 'circle'
 }
 
-export type Reactangle = FigureBase & {
+export type Rectangle = FigureBase & {
     type: 'rectangle'
 }
 
