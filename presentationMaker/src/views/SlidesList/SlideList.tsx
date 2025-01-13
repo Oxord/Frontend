@@ -5,39 +5,52 @@ import { SlideType } from "../../store/types"
 import style from './SlideList.module.css'
 
 export type slidesListProps = {
-    selectedSlideId: string
+    selectedSlidesIds: string[]
     onClickSlide: (slideId: string) => void
+    onClickSlideWithCtrl: (slideId: string) => void
     selectedElemId: string
 }
 
-const SlideList = ( {selectedSlideId, onClickSlide, selectedElemId}: slidesListProps ) => {  
+const SlideList = ( {selectedSlidesIds, onClickSlide, onClickSlideWithCtrl, selectedElemId}: slidesListProps ) => {  
     
     const slides = useAppSelector(state => state.slides)
 
     const { changeSlidePosition } = useAppActions()
     let newOrder: string[] = slides.map(slideId => slideId.id)
-    let draggedSlideId: string
+    const draggedSlideIds: string[] = selectedSlidesIds
     const onDragStart = (slide: SlideType) => {
-        draggedSlideId = slide.id
+        if (!draggedSlideIds.includes(slide.id))
+            draggedSlideIds.push(slide.id)
     }
     const onDragOver = (event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault()
     }
     const onDrop = (event: React.DragEvent<HTMLDivElement>, slide: SlideType) => {
-
         event.preventDefault()
-        const indexOfDraggedSlideId = newOrder.indexOf(draggedSlideId)
-        newOrder = newOrder.filter(id => id !== draggedSlideId)
-        const indexOfSlideId = newOrder.indexOf(slide.id)
+        draggedSlideIds.forEach(slideId => {
+            const indexOfDraggedSlideId = newOrder.indexOf(slideId)
+            newOrder = newOrder.filter(id => id !== slideId)
+            
+            const indexOfSlideId = newOrder.indexOf(slide.id)
+            
+            if (indexOfDraggedSlideId === indexOfSlideId + 1) {
+                newOrder.splice(indexOfSlideId, 0, slideId)
+            } else {
+                newOrder.splice(indexOfSlideId + 1, 0, slideId)
+            }
+        })
         
-        if (indexOfDraggedSlideId === indexOfSlideId + 1) {
-            newOrder.splice(indexOfSlideId, 0, draggedSlideId)
+        changeSlidePosition(newOrder) 
+    }
+
+    
+    const handleClickOnSlidePreview = (event: React.MouseEvent<HTMLDivElement>, slideId: string) => {
+        if (event.ctrlKey) {
+            onClickSlideWithCtrl(slideId)
         }
         else {
-            newOrder.splice(indexOfSlideId + 1, 0, draggedSlideId)
-        }        
-
-        changeSlidePosition(newOrder) 
+            onClickSlide(slideId)
+        }
     }
 
     return (
@@ -45,7 +58,7 @@ const SlideList = ( {selectedSlideId, onClickSlide, selectedElemId}: slidesListP
             {slides.map(slide =>
                 <div key={slide.id} 
                     className={style.slideList__slide_prewiev} 
-                    onClick={() => onClickSlide(slide.id)}
+                    onClick={event => handleClickOnSlidePreview(event, slide.id)}
                     draggable={true}
                     onDragStart={() => onDragStart(slide)}
                     onDragOver={(event: React.DragEvent<HTMLDivElement>) => onDragOver(event)}                
@@ -53,7 +66,7 @@ const SlideList = ( {selectedSlideId, onClickSlide, selectedElemId}: slidesListP
                 >
                     <SlidePreview
                         slide={slide}
-                        isSelected={slide.id == selectedSlideId}
+                        isSelected={selectedSlidesIds.includes(slide.id)}
                         selectedElemId={selectedElemId}
                     />
                 </div>

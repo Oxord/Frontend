@@ -9,7 +9,6 @@ import { useAppSelector } from './hooks/useAppSelector'
 import { HistoryType } from './store/history'
 import { HistoryContext } from './hooks/historyContext'
 import { useAppActions } from './hooks/useAppActions'
-import GradientPicker from './components/GradientPicker'
 
 type AppProprs = {
     history: HistoryType
@@ -18,30 +17,33 @@ type AppProprs = {
 function App({history}: AppProprs) {
     const slides = useAppSelector(state => state.slides) 
 
-    const [selectedSlideId, setSelectedSlideId] = useState(slides[0].id)
+    const [selectedSlidesIds, setSelectedSlidesIds] = useState<string[]>([slides[0].id])
     useEffect(() => {
         if (slides.length > 0) {
-            setSelectedSlideId(slides[slides.length - 1].id)
+            setSelectedSlidesIds([slides[slides.length - 1].id])
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [slides.length])
 
-    const slide: SlideType | undefined = slides.find(s => s.id === selectedSlideId)
+    const slide: SlideType | undefined = slides.find(s => s.id === selectedSlidesIds[0])
 
     const [selectedElemId, setSelectedElemId] = useState('')
     useEffect(() => {
         setSelectedElemId('')
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedSlideId, slide?.objects.length])
+    }, [selectedSlidesIds, slide?.objects.length])
 
     const onElemClick = (elemId: string) => {
         setSelectedElemId(elemId)     
     }
     
     const onClickSlide = (slideId: string) => {
-        setSelectedSlideId(slideId)
+        setSelectedSlidesIds([slideId])
     }
 
+    const onClickSlideWithCtrl = (slideId: string) => {
+        setSelectedSlidesIds([...selectedSlidesIds, slideId])
+    }
     
     const { changePresentationTitle, updateSlides } = useAppActions()
     function onUndo() {
@@ -62,7 +64,7 @@ function App({history}: AppProprs) {
         if (event.key.toLowerCase() === 'z' && (event.ctrlKey || event.metaKey)) {
             onUndo()
         }
-        if (event.key.toLocaleLowerCase() === 'y' && (event.ctrlKey || event.metaKey)) {
+        if (event.key.toLowerCase() === 'y' && (event.ctrlKey || event.metaKey)) {
             onRedo()
         }
     }
@@ -86,7 +88,7 @@ function App({history}: AppProprs) {
     
     const SLIDE_WIDTH = 950
     const SLIDE_HEIGHT = 525
-    const selectedSlide = slides.find(s => s.id === selectedSlideId)
+    const selectedSlide = slides.find(s => s.id === selectedSlidesIds[0])
 
     return (
         <div>
@@ -96,7 +98,7 @@ function App({history}: AppProprs) {
                     onRedo={onRedo}
                 />
                 <Toolbar 
-                    selectedSlideId={selectedSlideId}
+                    selectedSlideId={selectedSlidesIds[0]}
                     isRemoveSlideAvailable={slides.length > 1}
                     selectedElemId={selectedElemId}
                     selectedElemType={selectedElemType}
@@ -104,8 +106,9 @@ function App({history}: AppProprs) {
                 />
                 <div className={styles.slides}>
                     <SlideList 
-                        selectedSlideId={selectedSlideId}
+                        selectedSlidesIds={selectedSlidesIds}
                         onClickSlide={onClickSlide}
+                        onClickSlideWithCtrl={onClickSlideWithCtrl}
                         selectedElemId={selectedElemId}
                     />
                     {selectedSlide &&
