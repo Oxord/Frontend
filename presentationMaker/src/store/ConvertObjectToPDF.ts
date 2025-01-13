@@ -17,7 +17,7 @@ export const getReactanglePDF = (page: PDFPage, rect: Rectangle) => {
 
 export const getCirclePDF = (page: PDFPage, circle: Circle) => {
     const { r, g, b } = hexToRgb(circle.color)
-    page.moveTo(circle.position.X, SLIDE_HEIGHT - circle.position.Y - circle.height)
+    page.moveTo(circle.position.X + circle.radius, SLIDE_HEIGHT - circle.position.Y - circle.height)
     page.drawCircle({
         size: circle.width,
         color: rgb(r, g, b)
@@ -28,7 +28,7 @@ export const getCirclePDF = (page: PDFPage, circle: Circle) => {
 export const getTrianglePDF = (page: PDFPage, triangle: Triangle) => {
     const trianglePath = `M ${triangle.pointOne.X} ${triangle.pointOne.Y} L ${triangle.pointTwo.X} ${triangle.pointTwo.Y} L ${triangle.pointThree.X} ${triangle.pointThree.Y} Z`
     const { r, g, b } = hexToRgb(triangle.color)
-    page.moveTo(triangle.position.X, SLIDE_HEIGHT - triangle.position.Y - triangle.height)
+    page.moveTo(triangle.position.X, SLIDE_HEIGHT - triangle.position.Y) //+ triangle.height)
     page.drawSvgPath(trianglePath, {
         color: rgb(r, g, b)
     })
@@ -38,7 +38,7 @@ export const getTextPDF = async (pdfDoc: PDFDocument, page: PDFPage, text: TextO
     // const fontBytes = await fetch(text.font).then(res => res.arrayBuffer()) //problem with шрифт    
     // const customFont = await pdfDoc.embedFont(fontBytes)
     const { r, g, b } = hexToRgb(text.color)
-    page.moveTo(text.position.X, SLIDE_HEIGHT - text.position.Y - text.height)
+    page.moveTo(text.position.X, SLIDE_HEIGHT - text.position.Y - text.fontsize)
     page.drawText(text.text, {
         // font: customFont, //придумать парсер
         size: text.fontsize,

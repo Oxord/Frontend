@@ -7,7 +7,7 @@ export const getDefaultTextField = (): TextObject => {
         id,
         width: 100, 
         height: 100, 
-        color: 'black',
+        color: '#000000',
         text: 'NewText',
         font: 'arial',
         fontsize: 16,
