@@ -5,7 +5,7 @@ import { SlideObject } from '../../store/types'
 import fontkit from '@pdf-lib/fontkit'
 import { getCirclePDF, getImagePDF, getReactanglePDF, getTextPDF, getTrianglePDF } from '../../store/ConvertObjectToPDF'
 import { hexToRgb } from '../../store/hexToRgb'
-import { drawPageGradientBackground } from '../../store/ВrawPageGradientBackground'
+import { drawPageGradientBackground } from '../../store/DrawPageGradientBackground'
 
 const ExportTool = () => {
     const SLIDE_WIDTH = 950

@@ -15,11 +15,12 @@ type slideObjectProps = {
     isSelected: boolean
     elem: SlideObject
     showSelection: boolean
+    scale: number
     slideRef:  RefObject<HTMLElement>
     isResizePointActive: boolean
 }
 
-export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, isResizePointActive}: slideObjectProps ) => {
+export const SlideElem = ( {slideId, elem, isSelected, showSelection, scale, slideRef, isResizePointActive}: slideObjectProps ) => {
     let elemPoint: string
     let elemClassName: string = styles.elem
     if (isSelected && showSelection) {
@@ -93,8 +94,8 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
     const bottomRightPoint = elemPoint + ' ' + styles.point_bottom_right
 
     const elemStyle: CSSProperties = {
-        left: pos.X,  
-        top: pos.Y,
+        left: pos.X * scale - 5,  
+        top: pos.Y * scale - 5,
         position: 'absolute'
     }
     let element = <></>
@@ -104,7 +105,7 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
                         slideId={slideId}
                         text={elem.text} 
                         font={elem.font} 
-                        fontSize={elem.fontsize * 1} 
+                        fontSize={elem.fontsize * scale} 
                         isReadOnly={!isSelected}
                         elemId={elem.id}
                         textColor={elem.color}
@@ -113,15 +114,15 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
         case 'image': 
             element = <ImageObject 
                         src={elem.src} 
-                        width={size.width * 1} 
-                        height={size.height * 1} 
+                        width={size.width * scale} 
+                        height={size.height * scale} 
                     />
             break
         case 'circle':
             elemStyle.width = size.width * 2
             elemStyle.height = size.width * 2           
             element = <Circle 
-                        radius={size.width * 1}
+                        radius={size.width * scale}
                         color={elem.color}
                     />
             break
@@ -129,8 +130,8 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
             elemStyle.width = size.width
             elemStyle.height = size.height
             element = <Rectangle 
-                        width={size.width * 1} 
-                        height={size.height * 1} 
+                        width={size.width * scale} 
+                        height={size.height * scale} 
                         color={elem.color} 
                     />
             break
@@ -141,8 +142,8 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, slideRef, 
                         PointOne={elem.pointOne} 
                         PointTwo={elem.pointTwo} 
                         PointThree={elem.pointThree} 
-                        width={size.width * 1} 
-                        height={size.height * 1} 
+                        width={size.width * scale} 
+                        height={size.height * scale} 
                         color={elem.color}
                     />
     }

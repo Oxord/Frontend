@@ -9,8 +9,8 @@
 
 .slideList__slide_prewiev{
     margin-bottom: 15px;
-    width: 180px;
-    height: 145px;
+    /* width: 180px; */
+    /* height: 145px; */
     border: 1px solid gray; 
 }
 

@@ -20,7 +20,6 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
         maxHeight: '100%',
         width: `${width}px`,
         height: `${height}px`,
-        'transform': `scale(${scale})`,
     }
     if (slide.background.type === 'image') {
         slideStyle.backgroundImage = `url(${slide.background.src})`
@@ -30,7 +29,7 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
     if (slide.background.type === 'gradient') {
         slideStyle.background = `linear-gradient(to ${slide.background.gradientType}, ${slide.background.color1}, ${slide.background.color2})`
     }
-    else{
+    if(slide.background.type === 'solid') {
         slideStyle.backgroundColor = slide.background.color
         slideStyle.backgroundSize = 'contain'
     }
@@ -54,7 +53,7 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
                         elem={elem} 
                         key={elem.id} 
                         slideId={slide.id}
-                        // scale={scale} 
+                        scale={scale} 
                         isSelected={selectedElemId === elem.id} 
                         showSelection={showSelection}
                         slideRef={slideRef}

@@ -8,23 +8,21 @@ export type slidePreviewProps = {
     onElemClick?: (objId: string) => void
 }
 
-const scale = 180 / 950;  
-const SLIDE_WIDTH = 950
+const scale = 0.2  
 const SLIDE_HEIGHT = 525
+const SLIDE_WIDTH = 900
 
 export const SlidePreview = ({slide, isSelected, selectedElemId}: slidePreviewProps ) => {
     return (
         <Slide 
             slide={slide} 
             scale={scale} 
-            width={SLIDE_WIDTH} 
-            height={SLIDE_HEIGHT} 
+            width={SLIDE_WIDTH * scale} 
+            height={SLIDE_HEIGHT * scale} 
             isSelected={isSelected} 
             showSelection={false} 
-            selectedElemsId={selectedElemId}
+            selectedElemId={selectedElemId}
             onElemClick={() => {}} 
-            onChangeSlideObjectPosition={() => {}}
-            onChangeSlideObjectSize={() => {}}
         />
     )
 }
