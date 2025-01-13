@@ -1,4 +1,4 @@
-import { applyMiddleware, createStore } from 'redux' 
+import { applyMiddleware, createStore, } from 'redux' 
 import rootReducer from './rootReducer' 
 import { thunk } from 'redux-thunk'
 
@@ -11,10 +11,8 @@ function saverState({ getState }) {
       localStorage.setItem(KEY, presentation)  
       return returnValue
     }
-  }
-
-const store = createStore(rootReducer, {}, applyMiddleware(thunk))
-
-export {
-    store
 }
+
+const store = createStore(rootReducer, undefined, applyMiddleware(saverState, thunk))
+
+export default store

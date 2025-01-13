@@ -107,6 +107,9 @@ const slidesReducer = (state = getInitialState(), action: SlidesAction): SlidesS
             }
             return state
         }
+        case SlideActionTypes.IMPORT_IMAGE: {
+            return state
+        }
         case SlideActionTypes.IMPORT_IMAGE_SUCCESS: {
             const slideId = (action.payload as ImportImagePayload).selectedSlideId
             const slide = state.find(s => s.id === slideId)
@@ -123,6 +126,9 @@ const slidesReducer = (state = getInitialState(), action: SlidesAction): SlidesS
                     }
                 })
             }
+            return state
+        }
+        case SlideActionTypes.IMPORT_IMAGE_FAILURE: {
             return state
         }
         case SlideActionTypes.INSERT_TEXT_FIELD: {

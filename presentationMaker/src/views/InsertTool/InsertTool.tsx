@@ -88,7 +88,9 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
     const { importImage } = useAppActions()
 
     const dispatch = useDispatch()
+
     const handleFetchPhoto = () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         dispatch(importImage())
     }
 

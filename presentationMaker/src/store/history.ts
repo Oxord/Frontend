@@ -15,24 +15,18 @@ function initHistory(store: Store): HistoryType {
     let redoStack: stateDataType[] = []
 
     let previousState = store.getState()
-
     store.subscribe(() => {
-        const state: stateDataType = store.getState()  
+        const state: stateDataType = store.getState()
         if (!undoStack.length || previousState != state) {
-            if (getLastItem(undoStack)) {
-                const undoState = getLastItem(undoStack)
-                if (state.slides == undoState.slides && state.title == undoState.title ) {
-                    undoStack.pop()
-                    redoStack.push(previousState)
+            if (getLastItem(undoStack) && state.slides == getLastItem(undoStack).slides && state.title == getLastItem(undoStack).title) {
+                undoStack.pop()
+                redoStack.push(previousState)
             }
-            }
-            if (getLastItem(redoStack)) {
-                const redoState = getLastItem(redoStack)
-                if (state.slides == redoState.slides && state.title == redoState.title ) {
-                    redoStack.pop() 
-                    undoStack.push(previousState)
-            }
-            } else {
+            else if (getLastItem(redoStack) && state.slides == getLastItem(redoStack).slides && state.title == getLastItem(redoStack).title) {
+                redoStack.pop() 
+                undoStack.push(previousState)
+            } 
+            else {
                 undoStack.push(previousState)
                 redoStack = []
             }

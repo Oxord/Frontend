@@ -2,7 +2,7 @@ import { Provider } from 'react-redux'
 import App from './App.tsx'
 import './index.css'
 import { createRoot } from 'react-dom/client'
-import { store } from './store/store.ts'
+import store from './store/store.ts'
 import { initHistory } from './store/history.ts'
 import { StrictMode } from 'react'
 
