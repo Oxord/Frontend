@@ -1,9 +1,9 @@
 import { getDefaultImage } from "./GetDefaultImage"
 import { getDefaultFigure } from "./GetDefaultFigure"
 import { SlideActionTypes } from "./SlideActionTypes"
-import { ChangeBackgroundPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, ImportImagePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction, UpdateSlidesPayload } from "./SlidesAction"
+import { ChangeBackgroundGradientPayload, ChangeBackgroundPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, ImportImagePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction, UpdateSlidesPayload } from "./SlidesAction"
 import { SlidesState } from "./SlidesState"
-import { Background, SlideObject, SlideType, TextObject } from "./types"
+import { Background, GradientBackground, SlideObject, SlideType, TextObject } from "./types"
 import { getDefaultTextField } from "./GetDefaultTextField"
 import { getDefaultSlide } from "./GetDefaultSlide"
 import { initialData } from "./initialData"
@@ -47,6 +47,31 @@ const slidesReducer = (state = getInitialState(), action: SlidesAction): SlidesS
                         src: value,
                         type: 'image'
                     }
+                }    
+                const editedSlide: SlideType = { ...slide, background: newBackground }
+                return state.map(x => {
+                    if (x.id === slide.id){
+                        return editedSlide
+                    }
+                    else{
+                        return x
+                    }
+                })
+            }
+            return state
+        }
+        case SlideActionTypes.CHANGE_SLIDE_BACKGROUND_GRADIENT: {
+            const slideId = (action.payload as ChangeBackgroundGradientPayload).selectedSlideId
+            const color1 = (action.payload as ChangeBackgroundGradientPayload).values[0]
+            const color2 = (action.payload as ChangeBackgroundGradientPayload).values[1]
+            const gradientType = (action.payload as ChangeBackgroundGradientPayload).gradientType
+            const slide = state.find(s => s.id === slideId)
+            if (slide) {
+                const newBackground: GradientBackground = {
+                    color1,
+                    color2,
+                    gradientType: gradientType,
+                    type: 'gradient'
                 }    
                 const editedSlide: SlideType = { ...slide, background: newBackground }
                 return state.map(x => {

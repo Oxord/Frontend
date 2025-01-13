@@ -9,6 +9,7 @@ import { useAppSelector } from './hooks/useAppSelector'
 import { HistoryType } from './store/history'
 import { HistoryContext } from './hooks/historyContext'
 import { useAppActions } from './hooks/useAppActions'
+import GradientPicker from './components/GradientPicker'
 
 type AppProprs = {
     history: HistoryType

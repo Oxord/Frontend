@@ -27,6 +27,9 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
         slideStyle.backgroundSize = 'cover'
         slideStyle.backgroundPosition = 'center'
     }
+    if (slide.background.type === 'gradient') {
+        slideStyle.background = `linear-gradient(to ${slide.background.gradientType}, ${slide.background.color1}, ${slide.background.color2})`
+    }
     else{
         slideStyle.backgroundColor = slide.background.color
         slideStyle.backgroundSize = 'contain'

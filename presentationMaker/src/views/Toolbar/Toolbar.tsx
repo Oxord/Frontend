@@ -5,6 +5,7 @@ import { Popup } from "../../components/Popup/Popup"
 import { PopupCover } from "../../components/Popup/PopupCover"
 import { Form } from "../../components/Forms/Form"
 import { useAppActions } from "../../hooks/useAppActions"
+import { GradientForm } from "../../components/Forms/GradientForm"
 
 type toolbarProps = {
     selectedSlideId: string
@@ -65,6 +66,22 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
     const ref = useRef(null)
     const handleClick = () => {
         ref.current.click()
+    }
+    const onAddImage: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+        const file = event.target.files?.[0]
+        if (file) { 
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const src = reader.result
+                if (src as string) {
+                    changeBackground(selectedSlideId, src as string, 'src')
+                }
+                else{
+                    alert('Не удалось добавить файл:(')
+                }
+            }
+            reader.readAsDataURL(file)
+        } 
     }
 
     const { changeTextFont } = useAppActions()
@@ -150,9 +167,10 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
                     && <div className={style.objectList + ' ' + style.insertSection}>
                             <button onClick={() => {onClickChangePopupVisible('color')}}>Set color</button>
                             <button onClick={handleClick}>Set local image
-                                <input id='image' type='file' style={{display: 'none'}} ref={ref}></input>
+                                <input id='image' type='file' style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
                             </button>   
                             <button onClick={() => {onClickChangePopupVisible('image')}}>Set outher image</button>
+                            <button onClick={() => {onClickChangePopupVisible('gradient')}}>Gradient</button>
                     </div>
                 }
             </div>
@@ -209,6 +227,11 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
                         onSubmit={onChangeBackgroundColor}
                         onClose={changePopupOpened}
                     />}
+                {popupType === 'gradient' && <GradientForm
+                        selectedSlideId={selectedSlideId}
+                        handleInputChange={handleBackgroundChange}
+                        onClose={changePopupOpened}
+                    />}    
                 {popupType === 'elemColor' && <Form
                         title='Выберите цвет'
                         inputType='color'

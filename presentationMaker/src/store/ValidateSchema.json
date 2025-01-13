@@ -28,6 +28,16 @@
                 {
                   "type": "object",
                   "properties": {
+                    "color1": { "type": "string" },
+                    "color2": { "type": "string" },
+                    "gradientType": { "type": "string" },
+                    "type": { "const": "gradient" }
+                  },
+                  "required": ["color1", "color2", "gradientType", "type"]
+                },
+                {
+                  "type": "object",
+                  "properties": {
                     "src": { "type": "string" },
                     "type": { "const": "image" }
                   },

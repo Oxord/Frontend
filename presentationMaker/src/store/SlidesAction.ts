@@ -12,6 +12,15 @@ export type ChangeBackgroundPayload = {
     type: 'src' | 'solid'
 }
 
+export type GradientTypeValues = 'right' | 'left' | 'top' | 'bottom' | 'top right' | 'top left' | 'bottom right' | 'bottom left'
+
+export type ChangeBackgroundGradientPayload = {
+    selectedSlideId: string
+    values: string[]
+    gradientType: GradientTypeValues
+    type: 'gradient'
+}
+
 export type ChangeSlidePositionPayload = {
     newOrder: string[]
 } 
@@ -84,6 +93,7 @@ export type UpdateSlidesPayload = {
 export type PayloadType = 
     RemoveSlidePayload | 
     ChangeBackgroundPayload | 
+    ChangeBackgroundGradientPayload |
     ChangeSlidePositionPayload | 
     InsertFigurePayload | 
     InsertImagePayload |

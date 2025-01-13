@@ -1,6 +1,6 @@
 import { Dispatch, UnknownAction } from "redux"
 import { SlideActionTypes } from "../SlideActionTypes"
-import { SlidesAction } from "../SlidesAction"
+import { GradientTypeValues, SlidesAction } from "../SlidesAction"
 import { Position, SizeType, SlideType } from "../types"
 
 //change slide
@@ -27,6 +27,18 @@ export const changeBackground = (selectedSlideId: string, value: string, type: '
             selectedSlideId, 
             value, 
             type
+        }
+    }
+} 
+
+export const changeBackgroundGradient = (selectedSlideId: string, values: string[], gradientType: GradientTypeValues): SlidesAction => {
+    return {
+        type: SlideActionTypes.CHANGE_SLIDE_BACKGROUND_GRADIENT,
+        payload: {
+            selectedSlideId, 
+            values, 
+            gradientType,
+            type: 'gradient'
         }
     }
 } 

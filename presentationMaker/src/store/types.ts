@@ -9,7 +9,7 @@ export type SlideType = {
     objects: SlideObject[]
 }
 
-export type Background = SolidBackground | ImageBackground
+export type Background = SolidBackground | ImageBackground | GradientBackground
 
 export type SolidBackground = {
     color: string
@@ -19,6 +19,13 @@ export type SolidBackground = {
 export type ImageBackground = {
     src: string
     type: 'image'
+}
+
+export type GradientBackground = {
+    color1: string
+    color2: string
+    gradientType: string
+    type: 'gradient'
 }
 
 export type SlideObject = TextObject | ImageObject | FigureObject
