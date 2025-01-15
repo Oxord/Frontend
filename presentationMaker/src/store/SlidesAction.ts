@@ -82,8 +82,7 @@ export type ChangeElemPositionPayload = {
 
 export type ImportImagePayload = {
     selectedSlideId: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    image: any
+    image: string
 }
 
 export type UpdateSlidesPayload = {

@@ -9,16 +9,18 @@ export type TextObjectProps = {
   isReadOnly: boolean
   elemId: string
   textColor: string
+  width: number
+  height: number
 }
 
-export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, textColor }: TextObjectProps) => {
+export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, textColor, width, height }: TextObjectProps) => {
   const textObjectStyle: CSSProperties = {
       border: 'none',
       background: 'none',
       position: 'relative',
-      width: '100%', 
-      height: 'auto',
-      maxHeight: '200px', //зачем тут так? потом перепроверю, как смогу дебажить
+      width: width, 
+      height: height,
+      //зачем тут так? потом перепроверю, как смогу дебажить
       color: textColor,
       resize: 'none',
       fontFamily: font? font: 'arial',
@@ -48,7 +50,6 @@ export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, 
         style={textObjectStyle} 
         readOnly={isReadOnly} 
         onChange={onChangeText}
-        // onkeydown={onChangeTextSubmit}
       >
           {newText}
       </textarea>

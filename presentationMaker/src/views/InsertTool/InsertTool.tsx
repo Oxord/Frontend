@@ -4,7 +4,7 @@ import { PopupCover } from "../../components/Popup/PopupCover"
 import { Popup } from '../../components/Popup/Popup'
 import { Form } from "../../components/Forms/Form"
 import { useAppActions } from "../../hooks/useAppActions"
-import { useDispatch } from "react-redux"
+import ImageSearch from "../ImageSearcher/ImageSearcher"
 
 export type InsertToolProps = {
     selectedSlideId: string
@@ -55,7 +55,7 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
     }
     const [insertToolOpened, setInsertToolopened] = useState(false)
     const changeInsertToolOpened = () => {
-        setInsertToolopened(!insertToolOpened);
+        setInsertToolopened(!insertToolOpened)
         if (imageInsertOpend){
             changeImageInsertOpend()
         }
@@ -85,13 +85,17 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
 
     const { insertFigure } = useAppActions()
     const { insertTextField } = useAppActions()
-    const { importImage } = useAppActions()
 
-    const dispatch = useDispatch()
+
+    const [unsplashActive, setUnsplashActive] = useState(false)
+
+    const changeUnsplashActive = () => {
+        setUnsplashActive(!unsplashActive)
+    }
 
     const handleFetchPhoto = () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        dispatch(importImage())
+        setUnsplashActive(true)
+        changeInsertToolOpened()
     }
 
     return(
@@ -130,12 +134,12 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
                                         <div className={style.insertSection__image_objects}>
                                             <button onClick={handleClick}>
                                                 <label form='image'>
-                                                    С компьютера
+                                                    Local
                                                 </label>
                                                 <input id='image' type='file' accept=".jpg, .jpeg, .png" style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
                                             </button>
                                             <button onClick={handleFetchPhoto}>
-                                                Из другого сервиса
+                                                Outher
                                             </button>
                                         </div>
                                     }  
@@ -148,7 +152,13 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
                             </div>
                         </div>
                     }
-                    <PopupCover isVisible={popupOpened}/>
+                    <PopupCover isVisible={popupOpened || unsplashActive}/>
+                    <Popup isVisible={unsplashActive}>
+                        <ImageSearch
+                            selectedSlideId={selectedSlideId}
+                            onClose={changeUnsplashActive}
+                        />
+                    </Popup>
                     <Popup isVisible={popupOpened}>
                         <Form
                             title='URL изображения:'

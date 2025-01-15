@@ -1,7 +1,23 @@
 import { getDefaultImage } from "./GetDefaultImage"
 import { getDefaultFigure } from "./GetDefaultFigure"
 import { SlideActionTypes } from "./SlideActionTypes"
-import { ChangeBackgroundGradientPayload, ChangeBackgroundPayload, ChangeElemColorPayload, ChangeElemPositionPayload, ChangeElemSizePayload, ChangeSlidePositionPayload, ChangeTextFontPayload, ChangeTextPayload, ChangeTextSizePayload, ImportImagePayload, InsertFigurePayload, InsertImagePayload, InsertTextFieldPayload, RemoveElemPayload, RemoveSlidePayload, SlidesAction, UpdateSlidesPayload } from "./SlidesAction"
+import { ChangeBackgroundGradientPayload, 
+    ChangeBackgroundPayload, 
+    ChangeElemColorPayload, 
+    ChangeElemPositionPayload, 
+    ChangeElemSizePayload, 
+    ChangeSlidePositionPayload, 
+    ChangeTextFontPayload, 
+    ChangeTextPayload, 
+    ChangeTextSizePayload, 
+    InsertFigurePayload, 
+    InsertImagePayload, 
+    InsertTextFieldPayload, 
+    RemoveElemPayload, 
+    RemoveSlidePayload, 
+    SlidesAction, 
+    UpdateSlidesPayload 
+} from "./SlidesAction"
 import { SlidesState } from "./SlidesState"
 import { Background, GradientBackground, SlideObject, SlideType, TextObject } from "./types"
 import { getDefaultTextField } from "./GetDefaultTextField"
@@ -116,7 +132,7 @@ const slidesReducer = (state = getInitialState(), action: SlidesAction): SlidesS
         }
         case SlideActionTypes.INSERT_IMAGE: {
             const slideId = (action.payload as InsertImagePayload).selectedSlideId
-            const src = (action.payload as InsertImagePayload).src 
+            const src = (action.payload as InsertImagePayload).src
             const slide = state.find(s => s.id === slideId)
             if (slide && action.payload) {
                 const image = getDefaultImage(src)
@@ -130,30 +146,6 @@ const slidesReducer = (state = getInitialState(), action: SlidesAction): SlidesS
                     }
                 })
             }
-            return state
-        }
-        case SlideActionTypes.IMPORT_IMAGE: {
-            return state
-        }
-        case SlideActionTypes.IMPORT_IMAGE_SUCCESS: {
-            const slideId = (action.payload as ImportImagePayload).selectedSlideId
-            const slide = state.find(s => s.id === slideId)
-            if (slide) {
-                const img = (action.payload as ImportImagePayload).image
-                const image = getDefaultImage(img)
-                const editedSlide: SlideType = { ...slide, objects: [...slide.objects, image] }
-                return state.map(x => {
-                    if (x.id === slide.id){
-                        return editedSlide
-                    }
-                    else{
-                        return x
-                    }
-                })
-            }
-            return state
-        }
-        case SlideActionTypes.IMPORT_IMAGE_FAILURE: {
             return state
         }
         case SlideActionTypes.INSERT_TEXT_FIELD: {

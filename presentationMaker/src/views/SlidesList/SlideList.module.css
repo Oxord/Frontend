@@ -1,6 +1,4 @@
 .slideList{
-    /* display: 'flex';
-    flex-direction: 'column'; */
     max-height: 550px;
     width: 200px;
     overflow-y: scroll;
@@ -9,18 +7,14 @@
 
 .slideList__slide_prewiev{
     margin-bottom: 15px;
-    /* width: 180px; */
-    /* height: 145px; */
     border: 1px solid gray; 
 }
 
-/* Стилизация самого скроллбара */
 .slideList::-webkit-scrollbar {
-    width: 15px; 
+    width: 10px; 
     height: 15px; 
 }
 
-/* Стилизация ползунка скроллбара */
 .slideList::-webkit-scrollbar-thumb {
     background-color: rgba(250, 113, 0, 1); 
     border-radius: 35px; 

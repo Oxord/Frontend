@@ -1,0 +1,73 @@
+.popup{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    max-height: 100%;
+    z-index: 1;
+    background-color: rgb(51, 205, 199);
+    padding-top: 15px;
+}
+
+.imageSearcher__images{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 30px;
+    max-width: 500px;
+    height: 350px;
+    overflow-x: scroll;
+    display: flex;
+    flex-direction: row;
+}
+
+.imageSearcher__images .image{
+    padding: 7.5px;
+}
+
+.imageSearcher__images::-webkit-scrollbar {
+    width: 30px;  
+    height: 10px; 
+}
+
+.imageSearcher__images::-webkit-scrollbar-thumb {
+    background-color: rgba(250, 113, 0, 1); 
+    border-radius: 35px; 
+    margin: 5px;
+}
+
+.popup__form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+
+.form__input{
+    margin-top: 15px;
+    width: 250px;
+    height: 30px;
+    font-size: 18px;
+    font-family: "inter";
+}
+
+.form__buttons{
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form__buttons button{
+    height: 40px;
+    width: 100px;
+    border-radius: 15px;
+    border: none;
+    margin-bottom: 30px;
+}
+
+.cover__popup_hidden{
+    display: none;
+}
+  

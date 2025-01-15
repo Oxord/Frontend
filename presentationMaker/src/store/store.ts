@@ -15,4 +15,6 @@ function saverState({ getState }) {
 
 const store = createStore(rootReducer, undefined, applyMiddleware(saverState, thunk))
 
+export type AppDispatch = typeof store.dispatch
+
 export default store
