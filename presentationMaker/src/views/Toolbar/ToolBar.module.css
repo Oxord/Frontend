@@ -91,6 +91,7 @@ input::-webkit-inner-spin-button {
 .toolBar__colors__colorBlock__Icon__textColor{
     width: 32px;
     height: 37px;
+    background: none;
 }
 
 .toolBar__colors__colorBlock__Icon__fillColor{
@@ -106,8 +107,7 @@ input::-webkit-inner-spin-button {
 }
 
 .toolBar__tool_notAvailable{
-    display: none;
-    background-color: rgba(51, 205, 199, 0.3);
+    opacity: 0.3;
     pointer-events: none;
 }
 

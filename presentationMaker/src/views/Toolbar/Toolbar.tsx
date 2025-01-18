@@ -6,6 +6,8 @@ import { PopupCover } from "../../components/Popup/PopupCover"
 import { Form } from "../../components/Forms/Form"
 import { useAppActions } from "../../hooks/useAppActions"
 import { GradientForm } from "../../components/Forms/GradientForm"
+import ImageSearch from "../ImageSearcher/ImageSearcher"
+import { SlideActionTypes } from "../../store/SlideActionTypes"
 
 type toolbarProps = {
     selectedSlideId: string
@@ -118,13 +120,7 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
             'solid'
         )
     }
-    const onChangeBackgroundImage = () => {
-        changeBackground(
-            selectedSlideId,
-            newBackgroundValue,
-            'src'
-        )
-    }
+
     
     const { changeElementColor } = useAppActions()
     const [newColor, setNewColor] = useState('black') 
@@ -201,10 +197,10 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
                         </div>
                     </div>
                 </>}
-            {selectedElemType !== 'text' &&
+            {selectedElemType !== 'text' && selectedElemType && 
                 <div className={elemColorClassName}>
                     <div className={style.toolBar__colors__colorBlock}>
-                        <div className={style.toolBar__colors__colorBlock__Icon} onClick={() => onClickChangePopupVisible('elemColor')}>
+                        <div className={style.toolBar__colors__colorBlock__Icon} style={{background: 'none'}} onClick={() => onClickChangePopupVisible('elemColor')}>
                             <img src='.\src\assets\fillColor.png' alt="fillColor" className={style.toolBar__colors__colorBlock__Icon__fillColor}/>
                         </div>
                         <div className={style.toolBar__colors__colorBlock__color} style={{ backgroundColor: selectedElemColor }}></div>
@@ -213,15 +209,14 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
             }    
             <PopupCover isVisible={popupOpened}/>
             <Popup isVisible={popupOpened}>
-                {popupType === 'image' && <Form
-                        title='URL изображения:'
-                        inputType='text'
-                        handleInputChange={handleBackgroundChange}
-                        onSubmit={onChangeBackgroundImage}
-                        onClose={changePopupOpened}
+                {popupType === 'image' && 
+                    <ImageSearch
+                        selectedSlideId={selectedSlideId}
+                        onClose={changePopupOpened}    
+                        actionType={SlideActionTypes.CHANGE_SLIDE_BACKGROUND}
                     />}
                 {popupType === 'color' && <Form
-                        title='Выберите цвет фона'
+                        title='Choose background color'
                         inputType='color'
                         handleInputChange={handleBackgroundChange}
                         onSubmit={onChangeBackgroundColor}
@@ -233,7 +228,7 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
                         onClose={changePopupOpened}
                     />}    
                 {popupType === 'elemColor' && <Form
-                        title='Выберите цвет'
+                        title='Choose color'
                         inputType='color'
                         handleInputChange={handleElemColorChange}
                         onSubmit={onChangeElemColor}

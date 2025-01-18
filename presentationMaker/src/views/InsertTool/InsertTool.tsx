@@ -5,6 +5,7 @@ import { Popup } from '../../components/Popup/Popup'
 import { Form } from "../../components/Forms/Form"
 import { useAppActions } from "../../hooks/useAppActions"
 import ImageSearch from "../ImageSearcher/ImageSearcher"
+import { SlideActionTypes } from "../../store/SlideActionTypes"
 
 export type InsertToolProps = {
     selectedSlideId: string
@@ -157,6 +158,7 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
                         <ImageSearch
                             selectedSlideId={selectedSlideId}
                             onClose={changeUnsplashActive}
+                            actionType={SlideActionTypes.INSERT_IMAGE}
                         />
                     </Popup>
                     <Popup isVisible={popupOpened}>

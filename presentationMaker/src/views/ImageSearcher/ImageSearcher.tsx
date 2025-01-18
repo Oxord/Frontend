@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react'
 import style from './ImageSearcher.module.css'
 import { useAppActions } from '../../hooks/useAppActions'
 import { getBase64Image } from '../../store/getBase64'
+import { SlideActionTypes } from '../../store/SlideActionTypes'
 
 const UNSPLASH_ACCESS_KEY = 'yInoT3_rganJbCrJ1Dr8xyG5m2w2bst-lBQpqkdKQs8'
 
 type ImageSearchProps = {
     selectedSlideId: string
     onClose: () => void
+    actionType: SlideActionTypes.INSERT_IMAGE | SlideActionTypes.CHANGE_SLIDE_BACKGROUND 
 }
 
-const ImageSearch = ({ selectedSlideId, onClose }: ImageSearchProps) => {
+const ImageSearch = ({ selectedSlideId, onClose, actionType }: ImageSearchProps) => {
     const [images, setImages] = useState<string[]>([])
     const [query, setQuery] = useState('office')
 
-    const { insertImage } = useAppActions()
+    const { insertImage, changeBackground } = useAppActions()
 
     const fetchImages = async () => {
         try {
@@ -43,7 +45,12 @@ const ImageSearch = ({ selectedSlideId, onClose }: ImageSearchProps) => {
 
     const handleImageClick = async (img: string) => {
         const base64 = await getBase64Image(img)
-        insertImage(selectedSlideId, base64)
+        if (actionType === SlideActionTypes.CHANGE_SLIDE_BACKGROUND) {
+            changeBackground(selectedSlideId, base64, 'src')
+        }
+        else {
+            insertImage(selectedSlideId, base64)
+        }
         onClose()
     }
 
