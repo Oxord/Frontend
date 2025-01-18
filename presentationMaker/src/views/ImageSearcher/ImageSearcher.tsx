@@ -14,7 +14,7 @@ type ImageSearchProps = {
 
 const ImageSearch = ({ selectedSlideId, onClose, actionType }: ImageSearchProps) => {
     const [images, setImages] = useState<string[]>([])
-    const [query, setQuery] = useState('office')
+    const [query, setQuery] = useState('image')
 
     const { insertImage, changeBackground } = useAppActions()
 
@@ -57,19 +57,14 @@ const ImageSearch = ({ selectedSlideId, onClose, actionType }: ImageSearchProps)
     return (
         <>
             <form onSubmit={handleSearch}>
-                <input type="text" value={query} className={style.form__input} onChange={(e) => setQuery(e.target.value)} placeholder="Поиск изображений" />
+                <input type="text" value={query} className={style.form__input} onChange={(e) => setQuery(e.target.value)} placeholder="Search" />
             </form>
             <div className={style.imageSearcher__images}>
                 {images.map((img, index) => (
                     <img key={index} src={img} alt="Unsplash" onClick={() => handleImageClick(img)} className={style.image}/>
                 ))}
             </div>
-            <div className={style.form__button}>
-                <button onClick={onClose}>
-                    Close
-                </button>
-
-            </div>
+            <div className={style.form__button_close} onClick={onClose}></div>
         </>    
     )
 }

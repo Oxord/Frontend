@@ -8,6 +8,7 @@ import { useAppActions } from "../../hooks/useAppActions"
 import { GradientForm } from "../../components/Forms/GradientForm"
 import ImageSearch from "../ImageSearcher/ImageSearcher"
 import { SlideActionTypes } from "../../store/SlideActionTypes"
+import { GradientTypeValues } from "../../store/SlidesAction"
 
 type toolbarProps = {
     selectedSlideId: string
@@ -121,6 +122,33 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
         )
     }
 
+
+    const { changeBackgroundGradient } = useAppActions()
+    const [gradientValue1, setGradientValue1] = useState('#000000')
+    const [gradientValue2, setGradientValue2] = useState('#000000')
+    const handleGradientColorChange = (event: React.ChangeEvent<HTMLInputElement>, gradientNum: number) => {
+        if (gradientNum === 1) {
+            setGradientValue1(event.target.value)
+        }
+        if (gradientNum === 2) {
+            setGradientValue2(event.target.value)
+        }
+    }
+
+    const [gradientType, setGradientType] = useState<GradientTypeValues>('right')
+    const handleGradientTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setGradientType(event.target.value as GradientTypeValues)
+    }   
+    const onChangeGradientBackground = () => {
+        changeBackgroundGradient(
+            selectedSlideId,
+            [
+                gradientValue1,
+                gradientValue2
+            ],
+            gradientType
+        )
+    }
     
     const { changeElementColor } = useAppActions()
     const [newColor, setNewColor] = useState('black') 
@@ -130,7 +158,6 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
     const onChangeElemColor = () => {
         changeElementColor(selectedSlideId, selectedElemId, newColor)
     }
-    //реализовать этот функционал
 
     const { addSlide } = useAppActions()
 
@@ -223,8 +250,12 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
                         onClose={changePopupOpened}
                     />}
                 {popupType === 'gradient' && <GradientForm
-                        selectedSlideId={selectedSlideId}
-                        handleInputChange={handleBackgroundChange}
+                        color1={gradientValue1}
+                        color2={gradientValue2}
+                        gradientType={gradientType}
+                        onSubmit={onChangeGradientBackground}
+                        handleInputChange={handleGradientColorChange}
+                        handleInputTypeChange={handleGradientTypeChange}
                         onClose={changePopupOpened}
                     />}    
                 {popupType === 'elemColor' && <Form
