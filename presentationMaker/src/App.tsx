@@ -90,8 +90,7 @@ function App({history}: AppProprs) {
     const SLIDE_HEIGHT = 525
     const selectedSlide = slides.find(s => s.id === selectedSlidesIds[0])
     return (    
-        <div>
-            {/* <ImageSearch/> */}
+        <div className='main'>
             <HistoryContext.Provider value={history}>
                 <TopPanel
                     onUndo={onUndo}

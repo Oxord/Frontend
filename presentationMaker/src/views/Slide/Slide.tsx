@@ -20,6 +20,7 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
         maxHeight: '100%',
         width: `${width}px`,
         height: `${height}px`,
+        overflow: 'hidden'
     }
     if (slide.background.type === 'image') {
         slideStyle.backgroundImage = `url(${slide.background.src})`

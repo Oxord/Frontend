@@ -4,6 +4,7 @@ import { ExportTool } from "../Toolbar/ExportTool"
 import { ImportTool } from "../Toolbar/ImportTool"
 import style from './TopPanel.module.css'
 import { HistoryTool } from "../Toolbar/HistoryTool"
+import { useNavigate } from "react-router-dom"
 
 type TopPanelProps = {
     onUndo: () => void
@@ -11,6 +12,7 @@ type TopPanelProps = {
 }
 
 const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
+    const navigate = useNavigate()
     return(
         <div className={style.topPanel}>
             <div className={style.topPanel__icon_and_name}>
@@ -18,20 +20,24 @@ const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
                 <PresNameInput/>
             </div>
             <div className={style.topPanel__tools}>
-                <div className={style.topPanel__tools_tools_container}>
-                    <HistoryTool 
-                        onClick={onUndo}
-                        label="Undo"
-                    />
-                    <HistoryTool 
-                        onClick={onRedo}
-                        label="Redo"
-                    />
+                <div>
+                    <button 
+                        onClick={() => navigate('preview', { replace: false })} 
+                        className={style.toolBar__tool}
+                    >
+                        Preview
+                    </button>
                 </div>
-                <div className={style.topPanel__tools_tools_container}>
-                    <ImportTool/>
-                    <ExportTool/>
-                </div>
+                <HistoryTool 
+                    onClick={onUndo}
+                    label="Undo"
+                />
+                <HistoryTool 
+                    onClick={onRedo}
+                    label="Redo"
+                />
+                <ImportTool/>
+                <ExportTool/>
             </div>
         </div>
     )

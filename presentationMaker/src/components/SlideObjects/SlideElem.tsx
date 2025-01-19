@@ -22,13 +22,12 @@ type slideObjectProps = {
 
 export const SlideElem = ( {slideId, elem, isSelected, showSelection, scale, slideRef, isResizePointActive}: slideObjectProps ) => {
     let elemPoint: string
-    let elemClassName: string = styles.elem
+    let elemClassName = ''
     if (isSelected && showSelection) {
         elemClassName = styles.elem + ' ' + styles.elem_selected
         elemPoint = styles.figure__point
     }
     else{
-        elemClassName = styles.elem
         elemPoint = styles.disable
     }
 
@@ -153,39 +152,42 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, scale, sli
         <div style={elemStyle} className={elemClassName}>
             <div ref={draggableObject}>  
                 {element}
-            </div>  
-            <div
-                className={topLeftPoint}
-                ref={resizePointTopLeft}>
-            </div>
-            <div
-                className={topPoint}
-                ref={resizePointTop}>    
-            </div>
-            <div
-                className={topRightPoint}
-                ref={resizePointTopRight}>
-            </div>
-            <div
-                className={mediumLeftPoint}
-                ref={resizePointMediumLeft}>
-            </div>
-            <div
-                className={mediumRightPoint}
-                ref={resizePointMediumRight}>
-            </div>
-            <div
-                className={bottomLeftPoint}
-                ref={resizePointBottomLeft}>
-            </div>
-            <div
-                className={bottomPoint}
-                ref={resizePointBottom}>
-            </div>
-            <div
-                className={bottomRightPoint}
-                ref={resizePointBottomRight}>
-            </div>
+            </div> 
+            {isSelected &&  
+                <>
+                <div
+                    className={topLeftPoint}
+                    ref={resizePointTopLeft}>
+                </div>
+                <div
+                    className={topPoint}
+                    ref={resizePointTop}>    
+                </div>
+                <div
+                    className={topRightPoint}
+                    ref={resizePointTopRight}>
+                </div>
+                <div
+                    className={mediumLeftPoint}
+                    ref={resizePointMediumLeft}>
+                </div>
+                <div
+                    className={mediumRightPoint}
+                    ref={resizePointMediumRight}>
+                </div>
+                <div
+                    className={bottomLeftPoint}
+                    ref={resizePointBottomLeft}>
+                </div>
+                <div
+                    className={bottomPoint}
+                    ref={resizePointBottom}>
+                </div>
+                <div
+                    className={bottomRightPoint}
+                    ref={resizePointBottomRight}>
+                </div>
+            </>}
         </div>
     ) 
 }

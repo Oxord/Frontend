@@ -2,7 +2,7 @@ body {
   margin: 0;
 }
 
-#root {
+.main{
   display: flex;
   margin-left: 30px;
   flex-direction: column;
