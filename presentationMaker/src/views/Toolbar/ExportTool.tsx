@@ -6,8 +6,19 @@ import fontkit from '@pdf-lib/fontkit'
 import { getCirclePDF, getImagePDF, getReactanglePDF, getTextPDF, getTrianglePDF } from '../../store/ConvertObjectToPDF'
 import { hexToRgb } from '../../store/hexToRgb'
 import { drawPageGradientBackground } from '../../store/DrawPageGradientBackground'
+import { useCallback, useEffect, useState } from 'react'
+import Preloader from '../Preloader/Preloader'
 
 const ExportTool = () => {
+    const [screenLoading, setScreenLoading] = useState(false);
+
+    // useEffect(() => {
+    //     setScreenLoading(true);
+    //     setTimeout(() => {
+    //     setScreenLoading(false);
+    //     }, 1000);
+    // }, []);
+
     const SLIDE_WIDTH = 950
     const SLIDE_HEIGHT = 525
 
@@ -79,10 +90,10 @@ const ExportTool = () => {
             })
         })
 
-        const pdfBytes = await pdfDoc.save();
+        const pdfBytes = await pdfDoc.save()
         
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+        const url = URL.createObjectURL(blob)
 
         const link = document.createElement('a')
         link.href = url
@@ -92,8 +103,27 @@ const ExportTool = () => {
         document.body.removeChild(link)
     }
 
+    const onExport = useCallback(async () => {
+        setScreenLoading(true)
+        console.log('loading')
+        
+        try {
+            await onExportToPDF()
+        } catch (error) {
+            console.error(error)
+        } finally { 
+            console.log('stop');
+            setScreenLoading(false)
+        }
+    }, [setScreenLoading, onExportToPDF])
+
+    console.log('loading', screenLoading)
+
     return(
-        <button onClick={onExportToPDF} className={style.toolBar__tool + ' ' + style.toolBar__tool_export}>Export</button>
+        <div>
+            { screenLoading && <Preloader /> }
+            <button onClick={onExport} className={style.toolBar__tool + ' ' + style.toolBar__tool_export}>Export</button>
+        </div>
     )
 }
 

@@ -19,9 +19,6 @@ type toolbarProps = {
 }
 
 const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, selectedElemType, selectedElemColor }: toolbarProps) => {
-
-    
-
     let removeSlideClassName = style.toolBar__tool
     if (isRemoveSlideAvailable) {
         removeSlideClassName = style.toolBar__tool
@@ -89,13 +86,14 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
 
     const { changeTextFont } = useAppActions()
     const [newFont, setNewFont] = useState('arial')
-    const onChangeFont: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const onChangeFont: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
         setNewFont(event.target.value)
+        changeTextFont(selectedSlideId, selectedElemId, event.target.value) 
     }
-    const setFontSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') 
-          changeTextFont(selectedSlideId, selectedElemId, newFont)          
-    }
+    // const setFontSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (event.key === 'Enter') 
+    //       changeTextFont(selectedSlideId, selectedElemId, newFont)          
+    // }
 
     
     const { changeTextSize } = useAppActions()
@@ -174,6 +172,7 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
         )
     }
 
+    const allFonts: string[] = ['arial', 'cursive', 'bold', 'serif']
     return(
         <div className={style.toolBar}>
             <button onClick={addSlide} className={style.toolBar__tool}>New Slide</button>
@@ -200,12 +199,17 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
             {selectedElemType === 'text' && 
                 <>
                     <div className={textPropertyClassName}>
-                        <input className={style.toolBar__tool_textProperties__font_input} 
-                            type="text" 
-                            defaultValue={newFont} 
-                            onChange={onChangeFont} 
-                            onKeyDown={setFontSubmit}
-                        />
+                            <select id="fontValuesList" 
+                                value={newFont} 
+                                onChange={onChangeFont}  
+                                className={style.toolBar__tool_textProperties__font_input}    
+                            >
+                            {allFonts.map((value, key) => {
+                                return (
+                                    <option key={key}>{value}</option>
+                                )
+                            })}
+                        </select>
                         <input className={style.toolBar__tool_textProperties__font_input + ' ' + style.toolBar__tool_textProperties__textSize} 
                             type="number" 
                             defaultValue={newFontsize}

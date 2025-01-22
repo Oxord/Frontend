@@ -8,7 +8,7 @@ export const ImageObject = ({src, width, height}: ImageObjectProps) => {
   return (
         <img
             src={src}
-            style={{ maxWidth: width, maxHeight: height }}>
+            style={{ width: width, height: height }}>
         </img>
   )
 }

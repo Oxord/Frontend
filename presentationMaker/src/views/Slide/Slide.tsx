@@ -49,7 +49,9 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
     const slideElements = slide.objects.map(elem => {
         if (elem){
             return (
-                <div onMouseDown={() => onElemClick(elem.id)}>
+                <div onMouseDown={() => onElemClick(elem.id)}
+                    className="slide-element"
+                >
                     <SlideElem 
                         elem={elem} 
                         key={elem.id} 
@@ -64,9 +66,15 @@ const Slide = ({slide, scale, width, height, isSelected, showSelection, onElemCl
             )
         }
     })
+    const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+        const target = event.target as HTMLElement;
+        if (!target.closest('.slide-element')) {
+            onElemClick('')
+        }
+    }
     return (
         <div style={slideStyle} ref={slideRef}
-            onMouseDown={changeIsResizePointActive}
+            onMouseDown={handleMouseDown}
             onMouseUp={changeIsResizePointActive}
         >
             {slideElements}

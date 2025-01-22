@@ -17,7 +17,6 @@ function render() {
           <Routes>
             <Route path='' element={<App history={initHistory(store)}/>}></Route>
             <Route path='preview' element={<SlideShow/>}/>
-            {/* <App history={initHistory(store)}/> */}
           </Routes>
         </BrowserRouter>
       </Provider>

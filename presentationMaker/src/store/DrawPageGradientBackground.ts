@@ -8,7 +8,6 @@ export const drawPageGradientBackground = (page: PDFPage, back: GradientBackgrou
     let steps = 10000
     const stepWidth = page.getWidth() / steps
     const stepHeight = page.getHeight() / steps
-    console.log(back.gradientType)
     switch (back.gradientType) {
         case 'right': {
             for (let i = 0; i < steps; i++) {

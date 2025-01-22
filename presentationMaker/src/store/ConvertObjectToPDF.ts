@@ -35,6 +35,9 @@ export const getTrianglePDF = (page: PDFPage, triangle: Triangle) => {
 }
 
 export const getTextPDF = async (pdfDoc: PDFDocument, page: PDFPage, text: TextObject) => {
+    // const fontBytes = await fetch('https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans+Wancho&family=Roboto:wght@100..900&display=swap').then(res => res.arrayBuffer());
+    // const customFont = await pdfDoc.embedFont(fontBytes);
+
     // const fontBytes = await fetch(text.font).then(res => res.arrayBuffer()) //problem with шрифт    
     // const customFont = await pdfDoc.embedFont(fontBytes)
     const { r, g, b } = hexToRgb(text.color)
