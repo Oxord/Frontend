@@ -39,7 +39,6 @@
 
 .toolBar__tool_textProperties__font_input{
     width: 100px;
-    height: 50px;
     color: white;
     font-size: 20px;
     font-family: "inter";
@@ -49,6 +48,7 @@
     padding-left: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
+    background: #33CDC7;
 }
 
 .toolBar__tool_textProperties__textSize{
