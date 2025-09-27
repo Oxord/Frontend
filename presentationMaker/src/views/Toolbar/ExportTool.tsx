@@ -6,19 +6,13 @@ import fontkit from '@pdf-lib/fontkit'
 import { getCirclePDF, getImagePDF, getReactanglePDF, getTextPDF, getTrianglePDF } from '../../store/ConvertObjectToPDF'
 import { hexToRgb } from '../../store/hexToRgb'
 import { drawPageGradientBackground } from '../../store/DrawPageGradientBackground'
-import { useCallback, useEffect, useState } from 'react'
-import Preloader from '../Preloader/Preloader'
+import { useCallback } from 'react'
 
-const ExportTool = () => {
-    const [screenLoading, setScreenLoading] = useState(false);
+type ExportToolProps = {
+    onLoading: (value: boolean) => void
+}
 
-    // useEffect(() => {
-    //     setScreenLoading(true);
-    //     setTimeout(() => {
-    //     setScreenLoading(false);
-    //     }, 1000);
-    // }, []);
-
+const ExportTool = ({onLoading}: ExportToolProps) => {
     const SLIDE_WIDTH = 950
     const SLIDE_HEIGHT = 525
 
@@ -104,7 +98,7 @@ const ExportTool = () => {
     }
 
     const onExport = useCallback(async () => {
-        setScreenLoading(true)
+        onLoading(true)
         console.log('loading')
         
         try {
@@ -113,20 +107,15 @@ const ExportTool = () => {
             console.error(error)
         } finally { 
             console.log('stop');
-            setScreenLoading(false)
+            onLoading(false)
         }
-    }, [setScreenLoading, onExportToPDF])
-
-    console.log('loading', screenLoading)
+    }, [onLoading, onExportToPDF])
 
     return(
-        <div>
-            { screenLoading && <Preloader /> }
-            <button onClick={onExport} className={style.toolBar__tool + ' ' + style.toolBar__tool_export}>Export</button>
-        </div>
+        <button onClick={onExport} className={style.toolBar__tool + ' ' + style.toolBar__tool_export}>Export</button>
     )
 }
 
-export{
+export {
     ExportTool
 }

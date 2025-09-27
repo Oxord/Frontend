@@ -2,7 +2,7 @@ import { PopupCover } from '../../components/Popup/PopupCover';
 import style from './Preloader.module.css'
 
 // type PreloaderProps = {
-//     // loading: boolean
+//     // setLoading: boolean
 // }
 
 const Preloader = () => {

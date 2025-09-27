@@ -5,6 +5,8 @@ import { ImportTool } from "../Toolbar/ImportTool"
 import style from './TopPanel.module.css'
 import { HistoryTool } from "../Toolbar/HistoryTool"
 import { useNavigate } from "react-router-dom"
+import { PopupCover } from "../../components/Popup/PopupCover"
+import { useState } from "react"
 
 type TopPanelProps = {
     onUndo: () => void
@@ -13,6 +15,10 @@ type TopPanelProps = {
 
 const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
+    const onLoading = (value: boolean) => {
+        setLoading(value)
+    }
     return(
         <div className={style.topPanel}>
             <div className={style.topPanel__icon_and_name}>
@@ -37,8 +43,14 @@ const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
                     label="Redo"
                 />
                 <ImportTool/>
-                <ExportTool/>
+                <ExportTool
+                    onLoading={onLoading}
+                />
             </div>
+            {loading && <>
+                <PopupCover isVisible={true}/>
+                <div className={style.loader}>Loading...</div>
+            </>}
         </div>
     )
 }

@@ -59,10 +59,10 @@ const SlideShow = () => {
             </div>
             <div className={style.slideShow__tools}>
                 <button 
-                    onClick={() => changeSlideNum('+')}
-                    className={nextSlideToolClassName}
+                    onClick={() => navigate('/', { replace: false })} 
+                    className={style.tool}
                 >
-                    Next
+                    Back
                 </button>
                 <button 
                     onClick={() => changeSlideNum('-')}
@@ -71,10 +71,10 @@ const SlideShow = () => {
                     Previous
                 </button>
                 <button 
-                    onClick={() => navigate('/', { replace: false })} 
-                    className={style.tool}
+                    onClick={() => changeSlideNum('+')}
+                    className={nextSlideToolClassName}
                 >
-                    Back
+                    Next
                 </button>
             </div>
         </div>
