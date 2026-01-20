@@ -43,7 +43,14 @@ const useDragAndDrop = (
             isObjectMoved = false
         }
 
-        const onMouseDown = () => {
+        const onMouseDown = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+            const isTextarea = target.tagName === 'TEXTAREA';
+            const isFocused = document.activeElement === target;
+            if (isTextarea && isFocused) {
+                return;
+            }
+
             if (draggableObject.current && slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMove)
                 draggableObject.current.addEventListener('mouseup', onMouseUp)
