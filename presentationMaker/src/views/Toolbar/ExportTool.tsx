@@ -7,6 +7,7 @@ import { getCirclePDF, getImagePDF, getReactanglePDF, getTextPDF, getTrianglePDF
 import { hexToRgb } from '../../store/hexToRgb'
 import { drawPageGradientBackground } from '../../store/DrawPageGradientBackground'
 import { useCallback } from 'react'
+import { useAppSelector } from '../../hooks/useAppSelector';
 
 type ExportToolProps = {
     onLoading: (value: boolean) => void
@@ -15,8 +16,9 @@ type ExportToolProps = {
 const ExportTool = ({onLoading}: ExportToolProps) => {
     const SLIDE_WIDTH = 950
     const SLIDE_HEIGHT = 525
+    const title = useAppSelector(state => state.title)
 
-    const compilePDFPage = (pdfDoc: PDFDocument, page: PDFPage, object: SlideObject) => {
+    const compilePDFPage = async (pdfDoc: PDFDocument, page: PDFPage, object: SlideObject) => {
         switch (object.type){
             case 'rectangle':
                 getReactanglePDF(page, object)
@@ -28,10 +30,10 @@ const ExportTool = ({onLoading}: ExportToolProps) => {
                 getTrianglePDF(page, object)
                 break
             case 'text':
-                getTextPDF(pdfDoc, page, object)
+                await getTextPDF(pdfDoc, page, object)
                 break
             case 'image':
-                getImagePDF(pdfDoc, page, object)
+                await getImagePDF(pdfDoc, page, object)
         }
     }
 
@@ -42,47 +44,49 @@ const ExportTool = ({onLoading}: ExportToolProps) => {
 
         pdfDoc.registerFontkit(fontkit)
 
-        stateLocal?.slides.forEach(async slide => {
-            const page = pdfDoc.addPage([SLIDE_WIDTH, SLIDE_HEIGHT])
-            if (slide.background.type === 'solid') {
-                const { r, g, b } = hexToRgb(slide.background.color)
-                const backgroundColor = rgb(r, g, b)
-                page.drawRectangle({
-                    x: 0,
-                    y: 0,
-                    width: page.getWidth(),
-                    height: page.getHeight(),
-                    color: backgroundColor,
-                })
-            }
-            if (slide.background.type === 'image') {
-                const base64Data = slide.background.src.split(',')[1]
-                const imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0))
-                
-                const isPng = slide.background.src.startsWith('data:image/png');
-                const isJpg = slide.background.src.startsWith('data:image/jpeg');
-                let image
-                if (isPng) {
-                    image = await pdfDoc.embedPng(imageBytes)
-                } else if (isJpg) {
-                    image = await pdfDoc.embedJpg(imageBytes)
-                } else {
-                    throw new Error('Unsupported image format. Please provide a PNG or JPEG image.')
+        if (stateLocal) {
+            for (const slide of stateLocal.slides) {
+                const page = pdfDoc.addPage([SLIDE_WIDTH, SLIDE_HEIGHT])
+                if (slide.background.type === 'solid') {
+                    const { r, g, b } = hexToRgb(slide.background.color)
+                    const backgroundColor = rgb(r, g, b)
+                    page.drawRectangle({
+                        x: 0,
+                        y: 0,
+                        width: page.getWidth(),
+                        height: page.getHeight(),
+                        color: backgroundColor,
+                    })
                 }
-                page.drawImage(image, {
-                    x: 0,
-                    y: 0,
-                    width: SLIDE_WIDTH,
-                    height: SLIDE_HEIGHT,
-                })
+                if (slide.background.type === 'image') {
+                    const base64Data = slide.background.src.split(',')[1]
+                    const imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0))
+                    
+                    const isPng = slide.background.src.startsWith('data:image/png');
+                    const isJpg = slide.background.src.startsWith('data:image/jpeg');
+                    let image
+                    if (isPng) {
+                        image = await pdfDoc.embedPng(imageBytes)
+                    } else if (isJpg) {
+                        image = await pdfDoc.embedJpg(imageBytes)
+                    } else {
+                        throw new Error('Unsupported image format. Please provide a PNG or JPEG image.')
+                    }
+                    page.drawImage(image, {
+                        x: 0,
+                        y: 0,
+                        width: SLIDE_WIDTH,
+                        height: SLIDE_HEIGHT,
+                    })
+                }
+                if (slide.background.type === 'gradient') {
+                    drawPageGradientBackground(page, slide.background)
+                }
+                for (const object of slide.objects) {
+                    await compilePDFPage(pdfDoc, page, object) // Добавьте await здесь!
+                }
             }
-            if (slide.background.type === 'gradient') {
-                drawPageGradientBackground(page, slide.background)
-            }
-            slide.objects.forEach(object => {
-                compilePDFPage(pdfDoc, page, object)
-            })
-        })
+        }
 
         const pdfBytes = await pdfDoc.save()
         
@@ -91,7 +95,7 @@ const ExportTool = ({onLoading}: ExportToolProps) => {
 
         const link = document.createElement('a')
         link.href = url
-        link.download = stateLocal? stateLocal.title + '.pdf' : 'presentation.pdf'
+        link.download = title ? title + '.pdf' : 'presentation.pdf'
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -99,14 +103,12 @@ const ExportTool = ({onLoading}: ExportToolProps) => {
 
     const onExport = useCallback(async () => {
         onLoading(true)
-        console.log('loading')
         
         try {
             await onExportToPDF()
         } catch (error) {
             console.error(error)
         } finally { 
-            console.log('stop');
             onLoading(false)
         }
     }, [onLoading, onExportToPDF])

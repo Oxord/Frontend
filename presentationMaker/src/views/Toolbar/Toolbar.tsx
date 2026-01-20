@@ -172,7 +172,20 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
         )
     }
 
-    const allFonts: string[] = ['arial', 'cursive', 'bold', 'serif']
+    // const allFonts: string[] = ['arial', 'cursive', 'bold', 'serif']
+    // Список безопасных веб-шрифтов, которые есть почти везде
+    const allFonts: string[] = [
+        'Arial',
+        'Verdana',
+        'Times New Roman',
+        'Courier New',
+        'Georgia',
+        'Tahoma',
+        'Trebuchet MS',
+        'Impact',
+        'Palatino Linotype'
+    ]
+
     return(
         <div className={style.toolBar}>
             <button onClick={addSlide} className={style.toolBar__tool}>New Slide</button>
@@ -202,11 +215,14 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
                             <select id="fontValuesList" 
                                 value={newFont} 
                                 onChange={onChangeFont}  
-                                className={style.toolBar__tool_textProperties__font_input}    
+                                className={style.toolBar__tool_textProperties__font_input}
+                                style={{ fontFamily: newFont }} // Чтобы сам селект отображал шрифт выбранного значения   
                             >
                             {allFonts.map((value, key) => {
                                 return (
-                                    <option key={key}>{value}</option>
+                                    <option key={key} value={value} style={{ fontFamily: value }}>
+                                        {value}
+                                    </option>
                                 )
                             })}
                         </select>

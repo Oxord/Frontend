@@ -1,6 +1,8 @@
 import { PDFDocument, PDFPage, rgb } from "pdf-lib"
 import { Circle, ImageObject, Rectangle, TextObject, Triangle } from "./types"
 import { hexToRgb } from "./hexToRgb"
+import fontkit from '@pdf-lib/fontkit'
+import { fontUrls } from "./fontUrls"
 
 const SLIDE_HEIGHT = 525
 
@@ -35,18 +37,38 @@ export const getTrianglePDF = (page: PDFPage, triangle: Triangle) => {
 }
 
 export const getTextPDF = async (pdfDoc: PDFDocument, page: PDFPage, text: TextObject) => {
-    // const fontBytes = await fetch('https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans+Wancho&family=Roboto:wght@100..900&display=swap').then(res => res.arrayBuffer());
-    // const customFont = await pdfDoc.embedFont(fontBytes);
+    const fontName = text.font || 'Arial'
+    const fontUrl = fontUrls[fontName] || fontUrls['default']
+    
+    // Альтернативная ссылка, если первая не сработает (Ubuntu Regular):
+    // const fontUrl = 'https://github.com/google/fonts/raw/main/ufl/ubuntu/Ubuntu-Regular.ttf';
 
-    // const fontBytes = await fetch(text.font).then(res => res.arrayBuffer()) //problem with шрифт    
-    // const customFont = await pdfDoc.embedFont(fontBytes)
-    const { r, g, b } = hexToRgb(text.color)
-    page.moveTo(text.position.X, SLIDE_HEIGHT - text.position.Y - text.fontsize)
-    page.drawText(text.text, {
-        // font: customFont, //придумать парсер
-        size: text.fontsize,
-        color: rgb(r, g, b)
-    })
+    try {
+        const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer())
+        pdfDoc.registerFontkit(fontkit)
+        const customFont = await pdfDoc.embedFont(fontBytes)
+        const { r, g, b } = hexToRgb(text.color)
+        
+        // 5. Рисуем текст
+        page.drawText(text.text, {
+            x: text.position.X,
+            y: SLIDE_HEIGHT - text.position.Y - text.fontsize, // Проверьте эту формулу координат
+            font: customFont,
+            size: text.fontsize,
+            color: rgb(r, g, b)
+        })
+        // page.drawText(text.text, {
+        //     x: text.position.X,
+        //     y: SLIDE_HEIGHT - text.position.Y - text.fontsize, // Проверьте эту формулу координат
+        //     font: customFont,
+        //     size: text.fontsize,
+        //     color: rgb(r, g, b)
+        // })
+    } catch (e) {
+        console.error(`Не удалось загрузить шрифт ${fontName}:`, e)
+        // Можно добавить логику отрисовки стандартным шрифтом (Helvetica) в случае ошибки сети,
+        // но пока просто выведем ошибку.
+    }
 }
 
 export const getImagePDF = async (pdfDoc: PDFDocument, page: PDFPage, img: ImageObject) => {

@@ -1,4 +1,4 @@
-import { CSSProperties, useState } from "react"
+import { CSSProperties, useEffect, useState } from "react"
 import { useAppActions } from "../../../hooks/useAppActions"
 
 export type TextObjectProps = {
@@ -34,24 +34,42 @@ export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, 
   const { changeText } = useAppActions()
   const [newText, setNewText] = useState(text)
 
-  const onChangeText: React.ChangeEventHandler<HTMLTextAreaElement>= (event) => {
+  useEffect(() => {
+    setNewText(text)
+  }, [text]);
+
+  const onChangeText: React.ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     setNewText(event.target.value)
-    if (newText)
-      changeText(
-        slideId,
-        elemId,
-        newText
-      )
   }
+
+  // 2. Когда пользователь закончил ввод и убрал фокус с элемента, обновляем Redux.
+  const onBlurText = () => {
+    // Небольшая оптимизация: не отправляем экшен, если текст не изменился
+    if (newText !== text) {
+        changeText(slideId, elemId, newText)
+    }
+  }
+  
+
+  // const onChangeText: React.ChangeEventHandler<HTMLTextAreaElement>= (event) => {
+  //   setNewText(event.target.value)
+  //   if (newText)
+  //     changeText(
+  //       slideId,
+  //       elemId,
+  //       newText
+  //     )
+  // }
   //тут мб возникнут проблемы потом с историей, но пока пусть будет так
 
   return (
       <textarea 
         style={textObjectStyle} 
-        readOnly={isReadOnly} 
+        readOnly={isReadOnly}
+        onBlur={onBlurText}
         onChange={onChangeText}
+        value={newText}
       >
-          {newText}
       </textarea>
   )
 }
