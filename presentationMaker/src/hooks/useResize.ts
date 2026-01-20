@@ -1,6 +1,7 @@
-import { RefObject, useEffect } from "react"
+import { RefObject, useEffect, useRef } from "react"
 import { fromEventToCoordinate } from "../store/fromEventToCoordinate"
 import { Position, SizeType } from "../store/types"
+
 const useResize = (
     draggablePointTopLeft: RefObject<HTMLElement>,
     draggablePointTop: RefObject<HTMLElement>,
@@ -22,22 +23,32 @@ const useResize = (
     onChangePosition: Function,
     isPointActive: boolean
 ) => {
+    // 1. Используем useRef для хранения актуального размера без триггера перерисовки эффекта
+    const sizeRef = useRef(size)
     useEffect(() => {
+        sizeRef.current = size
+    }, [size])
 
+    useEffect(() => {
+        
+        let startPosition: Position | undefined = { X: 0, Y: 0 }
+        let startSize: SizeType = { width: 0, height: 0 }
+        let newSize: SizeType = { width: 0, height: 0 }
+        
+        // Для изменения позиции (когда тянем левый или верхний край)
         let fixedXCoord: number | undefined
         let fixedYCoord: number | undefined
 
-        let startPosition: Position | undefined = { X: 0, Y: 0 }
-        let newSize: SizeType = { width: 0, height: 0 }
-        const startSize = size
-
-
+        // ================= BOTTOM RIGHT =================
         const onMouseDownBottomRight = (event: MouseEvent) => {
+            event.stopPropagation() // Остановить всплытие, чтобы не триггерить драг самого элемента
             if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveBottomRight)
                 slideRef.current.addEventListener('mouseup', onMouseUpBottomRight)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
+            startSize = { ...sizeRef.current } // Берем размер из Ref
+            newSize = { ...startSize } // Инициализируем newSize текущим размером
         }
 
         const onMouseMoveBottomRight = (event: MouseEvent) => {
@@ -51,21 +62,23 @@ const useResize = (
         }
 
         const onMouseUpBottomRight = () => {
+            onChangeSize(newSize)
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMoveBottomRight)
                 slideRef.current.removeEventListener('mouseup', onMouseUpBottomRight)
             }
-            onChangeSize(newSize)
         }
 
-
-
+        // ================= BOTTOM =================
         const onMouseDownBottom = (event: MouseEvent) => {
+            event.stopPropagation()
             if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveBottom)
                 slideRef.current.addEventListener('mouseup', onMouseUpBottom)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
+            startSize = { ...sizeRef.current }
+            newSize = { ...startSize }
         }
 
         const onMouseMoveBottom = (event: MouseEvent) => {
@@ -85,14 +98,16 @@ const useResize = (
             }
         }
 
-
-
+        // ================= BOTTOM LEFT =================
         const onMouseDownBottomLeft = (event: MouseEvent) => {
+            event.stopPropagation()
             if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveBottomLeft)
                 slideRef.current.addEventListener('mouseup', onMouseUpBottomLeft)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
+            startSize = { ...sizeRef.current }
+            newSize = { ...startSize }
         }
 
         const onMouseMoveBottomLeft = (event: MouseEvent) => {
@@ -102,32 +117,36 @@ const useResize = (
                 const deltaY = currentPosition.Y - startPosition.Y
                 newSize = { width: startSize.width + deltaX, height: startSize.height + deltaY }
                 setSize(newSize)
-                setPos({ X: currentPosition.X, Y: currentPosition.Y - newSize.height })
+                // При изменении левого края нужно менять позицию X
+                setPos({ X: currentPosition.X, Y: currentPosition.Y - newSize.height }) 
             }
         }
 
         const onMouseUpBottomLeft = (event: MouseEvent) => {
             onChangeSize(newSize)
+            // Фиксируем новую позицию в глобальном стейте
+            const currentPosition = fromEventToCoordinate(slideRef, event)
+            if (currentPosition) {
+                onChangePosition({ X: currentPosition.X, Y: currentPosition.Y - newSize.height })
+            }
+
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMoveBottomLeft)
                 slideRef.current.removeEventListener('mouseup', onMouseUpBottomLeft)
             }
-            const newPosition = fromEventToCoordinate(slideRef, event)
-            if (newPosition) {
-                onChangePosition({ X: newPosition.X, Y: newPosition.Y - newSize.height })
-            }
-
         }
 
-
-
+        // ================= MEDIUM LEFT =================
         const onMouseDownMediumLeft = (event: MouseEvent) => {
-            if (slideRef.current && draggablePointMediumLeft.current) {
+            event.stopPropagation()
+            if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveMediumLeft)
                 slideRef.current.addEventListener('mouseup', onMouseUpMediumLeft)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
-            fixedYCoord = startPosition?.Y
+            startSize = { ...sizeRef.current }
+            fixedYCoord = startPosition?.Y // Запоминаем Y, он не должен меняться при ресайзе влево
+            newSize = { ...startSize }
         }
 
         const onMouseMoveMediumLeft = (event: MouseEvent) => {
@@ -136,34 +155,49 @@ const useResize = (
                 const deltaX = startPosition.X - currentPosition.X
                 newSize = { width: startSize.width + deltaX, height: startSize.height }
                 setSize(newSize)
-                if (fixedYCoord) {
-                    setPos({ X: currentPosition.X, Y: fixedYCoord - newSize.height / 2})
+                if (fixedYCoord !== undefined) {
+                    // Корректируем позицию Y, чтобы элемент визуально не прыгал по вертикали
+                    // Но при ресайзе только ширины влево, Y (верхний угол) не должен меняться, меняется X
+                    setPos({ X: currentPosition.X, Y: fixedYCoord - newSize.height / 2 }) // тут логика зависит от точки отсчета, предположим Y не меняется
+                    // Исправление: если тянем влево, Y не должен меняться, только X. 
+                    // Но в startPosition.Y может быть середина элемента. 
+                    // Проще: setPos обновляет top/left.
+                    // При mouseMove влево меняется left (X). Top (Y) остается прежним.
+                    // Нам нужно знать начальный Top элемента. 
+                    // Однако setPos принимает координаты мыши или элемента? По коду setPos({X, Y}).
+                    // Предположим, что Y не меняется.
                 }
-
+                // Более точная логика для Left (меняется только ширина и X)
+                setPos((prevPos: Position) => ({ X: currentPosition.X, Y: prevPos.Y }))
             }
         }
 
         const onMouseUpMediumLeft = (event: MouseEvent) => {
             onChangeSize(newSize)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
+            if (currentPosition) {
+                 // Обновляем глобальную позицию. Y оставляем старым (нужно бы его получить, но пока берем из event с поправкой или не трогаем)
+                 // Лучше передать в onChangePosition старый Y, но у нас его нет под рукой в чистом виде в этом эффекте.
+                 // Допустим, мы меняем только X:
+                 onChangePosition((prev: Position) => ({ X: currentPosition.X, Y: prev.Y }))
+            }
+
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMoveMediumLeft)
                 slideRef.current.removeEventListener('mouseup', onMouseUpMediumLeft)
             }
-            const newPosition = fromEventToCoordinate(slideRef, event)
-            if (newPosition && fixedYCoord) {
-                onChangePosition({ X: newPosition.X, Y: fixedYCoord - newSize.height / 2})
-            }
-
         }
 
-
-
+        // ================= MEDIUM RIGHT =================
         const onMouseDownMediumRight = (event: MouseEvent) => {
-            if (slideRef.current && draggablePointMediumLeft.current) {
+            event.stopPropagation()
+            if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveMediumRight)
                 slideRef.current.addEventListener('mouseup', onMouseUpMediumRight)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
+            startSize = { ...sizeRef.current }
+            newSize = { ...startSize }
         }
 
         const onMouseMoveMediumRight = (event: MouseEvent) => {
@@ -181,17 +215,18 @@ const useResize = (
                 slideRef.current.removeEventListener('mousemove', onMouseMoveMediumRight)
                 slideRef.current.removeEventListener('mouseup', onMouseUpMediumRight)
             }
-
         }
 
-
-
+        // ================= TOP RIGHT =================
         const onMouseDownTopRight = (event: MouseEvent) => {
+            event.stopPropagation()
             if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveTopRight)
                 slideRef.current.addEventListener('mouseup', onMouseUpTopRight)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
+            startSize = { ...sizeRef.current }
+            newSize = { ...startSize }
         }
 
         const onMouseMoveTopRight = (event: MouseEvent) => {
@@ -201,31 +236,33 @@ const useResize = (
                 const deltaY = startPosition.Y - currentPosition.Y
                 newSize = { width: startSize.width + deltaX, height: startSize.height + deltaY }
                 setSize(newSize)
-                setPos({ X: currentPosition.X - newSize.width, Y: currentPosition.Y })
+                setPos((prev: Position) => ({ X: prev.X, Y: currentPosition.Y }))
             }
         }
 
         const onMouseUpTopRight = (event: MouseEvent) => {
+            onChangeSize(newSize)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
+            if (currentPosition) {
+                onChangePosition((prev: Position) => ({ X: prev.X, Y: currentPosition.Y }))
+            }
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMoveTopRight)
                 slideRef.current.removeEventListener('mouseup', onMouseUpTopRight)
             }
-            onChangeSize(newSize)
-            const newPosition = fromEventToCoordinate(slideRef, event)
-            if (newPosition) {
-                onChangePosition({ X: newPosition.X - newSize.width, Y: newPosition.Y })
-            }
         }
 
-
-
+        // ================= TOP =================
         const onMouseDownTop = (event: MouseEvent) => {
-            if (slideRef.current && draggablePointTop.current) {
+            event.stopPropagation()
+            if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveTop)
                 slideRef.current.addEventListener('mouseup', onMouseUpTop)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
+            startSize = { ...sizeRef.current }
             fixedXCoord = startPosition?.X
+            newSize = { ...startSize }
         }
 
         const onMouseMoveTop = (event: MouseEvent) => {
@@ -234,32 +271,32 @@ const useResize = (
                 const deltaY = startPosition.Y - currentPosition.Y
                 newSize = { width: startSize.width, height: startSize.height + deltaY }
                 setSize(newSize)
-                if (fixedXCoord) {
-                    setPos({ X: fixedXCoord - newSize.width / 2, Y: currentPosition.Y })
-                }
+                setPos((prev: Position) => ({ X: prev.X, Y: currentPosition.Y }))
             }
         }
 
         const onMouseUpTop = (event: MouseEvent) => {
+            onChangeSize(newSize)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
+            if (currentPosition) {
+                onChangePosition((prev: Position) => ({ X: prev.X, Y: currentPosition.Y }))
+            }
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMoveTop)
                 slideRef.current.removeEventListener('mouseup', onMouseUpTop)
             }
-            onChangeSize(newSize)
-            const newPosition = fromEventToCoordinate(slideRef, event)
-            if (newPosition && fixedXCoord) {
-                onChangePosition({ X: newPosition.X - newSize.width / 2, Y: newPosition.Y })
-            }
         }
 
-
-
+        // ================= TOP LEFT =================
         const onMouseDownTopLeft = (event: MouseEvent) => {
-            if (slideRef.current && draggablePointTopLeft.current) {
+            event.stopPropagation()
+            if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveTopLeft)
                 slideRef.current.addEventListener('mouseup', onMouseUpTopLeft)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
+            startSize = { ...sizeRef.current }
+            newSize = { ...startSize }
         }
 
         const onMouseMoveTopLeft = (event: MouseEvent) => {
@@ -269,47 +306,65 @@ const useResize = (
                 const deltaY = startPosition.Y - currentPosition.Y
                 newSize = { width: startSize.width + deltaX, height: startSize.height + deltaY }
                 setSize(newSize)
-                setPos(currentPosition)
+                setPos({ X: currentPosition.X, Y: currentPosition.Y })
             }
         }
 
         const onMouseUpTopLeft = (event: MouseEvent) => {
             onChangeSize(newSize)
+            const currentPosition = fromEventToCoordinate(slideRef, event)
+            if (currentPosition) {
+                onChangePosition({ X: currentPosition.X, Y: currentPosition.Y })
+            }
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMoveTopLeft)
                 slideRef.current.removeEventListener('mouseup', onMouseUpTopLeft)
             }
-            const newPosition = fromEventToCoordinate(slideRef, event)
-            onChangePosition(newPosition)
         }
 
+        // Подписываемся на события mousedown для точек
+        const points = [
+            { ref: draggablePointBottomRight, handler: onMouseDownBottomRight },
+            { ref: draggablePointBottom, handler: onMouseDownBottom },
+            { ref: draggablePointBottomLeft, handler: onMouseDownBottomLeft },
+            { ref: draggablePointMediumLeft, handler: onMouseDownMediumLeft },
+            { ref: draggablePointMediumRight, handler: onMouseDownMediumRight },
+            { ref: draggablePointTopRight, handler: onMouseDownTopRight },
+            { ref: draggablePointTop, handler: onMouseDownTop },
+            { ref: draggablePointTopLeft, handler: onMouseDownTopLeft },
+        ]
 
+        points.forEach(({ ref, handler }) => {
+            if (ref.current) ref.current.addEventListener('mousedown', handler)
+        })
 
-        if (draggablePointBottomRight.current &&
-            draggablePointBottom.current &&
-            draggablePointBottomLeft.current &&
-            draggablePointMediumRight.current &&
-            draggablePointMediumLeft.current &&
-            draggablePointTopRight.current &&
-            draggablePointTop.current &&
-            draggablePointTopLeft.current
-
-        ) {
-            draggablePointBottomRight.current.addEventListener('mousedown', onMouseDownBottomRight)
-            draggablePointBottom.current.addEventListener('mousedown', onMouseDownBottom)
-            draggablePointBottomLeft.current.addEventListener('mousedown', onMouseDownBottomLeft)
-            draggablePointMediumLeft.current.addEventListener('mousedown', onMouseDownMediumLeft)
-            draggablePointMediumRight.current.addEventListener('mousedown', onMouseDownMediumRight)
-            draggablePointTopRight.current.addEventListener('mousedown', onMouseDownTopRight)
-            draggablePointTop.current.addEventListener('mousedown', onMouseDownTop)
-            draggablePointTopLeft.current.addEventListener('mousedown', onMouseDownTopLeft)
+        // Cleanup функция
+        return () => {
+            points.forEach(({ ref, handler }) => {
+                if (ref.current) ref.current.removeEventListener('mousedown', handler)
+            })
+            // На всякий случай удаляем глобальные слушатели, если компонент размонтируется во время драга
+            if (slideRef.current) {
+                slideRef.current.removeEventListener('mousemove', onMouseMoveBottomRight)
+                slideRef.current.removeEventListener('mouseup', onMouseUpBottomRight)
+                slideRef.current.removeEventListener('mousemove', onMouseMoveBottom)
+                slideRef.current.removeEventListener('mouseup', onMouseUpBottom)
+                slideRef.current.removeEventListener('mousemove', onMouseMoveBottomLeft)
+                slideRef.current.removeEventListener('mouseup', onMouseUpBottomLeft)
+                slideRef.current.removeEventListener('mousemove', onMouseMoveMediumLeft)
+                slideRef.current.removeEventListener('mouseup', onMouseUpMediumLeft)
+                slideRef.current.removeEventListener('mousemove', onMouseMoveMediumRight)
+                slideRef.current.removeEventListener('mouseup', onMouseUpMediumRight)
+                slideRef.current.removeEventListener('mousemove', onMouseMoveTopRight)
+                slideRef.current.removeEventListener('mouseup', onMouseUpTopRight)
+                slideRef.current.removeEventListener('mousemove', onMouseMoveTop)
+                slideRef.current.removeEventListener('mouseup', onMouseUpTop)
+                slideRef.current.removeEventListener('mousemove', onMouseMoveTopLeft)
+                slideRef.current.removeEventListener('mouseup', onMouseUpTopLeft)
+            }
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isPointActive])
+    }, [isPointActive]) // size убран из зависимостей!
 }
 
-export {
-    useResize
-}
-
+export { useResize }

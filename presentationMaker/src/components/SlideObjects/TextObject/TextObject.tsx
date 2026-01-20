@@ -42,25 +42,21 @@ export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, 
     setNewText(event.target.value)
   }
 
-  // 2. Когда пользователь закончил ввод и убрал фокус с элемента, обновляем Redux.
   const onBlurText = () => {
-    // Небольшая оптимизация: не отправляем экшен, если текст не изменился
     if (newText !== text) {
-        changeText(slideId, elemId, newText)
+      changeText(slideId, elemId, newText)
     }
   }
-  
 
-  // const onChangeText: React.ChangeEventHandler<HTMLTextAreaElement>= (event) => {
-  //   setNewText(event.target.value)
-  //   if (newText)
-  //     changeText(
-  //       slideId,
-  //       elemId,
-  //       newText
-  //     )
-  // }
-  //тут мб возникнут проблемы потом с историей, но пока пусть будет так
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    e.stopPropagation();
+  }
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+      if (!isReadOnly) {
+        e.stopPropagation();
+      }
+  }
 
   return (
       <textarea 
@@ -68,6 +64,8 @@ export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, 
         readOnly={isReadOnly}
         onBlur={onBlurText}
         onChange={onChangeText}
+        onKeyDown={handleKeyDown}
+        onMouseDown={handleMouseDown}
         value={newText}
       >
       </textarea>
