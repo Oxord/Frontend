@@ -28,7 +28,7 @@ const CIRCLE_OBJ: Circle = {
 const RECT_OBJ: Reactangle = {
     id: generateGuid(),
     position: {X: 350, Y: 350},
-    color: 'red',
+    color: '#FF0000',
     width: 10,
     height: 15,
     type: 'rectangle'
@@ -36,7 +36,7 @@ const RECT_OBJ: Reactangle = {
 const TRIANGLE_OBJ: Triangle = {
     id: generateGuid(),
     position: {X: 50, Y: 50},
-    color: 'red',
+    color: '#FF0000',
     pointOne: {X: 0, Y: 44},
     pointTwo: {X: 22, Y: 4},
     pointThree: {X: 44, Y: 44},

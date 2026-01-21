@@ -120,10 +120,6 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
         setNewFont(event.target.value)
         changeTextFont(selectedSlideId, selectedElemId, event.target.value) 
     }
-    // const setFontSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    //     if (event.key === 'Enter') 
-    //       changeTextFont(selectedSlideId, selectedElemId, newFont)          
-    // }
 
     
     const { changeTextSize } = useAppActions()
@@ -204,8 +200,6 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
 
     const { changeTextAlign } = useAppActions()
 
-    // const allFonts: string[] = ['arial', 'cursive', 'bold', 'serif']
-    // Список безопасных веб-шрифтов, которые есть почти везде
     const allFonts: string[] = [
         'Arial',
         'Verdana',

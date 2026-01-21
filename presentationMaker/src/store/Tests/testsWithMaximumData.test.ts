@@ -95,7 +95,7 @@ describe('Tests with maximum data', () => {
             const editedSlide = {
                 ...FIRST_SLIDE, 
                 objects: [...FIRST_SLIDE.objects, newImg]
-            }//явное созданеи новой презентации
+            }
             const editedPres = {
                 ...PRESENTATION,
                 slides: [editedSlide, SECOND_SLIDE]
@@ -256,7 +256,7 @@ describe('Tests with maximum data', () => {
         })
         describe('test changeSlideBackground function', () => {
             const newBackground: SolidBackground = {
-                color: 'red',
+                color: '#FF0000',
                 type: 'solid'
             }
             const editedSlide = {

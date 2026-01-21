@@ -31,12 +31,9 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
     const file = event.target.files?.[0]
 
     if (file) { 
-        // setIsUploading(true); // Если добавили лоадер
         try {
-            // 1. Сначала ждем загрузку файла и получение ссылки!
             const imageUrl = await uploadImage(file)
             
-            // 2. Только когда ссылка получена, добавляем объект в Redux
             if (imageUrl) {
                 console.log(imageUrl)
                 insertImage(selectedSlideId, imageUrl)
@@ -45,11 +42,9 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
             console.error(error);
             alert('Ошибка загрузки');
         } finally {
-            // setIsUploading(false);
             changeInsertToolOpened();
         }
     } 
-    // Сброс input
     if (ref.current) ref.current.value = '';
 }   
 

@@ -339,7 +339,7 @@ describe('Tests with minimum data', () => {
         })
         describe('test changeSlideBackground function', () => {
             const newBackground: SolidBackground = {
-                color: 'red',
+                color: '#FF0000',
                 type: 'solid'
             }
             const editedSlide: SlideType = {...oneSlide, background: newBackground}

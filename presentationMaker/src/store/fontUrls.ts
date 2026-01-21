@@ -1,5 +1,4 @@
 export const fontUrls: Record<string, string> = {
-    // Roboto поддерживает кириллицу по умолчанию в полном пакете
     'Arial': 'https://cdn.jsdelivr.net/npm/@canvas-fonts/arial@1.0.4/Arial.ttf',
     'Verdana': 'https://cdn.jsdelivr.net/npm/@canvas-fonts/verdana@1.0.4/Verdana.ttf',
     'Times New Roman': 'https://cdn.jsdelivr.net/npm/@canvas-fonts/times-new-roman@1.0.4/Times New Roman.ttf',

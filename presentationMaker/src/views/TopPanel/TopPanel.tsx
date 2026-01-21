@@ -55,7 +55,7 @@ const TopPanel = ({onUndo, onRedo, onLoadCloudPresentation, onCreateNew }: TopPa
                 <button 
                     className={style.toolBar__tool} 
                     onClick={() => setIsListOpen(true)}
-                    style={{ backgroundColor: 'rgba(0, 100, 200, 1)' }} // Чуть другой цвет для отличия
+                    style={{ backgroundColor: 'rgba(0, 100, 200, 1)' }}
                 >
                     My Files
                 </button>

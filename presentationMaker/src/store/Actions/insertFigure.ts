@@ -12,7 +12,7 @@ function insertFigure(editor: EditorType, {slideId, figureType}: {slideId: strin
                 figure = { 
                     id: figureId,  
                     type: 'circle',  
-                    color: 'red', 
+                    color: '#000000', 
                     radius: 30, 
                     position: {X: 150, Y: 150}, 
                     width: 50,
@@ -23,7 +23,7 @@ function insertFigure(editor: EditorType, {slideId, figureType}: {slideId: strin
                 figure = { 
                     id: figureId,  
                     type: 'rectangle', 
-                    color: 'red', 
+                    color: '#000000', 
                     width: 200, 
                     height: 200, 
                     position: {X: 150, Y: 150} 
@@ -33,7 +33,7 @@ function insertFigure(editor: EditorType, {slideId, figureType}: {slideId: strin
                 figure =  {
                     id: figureId,
                     type: 'triangle',
-                    color: 'red',
+                    color: '#000000',
                     pointOne: {X: 0, Y: 44},
                     pointTwo: {X: 22, Y: 4},
                     pointThree: {X: 44, Y: 44},

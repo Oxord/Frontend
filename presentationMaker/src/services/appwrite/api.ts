@@ -16,7 +16,6 @@ export const databases = new Databases(client);
 export const storage = new Storage(client);
 export { ID };
 
-// Константы для использования в других файлах
 export const APPWRITE_CONFIG = {
     DATABASE_ID,
     COLLECTION_ID,

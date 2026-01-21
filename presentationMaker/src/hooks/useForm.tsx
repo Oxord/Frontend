@@ -1,10 +1,5 @@
 import React, { useState } from "react";
 
-// type FormValues = {
-//   src: string
-// }
-
-
 export const useForm = () => {
 
   const [formValue, setFormValue] = useState('')

@@ -22,7 +22,6 @@ export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, 
       position: 'relative',
       width: width, 
       height: height,
-      //зачем тут так? потом перепроверю, как смогу дебажить
       color: textColor,
       resize: 'none',
       fontFamily: font? font: 'arial',

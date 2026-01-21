@@ -39,7 +39,7 @@ export const getTrianglePDF = (page: PDFPage, triangle: Triangle) => {
 export const getTextPDF = async (pdfDoc: PDFDocument, page: PDFPage, text: TextObject) => {
     const fontName = text.font || 'Arial'
     const fontUrl = fontUrls[fontName] || fontUrls['default']
-    const defaultFontUrl = fontUrls['default'] // Ссылка на дефолтный шрифт
+    const defaultFontUrl = fontUrls['default']
 
     let fontBytes;
 

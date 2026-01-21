@@ -23,7 +23,6 @@ const useResize = (
     onChangePosition: Function,
     isPointActive: boolean
 ) => {
-    // 1. Используем useRef для хранения актуального размера без триггера перерисовки эффекта
     const sizeRef = useRef(size)
     useEffect(() => {
         sizeRef.current = size
@@ -35,20 +34,19 @@ const useResize = (
         let startSize: SizeType = { width: 0, height: 0 }
         let newSize: SizeType = { width: 0, height: 0 }
         
-        // Для изменения позиции (когда тянем левый или верхний край)
         let fixedXCoord: number | undefined
         let fixedYCoord: number | undefined
 
-        // ================= BOTTOM RIGHT =================
+        //BOTTOM RIGHT
         const onMouseDownBottomRight = (event: MouseEvent) => {
-            event.stopPropagation() // Остановить всплытие, чтобы не триггерить драг самого элемента
+            event.stopPropagation() 
             if (slideRef.current) {
                 slideRef.current.addEventListener('mousemove', onMouseMoveBottomRight)
                 slideRef.current.addEventListener('mouseup', onMouseUpBottomRight)
             }
             startPosition = fromEventToCoordinate(slideRef, event)
-            startSize = { ...sizeRef.current } // Берем размер из Ref
-            newSize = { ...startSize } // Инициализируем newSize текущим размером
+            startSize = { ...sizeRef.current }
+            newSize = { ...startSize }
         }
 
         const onMouseMoveBottomRight = (event: MouseEvent) => {
@@ -69,7 +67,7 @@ const useResize = (
             }
         }
 
-        // ================= BOTTOM =================
+        //BOTTOM
         const onMouseDownBottom = (event: MouseEvent) => {
             event.stopPropagation()
             if (slideRef.current) {
@@ -98,7 +96,7 @@ const useResize = (
             }
         }
 
-        // ================= BOTTOM LEFT =================
+        //BOTTOM LEFT
         const onMouseDownBottomLeft = (event: MouseEvent) => {
             event.stopPropagation()
             if (slideRef.current) {
@@ -117,14 +115,12 @@ const useResize = (
                 const deltaY = currentPosition.Y - startPosition.Y
                 newSize = { width: startSize.width + deltaX, height: startSize.height + deltaY }
                 setSize(newSize)
-                // При изменении левого края нужно менять позицию X
                 setPos({ X: currentPosition.X, Y: currentPosition.Y - newSize.height }) 
             }
         }
 
         const onMouseUpBottomLeft = (event: MouseEvent) => {
             onChangeSize(newSize)
-            // Фиксируем новую позицию в глобальном стейте
             const currentPosition = fromEventToCoordinate(slideRef, event)
             if (currentPosition) {
                 onChangePosition({ X: currentPosition.X, Y: currentPosition.Y - newSize.height })
@@ -136,7 +132,7 @@ const useResize = (
             }
         }
 
-        // ================= MEDIUM LEFT =================
+        //MEDIUM LEFT
         const onMouseDownMediumLeft = (event: MouseEvent) => {
             event.stopPropagation()
             if (slideRef.current) {
@@ -145,7 +141,7 @@ const useResize = (
             }
             startPosition = fromEventToCoordinate(slideRef, event)
             startSize = { ...sizeRef.current }
-            fixedYCoord = startPosition?.Y // Запоминаем Y, он не должен меняться при ресайзе влево
+            fixedYCoord = startPosition?.Y
             newSize = { ...startSize }
         }
 
@@ -156,18 +152,8 @@ const useResize = (
                 newSize = { width: startSize.width + deltaX, height: startSize.height }
                 setSize(newSize)
                 if (fixedYCoord !== undefined) {
-                    // Корректируем позицию Y, чтобы элемент визуально не прыгал по вертикали
-                    // Но при ресайзе только ширины влево, Y (верхний угол) не должен меняться, меняется X
-                    setPos({ X: currentPosition.X, Y: fixedYCoord - newSize.height / 2 }) // тут логика зависит от точки отсчета, предположим Y не меняется
-                    // Исправление: если тянем влево, Y не должен меняться, только X. 
-                    // Но в startPosition.Y может быть середина элемента. 
-                    // Проще: setPos обновляет top/left.
-                    // При mouseMove влево меняется left (X). Top (Y) остается прежним.
-                    // Нам нужно знать начальный Top элемента. 
-                    // Однако setPos принимает координаты мыши или элемента? По коду setPos({X, Y}).
-                    // Предположим, что Y не меняется.
+                    setPos({ X: currentPosition.X, Y: fixedYCoord - newSize.height / 2 })
                 }
-                // Более точная логика для Left (меняется только ширина и X)
                 setPos((prevPos: Position) => ({ X: currentPosition.X, Y: prevPos.Y }))
             }
         }
@@ -176,9 +162,6 @@ const useResize = (
             onChangeSize(newSize)
             const currentPosition = fromEventToCoordinate(slideRef, event)
             if (currentPosition) {
-                 // Обновляем глобальную позицию. Y оставляем старым (нужно бы его получить, но пока берем из event с поправкой или не трогаем)
-                 // Лучше передать в onChangePosition старый Y, но у нас его нет под рукой в чистом виде в этом эффекте.
-                 // Допустим, мы меняем только X:
                  onChangePosition((prev: Position) => ({ X: currentPosition.X, Y: prev.Y }))
             }
 
@@ -188,7 +171,7 @@ const useResize = (
             }
         }
 
-        // ================= MEDIUM RIGHT =================
+        //MEDIUM RIGHT
         const onMouseDownMediumRight = (event: MouseEvent) => {
             event.stopPropagation()
             if (slideRef.current) {
@@ -217,7 +200,7 @@ const useResize = (
             }
         }
 
-        // ================= TOP RIGHT =================
+        //TOP RIGHT
         const onMouseDownTopRight = (event: MouseEvent) => {
             event.stopPropagation()
             if (slideRef.current) {
@@ -252,7 +235,7 @@ const useResize = (
             }
         }
 
-        // ================= TOP =================
+        //TOP 
         const onMouseDownTop = (event: MouseEvent) => {
             event.stopPropagation()
             if (slideRef.current) {
@@ -287,7 +270,7 @@ const useResize = (
             }
         }
 
-        // ================= TOP LEFT =================
+        //TOP LEFT
         const onMouseDownTopLeft = (event: MouseEvent) => {
             event.stopPropagation()
             if (slideRef.current) {
@@ -322,7 +305,6 @@ const useResize = (
             }
         }
 
-        // Подписываемся на события mousedown для точек
         const points = [
             { ref: draggablePointBottomRight, handler: onMouseDownBottomRight },
             { ref: draggablePointBottom, handler: onMouseDownBottom },
@@ -343,7 +325,6 @@ const useResize = (
             points.forEach(({ ref, handler }) => {
                 if (ref.current) ref.current.removeEventListener('mousedown', handler)
             })
-            // На всякий случай удаляем глобальные слушатели, если компонент размонтируется во время драга
             if (slideRef.current) {
                 slideRef.current.removeEventListener('mousemove', onMouseMoveBottomRight)
                 slideRef.current.removeEventListener('mouseup', onMouseUpBottomRight)
@@ -364,7 +345,7 @@ const useResize = (
             }
         }
 
-    }, [isPointActive]) // size убран из зависимостей!
+    }, [isPointActive])
 }
 
 export { useResize }

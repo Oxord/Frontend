@@ -41,9 +41,7 @@ function App({history}: AppProprs) {
                         updateSlides(validatedData.slides);
                         changePresentationTitle(validatedData.title);
                         
-                        // --- ДОБАВИТЬ ЭТУ СТРОКУ ---
                         setCloudDocId(doc.$id); 
-                        // Теперь App знает ID этого документа и будет обновлять его, а не создавать новый
                     }
                 }
             }).catch(err => {
@@ -60,11 +58,9 @@ function App({history}: AppProprs) {
             setIsSaving(true)
             try {
                 const response = await savePresentationToCloud(user.$id, debouncedState, cloudDocId)
-                // Если это был новый документ, запоминаем его ID
                 if (!cloudDocId) {
                     setCloudDocId(response.$id)
                 }
-                console.log("Auto-saved to Appwrite at " + new Date().toLocaleTimeString())
             } catch (error) {
                 console.error("Auto-save error", error)
             } finally {
@@ -74,7 +70,7 @@ function App({history}: AppProprs) {
 
         saveData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedState]) // Срабатывает только когда меняется debounced версия стейта
+    }, [debouncedState])
 
     const slides = useAppSelector(state => state.slides) 
 
@@ -152,10 +148,6 @@ function App({history}: AppProprs) {
     const SLIDE_HEIGHT = 525
     const selectedSlide = slides.find(s => s.id === selectedSlidesIds[0])
 
-    // if (loading) {
-    //     return <Preloader />
-    // }
-
     if (!user) {
         return <Auth />
     }
@@ -187,7 +179,7 @@ function App({history}: AppProprs) {
                     selectedElemType={selectedElemType}
                     selectedElemColor={selectedElemColor}
                 />
-                <div className={styles.slides}>
+                <div className={styles  .slides}>
                     <SlideList 
                         selectedSlidesIds={selectedSlidesIds}
                         onClickSlide={onClickSlide}

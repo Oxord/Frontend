@@ -64,38 +64,35 @@ const SlideShow = () => {
     const navigate = useNavigate()
     return (    
         <div className={style.slideShow} style={{
-            // 3. Стили для центрирования слайда на весь экран
             width: '100vw',
             height: '100vh',
             overflow: 'hidden',
-            backgroundColor: '#000', // Черный фон для презентации
+            backgroundColor: '#000',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'
         }}>
             <div style={{
-                // Этот div имеет размеры оригинала, но масштабируется CSS-трансформацией
                 width: `${BASE_WIDTH}px`,
                 height: `${BASE_HEIGHT}px`,
                 transform: `scale(${scale})`,
-                transformOrigin: 'center center', // Масштабирование от центра
-                pointerEvents: 'none' // Чтобы нельзя было выделять элементы в режиме просмотра
+                transformOrigin: 'center center',
+                pointerEvents: 'none'
             }}>
                 {selectedSlide &&
                     <Slide 
                         slide={selectedSlide} 
-                        scale={1} // Внутри масштаб 1, так как мы масштабируем весь контейнер
-                        width={BASE_WIDTH}  // <-- ИСПРАВЛЕНО: передаем базовую ширину
-                        height={BASE_HEIGHT} // <-- ИСПРАВЛЕНО: передаем базовую высоту
+                        scale={1}
+                        width={BASE_WIDTH}
+                        height={BASE_HEIGHT}
                         isSelected={false}
-                        showSelection={false} // Обычно в просмотре выделение скрывают
+                        showSelection={false}
                         onElemClick={() => {}}
                         selectedElemId={''}
                     />
                 }
             </div>
             
-            {/* Панель управления */}
             <div className={style.slideShow__tools}>
                 <button 
                     onClick={() => navigate('/', { replace: false })} 
