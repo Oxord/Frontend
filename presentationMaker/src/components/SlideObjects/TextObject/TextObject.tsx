@@ -1,5 +1,6 @@
 import { CSSProperties, useEffect, useState } from "react"
 import { useAppActions } from "../../../hooks/useAppActions"
+import { TextAlign } from "../../../store/types"
 
 export type TextObjectProps = {
   slideId: string
@@ -10,10 +11,11 @@ export type TextObjectProps = {
   elemId: string
   textColor: string
   width: number
-  height: number
+  height: number,
+  align: TextAlign
 }
 
-export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, textColor, width, height }: TextObjectProps) => {
+export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, textColor, width, height, align }: TextObjectProps) => {
   const textObjectStyle: CSSProperties = {
       border: 'none',
       background: 'none',
@@ -24,7 +26,8 @@ export const TextObject = ({ slideId, elemId, text, font, fontSize, isReadOnly, 
       color: textColor,
       resize: 'none',
       fontFamily: font? font: 'arial',
-      fontSize: fontSize,  
+      fontSize: fontSize, 
+      textAlign: align, 
       padding: '0',
       margin: '0', 
       outline: 'none', 

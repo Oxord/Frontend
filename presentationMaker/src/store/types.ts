@@ -47,11 +47,14 @@ export type SizeType = {
     height: number
 }
 
+export type TextAlign = 'left' | 'center' | 'right'
+
 export type TextObject = ObjectBase & {
     text: string
     fontsize: number
     font: string 
-    color: string   
+    color: string  
+    align: TextAlign 
     type: 'text'
 }
 

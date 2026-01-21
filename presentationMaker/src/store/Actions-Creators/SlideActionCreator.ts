@@ -1,6 +1,6 @@
 import { SlideActionTypes } from "../SlideActionTypes"
 import { GradientTypeValues, SlidesAction } from "../SlidesAction"
-import { Position, SizeType, SlideType } from "../types"
+import { Position, SizeType, SlideType, TextAlign } from "../types"
 
 //change slide
 export const addSlide = (): SlidesAction => {
@@ -154,6 +154,17 @@ export const changeElementPosition = (selectedSlideId: string, selectedElemId: s
             selectedSlideId,
             selectedElemId,
             newPos
+        }
+    }
+}
+
+export const changeTextAlign = (selectedSlideId: string, selectedElemId: string, newAlign: TextAlign): SlidesAction => {
+    return {
+        type: SlideActionTypes.CHANGE_TEXT_ALIGN,
+        payload: {
+            selectedSlideId,
+            selectedElemId,
+            newAlign
         }
     }
 }

@@ -9,6 +9,7 @@ import { GradientForm } from "../../components/Forms/GradientForm"
 import ImageSearch from "../ImageSearcher/ImageSearcher"
 import { SlideActionTypes } from "../../store/SlideActionTypes"
 import { GradientTypeValues } from "../../store/SlidesAction"
+import { useAppSelector } from "../../hooks/useAppSelector"
 
 type toolbarProps = {
     selectedSlideId: string
@@ -43,6 +44,35 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
     }
     else{
         elemColorClassName = elemColorClassName + ' ' + style.toolBar__tool_notAvailable
+    }
+
+    const SLIDE_WIDTH = 950
+    const SLIDE_HEIGHT = 525
+    const slides = useAppSelector(state => state.slides)
+    const currentSlide = slides.find(s => s.id === selectedSlideId)
+    const selectedElement = currentSlide?.objects.find(obj => obj.id === selectedElemId)
+
+    const { changeElementPosition } = useAppActions()
+
+    const alignCenter = () => {
+        if (!selectedElement) return
+        
+        const newX = (SLIDE_WIDTH / 2) - (selectedElement.width / 2)
+        const newY = (SLIDE_HEIGHT / 2) - (selectedElement.height / 2)
+        
+        changeElementPosition(selectedSlideId, selectedElemId, { X: newX, Y: newY })
+    }
+
+    const alignHorizontally = () => {
+        if (!selectedElement) return
+        const newX = (SLIDE_WIDTH / 2) - (selectedElement.width / 2)
+        changeElementPosition(selectedSlideId, selectedElemId, { X: newX, Y: selectedElement.position.Y })
+    }
+
+    const alignVertically = () => {
+        if (!selectedElement) return
+        const newY = (SLIDE_HEIGHT / 2) - (selectedElement.height / 2)
+        changeElementPosition(selectedSlideId, selectedElemId, { X: selectedElement.position.X, Y: newY })
     }
 
     const [backgroundOpened, setBackgroundOpened] = useState(false);
@@ -172,6 +202,8 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
         )
     }
 
+    const { changeTextAlign } = useAppActions()
+
     // const allFonts: string[] = ['arial', 'cursive', 'bold', 'serif']
     // Список безопасных веб-шрифтов, которые есть почти везде
     const allFonts: string[] = [
@@ -209,14 +241,22 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
                     </div>
                 }
             </div>
+            {selectedElemId && (
+                <div style={{ display: 'flex', gap: '5px' }}>
+                    <button onClick={alignCenter} className={style.toolBar__tool} style={{width: '60px', minWidth: 'auto'}} title="Center both">C</button>                  
+                    <button onClick={alignHorizontally} className={style.toolBar__tool} style={{width: '60px', minWidth: 'auto'}}>H</button>
+                    <button onClick={alignVertically} className={style.toolBar__tool} style={{width: '60px', minWidth: 'auto'}}>V</button> 
+                   
+                </div>
+            )}
             {selectedElemType === 'text' && 
                 <>
                     <div className={textPropertyClassName}>
-                            <select id="fontValuesList" 
+                        <select id="fontValuesList" 
                                 value={newFont} 
                                 onChange={onChangeFont}  
                                 className={style.toolBar__tool_textProperties__font_input}
-                                style={{ fontFamily: newFont }} // Чтобы сам селект отображал шрифт выбранного значения   
+                                style={{ fontFamily: newFont }}
                             >
                             {allFonts.map((value, key) => {
                                 return (
@@ -226,6 +266,29 @@ const Toolbar = ({ selectedElemId, selectedSlideId, isRemoveSlideAvailable, sele
                                 )
                             })}
                         </select>
+                        <div style={{display: 'flex', alignItems: 'center', marginLeft: '10px', gap: '5px'}}>
+                            <button 
+                                onClick={() => changeTextAlign(selectedSlideId, selectedElemId, 'left')}
+                                style={{background: 'none', border: '1px solid white', borderRadius: '5px', color: 'white', cursor: 'pointer', fontSize: '12px', width: '25px', height: '25px'}}
+                                title="Align Left"
+                            >
+                                L
+                            </button>
+                            <button 
+                                onClick={() => changeTextAlign(selectedSlideId, selectedElemId, 'center')}
+                                style={{background: 'none', border: '1px solid white', borderRadius: '5px', color: 'white', cursor: 'pointer', fontSize: '12px', width: '25px', height: '25px'}}
+                                title="Align Center"
+                            >
+                                C
+                            </button>
+                            <button 
+                                onClick={() => changeTextAlign(selectedSlideId, selectedElemId, 'right')}
+                                style={{background: 'none', border: '1px solid white', borderRadius: '5px', color: 'white', cursor: 'pointer', fontSize: '12px', width: '25px', height: '25px'}}
+                                title="Align Right"
+                            >
+                                R
+                            </button>
+                        </div>
                         <input className={style.toolBar__tool_textProperties__font_input + ' ' + style.toolBar__tool_textProperties__textSize} 
                             type="number" 
                             defaultValue={newFontsize}

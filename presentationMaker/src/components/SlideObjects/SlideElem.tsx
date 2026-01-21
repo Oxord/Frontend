@@ -110,6 +110,7 @@ export const SlideElem = ( {slideId, elem, isSelected, showSelection, scale, sli
                         textColor={elem.color}
                         width={size.width * scale} 
                         height={size.height * scale}
+                        align={elem.align}
                     />
             break
         case 'image': 

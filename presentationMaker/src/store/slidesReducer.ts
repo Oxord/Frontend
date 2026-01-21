@@ -7,6 +7,7 @@ import { ChangeBackgroundGradientPayload,
     ChangeElemPositionPayload, 
     ChangeElemSizePayload, 
     ChangeSlidePositionPayload, 
+    ChangeTextAlignPayload, 
     ChangeTextFontPayload, 
     ChangeTextPayload, 
     ChangeTextSizePayload, 
@@ -343,6 +344,25 @@ const slidesReducer = (state = getInitialState(), action: SlidesAction): SlidesS
                     }
                     return slide
                 })    
+        }
+        case SlideActionTypes.CHANGE_TEXT_ALIGN: {
+            const slideId = (action.payload as ChangeTextAlignPayload).selectedSlideId
+            const slide = state.find(s => s.id === slideId)
+            if (slide) {
+                const elemId = (action.payload as ChangeTextAlignPayload).selectedElemId
+                const searchedObj = slide.objects.find(o => o.id === elemId)
+                if (searchedObj && searchedObj.type === 'text') {
+                    const align = (action.payload as ChangeTextAlignPayload).newAlign
+                    const editedObj: TextObject = { ...searchedObj, align }
+                    
+                    const editedSlide: SlideType = {
+                        ...slide, 
+                        objects: slide.objects.map(x => (x.id === editedObj.id ? editedObj : x))
+                    } 
+                    return state.map(x => (x.id === slide.id ? editedSlide : x))
+                }
+            }
+            return state
         }
         case SlideActionTypes.UPDATE_SLIDES: {
             const slides = (action.payload as UpdateSlidesPayload).slides
