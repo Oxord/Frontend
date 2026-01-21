@@ -7,18 +7,21 @@ import { initHistory } from './store/history.ts'
 import { StrictMode } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import SlideShow from './views/SlideShow/SlideShow.tsx'
+import { AuthProvider } from './context/AuthContext.tsx'
 
 const root = createRoot(document.getElementById('root')!)
 function render() {
   root.render(
     <StrictMode>
       <Provider store={store}>
-        <BrowserRouter>
-          <Routes>
-            <Route path='' element={<App history={initHistory(store)}/>}></Route>
-            <Route path='preview' element={<SlideShow/>}/>
-          </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path='' element={<App history={initHistory(store)}/>}></Route>
+              <Route path='preview' element={<SlideShow/>}/>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </Provider>
     </StrictMode>
   )

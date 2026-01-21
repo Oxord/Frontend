@@ -6,6 +6,7 @@ import { Form } from "../../components/Forms/Form"
 import { useAppActions } from "../../hooks/useAppActions"
 import ImageSearch from "../ImageSearcher/ImageSearcher"
 import { SlideActionTypes } from "../../store/SlideActionTypes"
+import { uploadImage } from "../../services/appwrite/service"
 
 export type InsertToolProps = {
     selectedSlideId: string
@@ -14,7 +15,7 @@ export type InsertToolProps = {
 
 export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolProps) => {
     
-    const ref = useRef<HTMLInputElement | null>(null)
+    // const ref = useRef<HTMLInputElement | null>(null)
     
     const handleClick = () => {
         if (ref.current) ref.current.click()
@@ -22,25 +23,35 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
     
     const { insertImage } = useAppActions()
 
-    const onAddImage: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-        const file = event.target.files?.[0]
+    const [isUploading, setIsUploading] = useState(false)
 
-        if (file) { 
-            const reader = new FileReader();
+    const ref = useRef<HTMLInputElement | null>(null)
+
+    const onAddImage: React.ChangeEventHandler<HTMLInputElement> = async (event) => {
+    const file = event.target.files?.[0]
+
+    if (file) { 
+        // setIsUploading(true); // Если добавили лоадер
+        try {
+            // 1. Сначала ждем загрузку файла и получение ссылки!
+            const imageUrl = await uploadImage(file)
             
-            reader.onloadend = () => {
-                const src = reader.result; 
-                if (src as string) {
-                    insertImage(selectedSlideId, src as string)
-                }
-                else{
-                    alert('Не удалось добавить файл:(')
-                }
+            // 2. Только когда ссылка получена, добавляем объект в Redux
+            if (imageUrl) {
+                console.log(imageUrl)
+                insertImage(selectedSlideId, imageUrl)
             }
-            reader.readAsDataURL(file)
-            changeInsertToolOpened()
-        } 
-    }
+        } catch (error) {
+            console.error(error);
+            alert('Ошибка загрузки');
+        } finally {
+            // setIsUploading(false);
+            changeInsertToolOpened();
+        }
+    } 
+    // Сброс input
+    if (ref.current) ref.current.value = '';
+}   
 
     const [figureInsertOpened, setFigureInsertOpened] = useState(false)
     const changeFigureInsertOpened = () => {
@@ -133,9 +144,9 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
                                 </button>
                                     {imageInsertOpend &&
                                         <div className={style.insertSection__image_objects}>
-                                            <button onClick={handleClick}>
+                                            <button onClick={handleClick} disabled={isUploading}>
                                                 <label form='image'>
-                                                    Local
+                                                    {isUploading ? 'Uploading...' : 'Local'}
                                                 </label>
                                                 <input id='image' type='file' accept=".jpg, .jpeg, .png" style={{display: 'none'}} ref={ref} onChange={e => onAddImage(e)}></input>
                                             </button>
@@ -147,7 +158,7 @@ export const InsertTool = ({ insertButtonStyle, selectedSlideId }: InsertToolPro
                             </div>
                             <div>
                                 <button onClick={() => {
-                                    changeInsertToolOpened();
+                                    changeInsertToolOpened()
                                     insertTextField(selectedSlideId)}
                                 }>Text field</button>
                             </div>

@@ -9,12 +9,58 @@ import { useAppSelector } from './hooks/useAppSelector'
 import { HistoryType } from './store/history'
 import { HistoryContext } from './hooks/historyContext'
 import { useAppActions } from './hooks/useAppActions'
+import { useAuth } from './hooks/useAuth'
+import Auth from './views/Auth/Auth'
+import Preloader from './views/Preloader/Preloader'
+import { useDebounce } from './hooks/useDebounce'
+import { getUserPresentations, savePresentationToCloud } from './services/appwrite/service'
 
 type AppProprs = {
     history: HistoryType
 }
 
 function App({history}: AppProprs) {
+    const { user, loading } = useAuth()
+
+    const fullState = useAppSelector(state => state)
+    const debouncedState = useDebounce(fullState, 2000)
+    const [cloudDocId, setCloudDocId] = useState<string | undefined>(undefined)
+    const [isSaving, setIsSaving] = useState(false)
+    useEffect(() => {
+        if (user) {
+            getUserPresentations(user.$id).then(res => {
+                if (res.documents.length > 0) {
+                    setCloudDocId(res.documents[0].$id)
+                    // Тут можно было бы сделать dispatch(updateSlides(JSON.parse(res.documents[0].data)))
+                    // чтобы загрузить данные с сервера
+                }
+            })
+        }
+    }, [user])
+
+    useEffect(() => {
+        const saveData = async () => {
+            if (!user || !debouncedState) return
+            
+            setIsSaving(true)
+            try {
+                const response = await savePresentationToCloud(user.$id, debouncedState, cloudDocId)
+                // Если это был новый документ, запоминаем его ID
+                if (!cloudDocId) {
+                    setCloudDocId(response.$id)
+                }
+                console.log("Auto-saved to Appwrite at " + new Date().toLocaleTimeString())
+            } catch (error) {
+                console.error("Auto-save error", error)
+            } finally {
+                setIsSaving(false)
+            }
+        }
+
+        saveData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedState]) // Срабатывает только когда меняется debounced версия стейта
+
     const slides = useAppSelector(state => state.slides) 
 
     const [selectedSlidesIds, setSelectedSlidesIds] = useState<string[]>([slides[0].id])
@@ -89,8 +135,21 @@ function App({history}: AppProprs) {
     const SLIDE_WIDTH = 950
     const SLIDE_HEIGHT = 525
     const selectedSlide = slides.find(s => s.id === selectedSlidesIds[0])
-    return (    
+
+    if (loading) {
+        return <Preloader />
+    }
+
+    if (!user) {
+        return <Auth />
+    }
+
+    return (  
         <div className='main'>
+            {/* Можно добавить индикатор сохранения */}
+            <div style={{position: 'fixed', bottom: 10, right: 10, opacity: 0.5, fontSize: 12}}>
+                {isSaving ? "Saving..." : "All changes saved"}
+            </div>
             <HistoryContext.Provider value={history}>
                 <TopPanel
                     onUndo={onUndo}

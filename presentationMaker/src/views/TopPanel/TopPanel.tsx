@@ -7,6 +7,7 @@ import { HistoryTool } from "../Toolbar/HistoryTool"
 import { useNavigate } from "react-router-dom"
 import { PopupCover } from "../../components/Popup/PopupCover"
 import { useState } from "react"
+import { useAuth } from "../../hooks/useAuth"
 
 type TopPanelProps = {
     onUndo: () => void
@@ -16,9 +17,11 @@ type TopPanelProps = {
 const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
+    const { logout } = useAuth()
     const onLoading = (value: boolean) => {
         setLoading(value)
     }
+
     return(
         <div className={style.topPanel}>
             <div className={style.topPanel__icon_and_name}>
@@ -46,6 +49,11 @@ const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
                 <ExportTool
                     onLoading={onLoading}
                 />
+                <div style={{ marginLeft: '10px'}}>
+                     <button onClick={logout} className={style.toolBar__tool_logout}>
+                        Logout
+                    </button>
+                </div>
             </div>
             {loading && <>
                 <PopupCover isVisible={true}/>

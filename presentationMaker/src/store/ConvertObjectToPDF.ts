@@ -66,29 +66,30 @@ export const getTextPDF = async (pdfDoc: PDFDocument, page: PDFPage, text: TextO
         // })
     } catch (e) {
         console.error(`Не удалось загрузить шрифт ${fontName}:`, e)
-        // Можно добавить логику отрисовки стандартным шрифтом (Helvetica) в случае ошибки сети,
-        // но пока просто выведем ошибку.
     }
 }
 
 export const getImagePDF = async (pdfDoc: PDFDocument, page: PDFPage, img: ImageObject) => {
-    const base64Data = img.src.split(',')[1]
-    const imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0))
+    const imageBytes = await fetch(img.src, { 
+        mode: 'cors',
+        cache: 'no-cache'
+    }).then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch image");
+        return res.arrayBuffer();
+    });
     
-    const isPng = img.src.startsWith('data:image/png');
-    const isJpg = img.src.startsWith('data:image/jpeg');
-    let image
-    if (isPng) {
-        image = await pdfDoc.embedPng(imageBytes)
-    } else if (isJpg) {
-        image = await pdfDoc.embedJpg(imageBytes)
-    } else {
-        throw new Error('Unsupported image format. Please provide a PNG or JPEG image.')
+    let image;
+    try {
+        image = await pdfDoc.embedPng(imageBytes);
+    } catch {
+        image = await pdfDoc.embedJpg(imageBytes);
     }
-    page.moveTo(img.position.X, SLIDE_HEIGHT - img.position.Y - img.height)
+
     page.drawImage(image, {
+        x: img.position.X,
+        y: SLIDE_HEIGHT - img.position.Y - img.height,
         width: img.width,
         height: img.height,
-    })
+    });
 }
 
