@@ -5,9 +5,10 @@ import { ImportTool } from "../Toolbar/ImportTool"
 import style from './TopPanel.module.css'
 import { HistoryTool } from "../Toolbar/HistoryTool"
 import { useNavigate } from "react-router-dom"
-import { PopupCover } from "../../components/Popup/PopupCover"
+// import { PopupCover } from "../../components/Popup/PopupCover"
 import { useState } from "react"
 import { useAuth } from "../../hooks/useAuth"
+import Preloader from "../Preloader/Preloader"
 
 type TopPanelProps = {
     onUndo: () => void
@@ -55,10 +56,7 @@ const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
                     </button>
                 </div>
             </div>
-            {loading && <>
-                <PopupCover isVisible={true}/>
-                <div className={style.loader}>Loading...</div>
-            </>}
+            {loading && <Preloader />}
         </div>
     )
 }

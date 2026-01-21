@@ -1,17 +1,12 @@
-import { PopupCover } from '../../components/Popup/PopupCover';
 import style from './Preloader.module.css'
-
-// type PreloaderProps = {
-//     // setLoading: boolean
-// }
 
 const Preloader = () => {
     return (
-        <>
-            <PopupCover isVisible={true}/>
-            <div className={style.loader}>Loading...</div>
-        </>
+        <div className={style.overlay}>
+            <div className={style.loader}></div>
+            <div className={style.text}>Exporting PDF...</div>
+        </div>
     )
 }
 
-export default Preloader;
+export default Preloader

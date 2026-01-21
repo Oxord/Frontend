@@ -136,9 +136,9 @@ function App({history}: AppProprs) {
     const SLIDE_HEIGHT = 525
     const selectedSlide = slides.find(s => s.id === selectedSlidesIds[0])
 
-    if (loading) {
-        return <Preloader />
-    }
+    // if (loading) {
+    //     return <Preloader />
+    // }
 
     if (!user) {
         return <Auth />
