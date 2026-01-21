@@ -9,19 +9,24 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { useAuth } from "../../hooks/useAuth"
 import Preloader from "../Preloader/Preloader"
+import { PopupCover } from "../../components/Popup/PopupCover"
+import { PresentationList } from "../PresentationList/PresentationList"
+import { Popup } from "../../components/Popup/Popup"
 
 type TopPanelProps = {
     onUndo: () => void
     onRedo: () => void
+    onLoadCloudPresentation?: (id: string) => void
 }
 
-const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
+const TopPanel = ({onUndo, onRedo, onLoadCloudPresentation}: TopPanelProps) => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const { logout } = useAuth()
     const onLoading = (value: boolean) => {
         setLoading(value)
     }
+    const [isListOpen, setIsListOpen] = useState(false);
 
     return(
         <div className={style.topPanel}>
@@ -46,7 +51,14 @@ const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
                     onClick={onRedo}
                     label="Redo"
                 />
-                <ImportTool/>
+                <button 
+                    className={style.toolBar__tool} 
+                    onClick={() => setIsListOpen(true)}
+                    style={{ backgroundColor: 'rgba(0, 100, 200, 1)' }} // Чуть другой цвет для отличия
+                >
+                    My Files
+                </button>
+                {/* <ImportTool/> */}
                 <ExportTool
                     onLoading={onLoading}
                 />
@@ -56,6 +68,18 @@ const TopPanel = ({onUndo, onRedo}: TopPanelProps) => {
                     </button>
                 </div>
             </div>
+            <PopupCover isVisible={isListOpen} />
+            <Popup isVisible={isListOpen}>
+                <div style={{color: 'white', fontSize: '20px', marginBottom: '10px'}}>My Presentations</div>
+                <PresentationList onClose={() => setIsListOpen(false)} onSelect={(id) => onLoadCloudPresentation && onLoadCloudPresentation(id)} />
+                <button 
+                    onClick={() => setIsListOpen(false)} 
+                    style={{marginTop: '20px', padding: '5px 20px', borderRadius: '10px', border: 'none', cursor: 'pointer'}}
+                >
+                    Close
+                </button>
+            </Popup>
+            
             {loading && <Preloader />}
         </div>
     )

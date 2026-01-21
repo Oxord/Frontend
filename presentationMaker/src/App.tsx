@@ -178,6 +178,7 @@ function App({history}: AppProprs) {
                 <TopPanel
                     onUndo={onUndo}
                     onRedo={onRedo}
+                    onLoadCloudPresentation={(id) => setCloudDocId(id)}
                 />
                 <Toolbar 
                     selectedSlideId={selectedSlidesIds[0]}

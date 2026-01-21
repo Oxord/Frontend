@@ -1,6 +1,6 @@
 // Frontend/presentationMaker/src/appwrite/service.ts
 import { databases, storage, ID, APPWRITE_CONFIG } from './api';
-import { Permission, Role } from 'appwrite';
+import { Permission, Query, Role } from 'appwrite';
 
 // Функция загрузки файла в Storage
 export const uploadImage = async (file: File) => {
@@ -57,13 +57,20 @@ export const savePresentationToCloud = async (userId: string, presentationData: 
 
 // Функция загрузки списка презентаций пользователя
 export const getUserPresentations = async (userId: string) => {
-    // В реальном Appwrite лучше использовать Queries для фильтрации
-    // import { Query } from 'appwrite';
-    // return await databases.listDocuments(..., [Query.equal('owner_id', userId)])
-    
-    // Для простоты пока просто list (с учетом прав доступа Appwrite сам отфильтрует)
     return await databases.listDocuments(
         APPWRITE_CONFIG.DATABASE_ID,
-        APPWRITE_CONFIG.COLLECTION_ID
+        APPWRITE_CONFIG.COLLECTION_ID,
+        [
+            Query.equal('owner_id', userId), // Фильтруем по ID пользователя
+            Query.orderDesc('$updatedAt')    // Сортируем: новые сверху
+        ]
+    );
+}
+
+export const deletePresentationFromCloud = async (docId: string) => {
+    return await databases.deleteDocument(
+        APPWRITE_CONFIG.DATABASE_ID,
+        APPWRITE_CONFIG.COLLECTION_ID,
+        docId
     );
 }
