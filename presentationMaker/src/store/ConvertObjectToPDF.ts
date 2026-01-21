@@ -39,33 +39,39 @@ export const getTrianglePDF = (page: PDFPage, triangle: Triangle) => {
 export const getTextPDF = async (pdfDoc: PDFDocument, page: PDFPage, text: TextObject) => {
     const fontName = text.font || 'Arial'
     const fontUrl = fontUrls[fontName] || fontUrls['default']
-    
-    // Альтернативная ссылка, если первая не сработает (Ubuntu Regular):
-    // const fontUrl = 'https://github.com/google/fonts/raw/main/ufl/ubuntu/Ubuntu-Regular.ttf';
+    const defaultFontUrl = fontUrls['default'] // Ссылка на дефолтный шрифт
+
+    let fontBytes;
 
     try {
-        const fontBytes = await fetch(fontUrl).then((res) => res.arrayBuffer())
+        fontBytes = await fetch(fontUrl).then((res) => {
+            if (!res.ok) throw new Error('Network response was not ok')
+            return res.arrayBuffer();
+        })
+    } catch (e) {
+        console.warn(`Не удалось загрузить шрифт ${fontName}, используем дефолтный:`, e)
+        try {
+            fontBytes = await fetch(defaultFontUrl).then((res) => res.arrayBuffer())
+        } catch (err) {
+            console.error('Не удалось загрузить даже дефолтный шрифт', err)
+            return
+        }
+    }
+
+    try {
         pdfDoc.registerFontkit(fontkit)
         const customFont = await pdfDoc.embedFont(fontBytes)
         const { r, g, b } = hexToRgb(text.color)
-        
-        // 5. Рисуем текст
+
         page.drawText(text.text, {
             x: text.position.X,
-            y: SLIDE_HEIGHT - text.position.Y - text.fontsize, // Проверьте эту формулу координат
+            y: SLIDE_HEIGHT - text.position.Y - text.fontsize,
             font: customFont,
             size: text.fontsize,
             color: rgb(r, g, b)
         })
-        // page.drawText(text.text, {
-        //     x: text.position.X,
-        //     y: SLIDE_HEIGHT - text.position.Y - text.fontsize, // Проверьте эту формулу координат
-        //     font: customFont,
-        //     size: text.fontsize,
-        //     color: rgb(r, g, b)
-        // })
     } catch (e) {
-        console.error(`Не удалось загрузить шрифт ${fontName}:`, e)
+        console.error('Ошибка при отрисовке текста:', e)
     }
 }
 

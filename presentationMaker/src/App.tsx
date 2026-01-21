@@ -11,8 +11,8 @@ import { HistoryContext } from './hooks/historyContext'
 import { useAppActions } from './hooks/useAppActions'
 import { useAuth } from './hooks/useAuth'
 import Auth from './views/Auth/Auth'
-import Preloader from './views/Preloader/Preloader'
 import { useDebounce } from './hooks/useDebounce'
+import { validateState } from './store/ValidateState'
 import { getUserPresentations, savePresentationToCloud } from './services/appwrite/service'
 
 type AppProprs = {
@@ -22,6 +22,8 @@ type AppProprs = {
 function App({history}: AppProprs) {
     const { user, loading } = useAuth()
 
+    const { updateSlides, changePresentationTitle } = useAppActions()
+
     const fullState = useAppSelector(state => state)
     const debouncedState = useDebounce(fullState, 2000)
     const [cloudDocId, setCloudDocId] = useState<string | undefined>(undefined)
@@ -30,13 +32,34 @@ function App({history}: AppProprs) {
         if (user) {
             getUserPresentations(user.$id).then(res => {
                 if (res.documents.length > 0) {
-                    setCloudDocId(res.documents[0].$id)
-                    // Тут можно было бы сделать dispatch(updateSlides(JSON.parse(res.documents[0].data)))
-                    // чтобы загрузить данные с сервера
+                    const doc = res.documents[0];
+                    const jsonString = doc.data; // Получаем строку JSON из Appwrite
+
+                    // --- ВАЛИДАЦИЯ ---
+                    // Функция validateState сама парсит JSON и проверяет схему AJV
+                    const validatedData = validateState(jsonString);
+
+                    if (validatedData) {
+                        // Если данные валидны, обновляем приложение
+                        console.log("Data loaded from Appwrite and validated successfully.");
+                        
+                        setCloudDocId(doc.$id); // Запоминаем ID документа
+                        
+                        // Обновляем Redux store
+                        changePresentationTitle(validatedData.title);
+                        updateSlides(validatedData.slides);
+                    } else {
+                        // Если validateState вернул null, значит данные повреждены
+                        console.error("Validation failed for the loaded document.");
+                        // validateState сам вызывает alert('Ошибка при парсинге JSON') или просто возвращает null при ошибке схемы
+                    }
                 }
-            })
+            }).catch(err => {
+                console.error("Error loading presentation:", err);
+            });
         }
-    }, [user])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     useEffect(() => {
         const saveData = async () => {
@@ -91,7 +114,6 @@ function App({history}: AppProprs) {
         setSelectedSlidesIds([...selectedSlidesIds, slideId])
     }
     
-    const { changePresentationTitle, updateSlides } = useAppActions()
     function onUndo() {
         const newState = history.undo()
         if (newState) {
@@ -99,6 +121,7 @@ function App({history}: AppProprs) {
             updateSlides(newState.slides)
         }
     }
+
     function onRedo() {
         const newState = history.redo()
         if (newState) {
@@ -106,6 +129,7 @@ function App({history}: AppProprs) {
             updateSlides(newState.slides)
         }
     }
+
     const handleKeyDown = (event: KeyboardEvent) => {
         if (event.key.toLowerCase() === 'z' && (event.ctrlKey || event.metaKey)) {
             onUndo()
@@ -114,13 +138,13 @@ function App({history}: AppProprs) {
             onRedo()
         }
     }
+
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown)
         return () => {
             window.removeEventListener('keydown', handleKeyDown)
         }
     }, [])
-
 
     let selectedElemType = ''
     let selectedElemColor = ''
