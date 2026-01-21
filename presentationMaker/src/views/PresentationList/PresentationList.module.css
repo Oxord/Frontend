@@ -57,3 +57,28 @@
     margin-left: 10px;
     font-size: 12px;
 }
+
+.createItem {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px dashed rgba(0, 155, 149, 1);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.createItem:hover {
+    background-color: white;
+    transform: scale(1.02);
+}
+
+.createTitle {
+    font-weight: bold;
+    color: rgba(0, 155, 149, 1);
+    font-family: "inter", sans-serif;
+    font-size: 16px;
+}

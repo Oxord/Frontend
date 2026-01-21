@@ -9,9 +9,10 @@ import { deletePresentationFromCloud, getUserPresentations } from '../../service
 type Props = {
     onClose: () => void
     onSelect: (id: string) => void
+    onCreateNew: () => void
 }
 
-export const PresentationList = ({ onClose }: Props) => {
+export const PresentationList = ({ onClose, onSelect, onCreateNew }: Props) => {
     const { user } = useAuth();
     const { updateSlides, changePresentationTitle } = useAppActions();
     const [docs, setDocs] = useState<Models.Document[]>([]);
@@ -35,16 +36,13 @@ export const PresentationList = ({ onClose }: Props) => {
     };
 
     const handleLoadPresentation = (doc: Models.Document) => {
-        // Парсим и валидируем данные из облака
         const validatedData = validateState(doc.data);
         if (validatedData) {
             updateSlides(validatedData.slides);
             changePresentationTitle(validatedData.title);
-            // Важно: здесь нужно обновить ID текущего документа в App.tsx, 
-            // чтобы автосохранение писало в этот же файл, а не создавало новый.
-            // Но пока у нас нет прямого доступа к setCloudDocId из этого компонента.
-            // Мы решим это через перезагрузку страницы с query-параметром или через Context,
-            // но для простоты просто загрузим данные в редактор.
+            
+            onSelect(doc.$id);
+            
             onClose();
         } else {
             alert("Ошибка: Некорректный формат презентации");
@@ -52,22 +50,31 @@ export const PresentationList = ({ onClose }: Props) => {
     };
 
     const handleDelete = async (e: React.MouseEvent, docId: string) => {
-        e.stopPropagation(); // Чтобы не сработал клик по элементу
+        e.stopPropagation();
         if (confirm('Вы уверены, что хотите удалить эту презентацию?')) {
             await deletePresentationFromCloud(docId);
-            loadData(); // Обновляем список
+            loadData();
         }
     };
 
-    if (loading) return <div className={style.empty}>Loading...</div>;
+    const handleCreateNew = () => {
+        if (confirm('Создать новую презентацию? Несохраненные изменения в текущей будут потеряны.')) {
+            onCreateNew();
+            onClose();
+        }
+    }
+
+    // if (loading) return <div className={style.empty}>Loading...</div>;
 
     return (
         <div className={style.listContainer}>
+            <div className={style.createItem} onClick={handleCreateNew}>
+                <span className={style.createTitle}>+ Create New Presentation</span>
+            </div>
             {docs.length === 0 ? (
                 <div className={style.empty}>Нет сохраненных презентаций</div>
             ) : (
                 docs.map(doc => {
-                    // Пытаемся достать название из JSON внутри, либо используем дату
                     let title = "Untitled Presentation";
                     try {
                         const parsed = JSON.parse(doc.data);

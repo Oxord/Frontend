@@ -14,6 +14,7 @@ import Auth from './views/Auth/Auth'
 import { useDebounce } from './hooks/useDebounce'
 import { validateState } from './store/ValidateState'
 import { getUserPresentations, savePresentationToCloud } from './services/appwrite/service'
+import { initialData } from './store/initialData';
 
 type AppProprs = {
     history: HistoryType
@@ -33,25 +34,16 @@ function App({history}: AppProprs) {
             getUserPresentations(user.$id).then(res => {
                 if (res.documents.length > 0) {
                     const doc = res.documents[0];
-                    const jsonString = doc.data; // Получаем строку JSON из Appwrite
+                    const jsonString = doc.data;
 
-                    // --- ВАЛИДАЦИЯ ---
-                    // Функция validateState сама парсит JSON и проверяет схему AJV
                     const validatedData = validateState(jsonString);
-
                     if (validatedData) {
-                        // Если данные валидны, обновляем приложение
-                        console.log("Data loaded from Appwrite and validated successfully.");
-                        
-                        setCloudDocId(doc.$id); // Запоминаем ID документа
-                        
-                        // Обновляем Redux store
-                        changePresentationTitle(validatedData.title);
                         updateSlides(validatedData.slides);
-                    } else {
-                        // Если validateState вернул null, значит данные повреждены
-                        console.error("Validation failed for the loaded document.");
-                        // validateState сам вызывает alert('Ошибка при парсинге JSON') или просто возвращает null при ошибке схемы
+                        changePresentationTitle(validatedData.title);
+                        
+                        // --- ДОБАВИТЬ ЭТУ СТРОКУ ---
+                        setCloudDocId(doc.$id); 
+                        // Теперь App знает ID этого документа и будет обновлять его, а не создавать новый
                     }
                 }
             }).catch(err => {
@@ -168,6 +160,13 @@ function App({history}: AppProprs) {
         return <Auth />
     }
 
+    const handleCreateNewPresentation = () => {
+        updateSlides(initialData.slides)
+        changePresentationTitle(initialData.title)
+        
+        setCloudDocId(undefined)
+    }
+
     return (  
         <div className='main'>
             {/* Можно добавить индикатор сохранения */}
@@ -179,6 +178,7 @@ function App({history}: AppProprs) {
                     onUndo={onUndo}
                     onRedo={onRedo}
                     onLoadCloudPresentation={(id) => setCloudDocId(id)}
+                    onCreateNew={handleCreateNewPresentation}
                 />
                 <Toolbar 
                     selectedSlideId={selectedSlidesIds[0]}

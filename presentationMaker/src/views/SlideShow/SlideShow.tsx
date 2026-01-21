@@ -7,6 +7,25 @@ import { useNavigate } from 'react-router-dom'
 const SlideShow = () => {
     const slides = useAppSelector(state => state.slides) 
 
+    const BASE_WIDTH = 950
+    const BASE_HEIGHT = 525
+
+    const getScale = () => {
+        const widthScale = window.innerWidth / BASE_WIDTH
+        const heightScale = window.innerHeight / BASE_HEIGHT
+        return Math.min(widthScale, heightScale)
+    }
+
+    const [scale, setScale] = useState(getScale())
+
+    useEffect(() => {
+        const handleResize = () => {
+            setScale(getScale())
+        }
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
     const [selectedSlideNum, setSelectedSlidesNum] = useState(0)
     const changeSlideNum = (flag: '+' | '-') => {
         if (flag == '+' && selectedSlideNum < slides.length - 1) {
@@ -44,19 +63,39 @@ const SlideShow = () => {
     const selectedSlide = slides.find(s => s.id === selectedSlidesId)
     const navigate = useNavigate()
     return (    
-        <div className={style.slideShow}>
-            <div style={{pointerEvents: 'none'}}>
+        <div className={style.slideShow} style={{
+            // 3. Стили для центрирования слайда на весь экран
+            width: '100vw',
+            height: '100vh',
+            overflow: 'hidden',
+            backgroundColor: '#000', // Черный фон для презентации
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
+            <div style={{
+                // Этот div имеет размеры оригинала, но масштабируется CSS-трансформацией
+                width: `${BASE_WIDTH}px`,
+                height: `${BASE_HEIGHT}px`,
+                transform: `scale(${scale})`,
+                transformOrigin: 'center center', // Масштабирование от центра
+                pointerEvents: 'none' // Чтобы нельзя было выделять элементы в режиме просмотра
+            }}>
                 {selectedSlide &&
-                    <Slide slide={selectedSlide} 
-                    scale={1} 
-                    width={SLIDE_WIDTH} 
-                    height={SLIDE_HEIGHT} 
-                    isSelected={false}
-                    showSelection={true}
-                    onElemClick={() => {}}
-                    selectedElemId={''}
-                    />}
+                    <Slide 
+                        slide={selectedSlide} 
+                        scale={1} // Внутри масштаб 1, так как мы масштабируем весь контейнер
+                        width={BASE_WIDTH}  // <-- ИСПРАВЛЕНО: передаем базовую ширину
+                        height={BASE_HEIGHT} // <-- ИСПРАВЛЕНО: передаем базовую высоту
+                        isSelected={false}
+                        showSelection={false} // Обычно в просмотре выделение скрывают
+                        onElemClick={() => {}}
+                        selectedElemId={''}
+                    />
+                }
             </div>
+            
+            {/* Панель управления */}
             <div className={style.slideShow__tools}>
                 <button 
                     onClick={() => navigate('/', { replace: false })} 

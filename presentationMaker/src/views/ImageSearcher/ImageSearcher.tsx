@@ -22,21 +22,19 @@ const ImageSearch = ({ selectedSlideId, onClose, actionType }: ImageSearchProps)
         try {
             const response = await fetch(`https://api.unsplash.com/search/photos?page=1&query=${query}&client_id=${UNSPLASH_ACCESS_KEY}`)
             if (!response.ok) {
-                throw new Error('Ошибка при загрузке изображений')
+                throw new Error(`Ошибка HTTP: ${response.status}`)
             }
             const data = await response.json()
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             setImages(data.results.map((img: any) => img.urls.small))
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (err) {
-            throw new Error 
+            console.error("Ошибка загрузки:", err)
         }
     }
 
     useEffect(() => {
         fetchImages()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [query])
+    }, [])
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

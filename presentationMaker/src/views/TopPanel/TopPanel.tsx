@@ -17,9 +17,10 @@ type TopPanelProps = {
     onUndo: () => void
     onRedo: () => void
     onLoadCloudPresentation?: (id: string) => void
+    onCreateNew: () => void 
 }
 
-const TopPanel = ({onUndo, onRedo, onLoadCloudPresentation}: TopPanelProps) => {
+const TopPanel = ({onUndo, onRedo, onLoadCloudPresentation, onCreateNew }: TopPanelProps) => {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
     const { logout } = useAuth()
@@ -71,7 +72,16 @@ const TopPanel = ({onUndo, onRedo, onLoadCloudPresentation}: TopPanelProps) => {
             <PopupCover isVisible={isListOpen} />
             <Popup isVisible={isListOpen}>
                 <div style={{color: 'white', fontSize: '20px', marginBottom: '10px'}}>My Presentations</div>
-                <PresentationList onClose={() => setIsListOpen(false)} onSelect={(id) => onLoadCloudPresentation && onLoadCloudPresentation(id)} />
+                
+                {/* Добавляем проверку isListOpen, чтобы компонент обновлялся при каждом открытии */}
+                {isListOpen && (
+                    <PresentationList 
+                        onClose={() => setIsListOpen(false)} 
+                        onSelect={(id) => onLoadCloudPresentation && onLoadCloudPresentation(id)} 
+                        onCreateNew={onCreateNew} 
+                    />
+                )}
+                
                 <button 
                     onClick={() => setIsListOpen(false)} 
                     style={{marginTop: '20px', padding: '5px 20px', borderRadius: '10px', border: 'none', cursor: 'pointer'}}
